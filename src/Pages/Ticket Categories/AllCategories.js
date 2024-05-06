@@ -11,6 +11,7 @@ export default function AllCategories() {
             <Drawer />
             <Box height={70} sx={{ direction: "rtl" }} />
             <Box sx={{ width: "80%" }}>
+            <h2 className='table-head' > فئات التذاكر</h2>
                 <div>
                     <Link to='/AddCategory'>
                         <button className='btn btn-primary add-button'>أضافه فئة التذكرة</button>

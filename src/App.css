@@ -20,3 +20,11 @@
   left: 89px;
   bottom: 25px;
 }
+
+.table-head{
+  display: flex;
+    justify-content: end;
+    position: relative;
+    right: 91px;
+    top: 13px;
+}

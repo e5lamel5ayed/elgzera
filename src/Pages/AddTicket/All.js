@@ -11,6 +11,7 @@ export default function All() {
             <Box height={70} sx={{ direction: "rtl" }} />
             <Box sx={{ width: "80%" }}>
                 <div>
+                    <h2 className='table-head' >قائمه التذاكر</h2>
                     <Link to='/AddTicket'>
                         <button className='btn btn-primary add-button'>اضافه تذكره</button>
                     </Link>
