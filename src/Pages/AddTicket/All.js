@@ -10,11 +10,11 @@ export default function All() {
             <Drawer />
             <Box height={70} sx={{ direction: "rtl" }} />
             <Box sx={{ width: "80%" }}>
-                <Link to='/AddTicket'>
-                    <div>
+                <div>
+                    <Link to='/AddTicket'>
                         <button className='btn btn-primary add-button'>اضافه تذكره</button>
-                    </div>
-                </Link>
+                    </Link>
+                </div>
 
                 <TicketsList />
             </Box>
