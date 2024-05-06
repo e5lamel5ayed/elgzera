@@ -13,8 +13,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+import CategoryIcon from '@mui/icons-material/Category';
 import ArticleIcon from '@mui/icons-material/Article';
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
 const drawerWidth = 240;
 
@@ -84,7 +86,7 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => navigate("/")}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <InboxIcon className='icon-edit' />
+                                <SpaceDashboardIcon className='icon-edit' />
                                 <span className='span-edit'>الرئيسيه</span>
                             </ListItemIcon>
                             <ListItemText />
@@ -93,7 +95,7 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => navigate("/All")}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <InboxIcon className='icon-edit' />
+                                <ConfirmationNumberIcon className='icon-edit' />
                                 <span className='span-edit'>اضافه تذكره</span>
                             </ListItemIcon>
                             <ListItemText />
@@ -102,7 +104,7 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <ArticleIcon className='icon-edit' />
+                                <CategoryIcon className='icon-edit' />
                                 <span className='span-edit'>فئات التذاكر</span>
                             </ListItemIcon>
                             <ListItemText />
