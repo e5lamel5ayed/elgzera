@@ -38,7 +38,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
             }),
             marginRight: 0,
         }),
-        
+
         position: 'relative',
     }),
 );
@@ -127,8 +127,17 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => { navigate("/") }}>
                         <ListItemButton>
                             <ListItemIcon>
-                                  <InboxIcon />
-                                  <span>الرئيسيه</span>
+                                <InboxIcon className='icon-edit' />
+                                <span className='span-edit'>الرئيسيه</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding onClick={() => { navigate("/All") }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <InboxIcon className='icon-edit' />
+                                <span className='span-edit'>اضافه تذكره</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
