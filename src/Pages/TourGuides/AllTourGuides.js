@@ -13,7 +13,7 @@ export default function AllTourGuides() {
             <Box sx={{ width: "80%" }}>
                 <div>
                     <h2 className='table-head' >المرشدين</h2>
-                    <Link to='/AddTOurGuide'>
+                    <Link to='/AddTOurGuides'>
                         <button className='btn btn-primary add-button'>اضافه مرشد</button>
                     </Link>
                 </div>

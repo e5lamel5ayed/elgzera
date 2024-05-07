@@ -48,21 +48,27 @@ export default function AddTourGuides() {
                       <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
                     </div>
                   </div>
-
+                  
                   <div className='col-md-6'>
-                    <label for="exampleInputEmail1" className="d-flex"> نوع التذكره</label>
+                    <div className="form-group">
+                      <label for="exampleInputEmail1" className="d-flex"> الايميل</label>
+                      <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                    </div>
+                  </div>
+                  <div className='col-md-6'>
+                    <label for="exampleInputEmail1" className="d-flex">الحاله</label>
                     <select class="form-control">
                       <option>Default select</option>
                     </select>
                   </div>
 
                   <div className='col-md-6'>
-                    <label for="exampleInputEmail1" className="d-flex"> السعر </label>
+                    <label for="exampleInputEmail1" className="d-flex">رقم الهاتف</label>
                     <FormControl fullWidth>
                       <OutlinedInput
                         size='small'
                         id="outlined-adornment-amount"
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        // startAdornment={<InputAdornment position="start">$</InputAdornment>}
 
                       />
                     </FormControl>
@@ -70,17 +76,17 @@ export default function AddTourGuides() {
 
 
                   <div className='col-md-3'>
-                    <label for="exampleInputEmail1" className="d-flex"> الضرائب </label>
+                    <label for="exampleInputEmail1" className="d-flex"> نسبة الربح</label>
                     <FormControl fullWidth>
                       <OutlinedInput
                         size='small'
                         id="outlined-adornment-amount"
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        // startAdornment={<InputAdornment position="start">$</InputAdornment>}
 
                       />
                     </FormControl>
                   </div>
-
+{/* 
                   <div className='col-md-3'>
                     <label for="exampleInputEmail1" className="d-flex"> العمله </label>
                     <TextField
@@ -100,7 +106,7 @@ export default function AddTourGuides() {
                         </option>
                       ))}
                     </TextField>
-                  </div>
+                  </div> */}
 
                   <div className='col-md-12 '>
                   <label for="exampleInputEmail1" className="d-flex mt-3"> اختر اليوم </label>
