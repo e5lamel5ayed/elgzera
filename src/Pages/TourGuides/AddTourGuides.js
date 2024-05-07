@@ -108,7 +108,7 @@ export default function AddTourGuides() {
                     </TextField>
                   </div> */}
 
-                  <div className='col-md-12 '>
+                  {/* <div className='col-md-12 '>
                   <label for="exampleInputEmail1" className="d-flex mt-3"> اختر اليوم </label>
                   <div className='col-md-12 d-flex'>
 
@@ -150,7 +150,7 @@ export default function AddTourGuides() {
                     </FormGroup>
                   </div>
                    
-                  </div>
+                  </div> */}
 
                 </div>
 
