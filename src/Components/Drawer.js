@@ -19,6 +19,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import ArticleIcon from '@mui/icons-material/Article';
 
 const drawerWidth = 240;
 
@@ -138,6 +139,16 @@ export default function PersistentDrawerRight() {
                             <ListItemIcon>
                                 <InboxIcon className='icon-edit' />
                                 <span className='span-edit'>اضافه تذكره</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+                    
+                    <ListItem disablePadding onClick={() => { navigate("/AllCategories") }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                < ArticleIcon className='icon-edit' />
+                                <span className='span-edit'>فئات التذاكر</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
