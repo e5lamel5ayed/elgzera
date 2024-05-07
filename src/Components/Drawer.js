@@ -110,6 +110,16 @@ export default function PersistentDrawerRight() {
                             <ListItemText />
                         </ListItemButton>
                     </ListItem>
+
+                    <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CategoryIcon className='icon-edit' />
+                                <span className='span-edit'> المرشدين</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
                 <Divider />
             </Drawer>
