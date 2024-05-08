@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import { Drawer, Paper, Stack } from "@mui/material";
+import { Drawer, Paper, Stack, Dialog, DialogTitle, DialogActions, Button } from "@mui/material";
 import { formatDate } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import "./Reservation.css";
 
+function ConfirmationDialog({ open, handleClose, handleConfirm }) {
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Are you sure?</DialogTitle>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleConfirm}>Confirm</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 function renderEventContent(eventInfo) {
   return (
@@ -19,8 +30,6 @@ function renderEventContent(eventInfo) {
 
 function renderSidebarEvent(event) {
   return (
-   
-    
     <li key={event.id}>
       <b>
         {formatDate(event.start, {
@@ -37,6 +46,8 @@ function renderSidebarEvent(event) {
 const Reservation = () => {
   const [weekendsVisible, setweekendsVisible] = useState(true);
   const [currentEvents, setcurrentEvents] = useState([]);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [eventToRemove, setEventToRemove] = useState(null);
 
   const handleWeekendsToggle = () => {
     setweekendsVisible(!weekendsVisible);
@@ -65,13 +76,21 @@ const Reservation = () => {
   };
 
   const handleEventClick = (clickInfo) => {
-    if (
-      confirm(
-        `هل تريد حذف الحجز'${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove();
+    setEventToRemove(clickInfo.event);
+    setConfirmationOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (eventToRemove) {
+      eventToRemove.remove();
+      setEventToRemove(null);
+      setConfirmationOpen(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setEventToRemove(null);
+    setConfirmationOpen(false);
   };
 
   const handleEvents = (events) => {
@@ -79,15 +98,10 @@ const Reservation = () => {
   };
 
   return (
-
     <Stack direction={"row"}>
       <Paper className="demo-app-sidebar">
-         
-       
-       
-          <h2 style={{ textAlign: "center" }}>مواعيد الحجز({currentEvents.length})</h2>
-          <ul>{currentEvents.map(renderSidebarEvent)}</ul>
-         
+        <h2 style={{ textAlign: "center" }}>مواعيد الحجز({currentEvents.length})</h2>
+        <ul>{currentEvents.map(renderSidebarEvent)}</ul>
       </Paper>
 
       <div className="demo-app-main">
@@ -104,21 +118,19 @@ const Reservation = () => {
           selectMirror={true}
           dayMaxEvents={true}
           weekends={weekendsVisible}
-          // initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
           select={handleDateSelect}
-          eventContent={renderEventContent} // custom render function
+          eventContent={renderEventContent}
           eventClick={handleEventClick}
-          eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-          /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-            */
+          eventsSet={handleEvents}
         />
       </div>
-    
+
+      <ConfirmationDialog
+        open={confirmationOpen}
+        handleClose={handleCancelDelete}
+        handleConfirm={handleConfirmDelete}
+      />
     </Stack>
-  
   );
 };
 
