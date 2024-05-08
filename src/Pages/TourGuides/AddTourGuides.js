@@ -58,7 +58,8 @@ export default function AddTourGuides() {
                   <div className='col-md-6'>
                     <label for="exampleInputEmail1" className="d-flex">الحاله</label>
                     <select class="form-control">
-                      <option>Default select</option>
+                    <option>Default select</option>
+
                     </select>
                   </div>
 
@@ -81,7 +82,7 @@ export default function AddTourGuides() {
                       <OutlinedInput
                         size='small'
                         id="outlined-adornment-amount"
-                        // startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        startAdornment={<InputAdornment position="start">%</InputAdornment>}
 
                       />
                     </FormControl>
@@ -108,50 +109,7 @@ export default function AddTourGuides() {
                     </TextField>
                   </div> */}
 
-                  <div className='col-md-12 '>
-                  <label for="exampleInputEmail1" className="d-flex mt-3"> اختر اليوم </label>
-                  <div className='col-md-12 d-flex'>
-
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="السبت" />
-                      </div>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاحد" />
-                      </div>
-                      
-                      
-                    </FormGroup>
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاثنين" />
-                      </div>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الثلاثاء" />
-                      </div>
-                      
-                      
-                    </FormGroup>
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاربعاء" />
-                      </div>                      
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الخميس" />
-                      </div>                      
-                      
-                    </FormGroup>
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الجمعه" />
-                      </div>                      
-                                          
-                      
-                    </FormGroup>
-                  </div>
-                   
-                  </div>
-
+                  
                 </div>
 
               </div>
