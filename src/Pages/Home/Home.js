@@ -6,13 +6,17 @@ import Chart2 from './Chart2';
 import Chart3 from './Chart3';
 import Chart4 from './Chart4';
 import { Grid } from '@mui/material';
+import Row1 from './Row1';
 
 
 export default function home() {
   return (
     <div>
       <Drawer />
+     
       <Box sx={{ width: "75%", ml:"50px",mr:"auto" }}>
+
+      <Row1/>
 
 
         <Grid container spacing={1} mt={5} display={"flex"} justifyContent={"space-between"}>

@@ -21,6 +21,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import SailingIcon from '@mui/icons-material/Sailing';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import BookOnlineIcon from '@mui/icons-material/BookOnline'; 
 
 const drawerWidth = 240;
 
@@ -152,6 +153,17 @@ export default function PersistentDrawerRight() {
                             <ListItemIcon>
                                 <ProductionQuantityLimitsIcon className='icon-edit' />
                                 <span className='span-edit'>المنتجات</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding onClick={() => navigate("/AllReservation")}>
+                        <ListItemButton>
+                            <ListItemIcon>     
+                                                 
+                                <BookOnlineIcon  className='icon-edit' />
+                                <span className='span-edit'>مواعيد الحجز</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
