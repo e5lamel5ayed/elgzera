@@ -28,7 +28,7 @@ export default function AddTourGuides() {
       <Drawer />
       <Box height={65} sx={{ direction: "rtl" }} />
       <div>
-        <Link to='/All'>
+        <Link to='/AllTourGuides'>
           <button className='btn btn-primary add-button'>رجوع </button>
         </Link>
       </div>
@@ -109,7 +109,50 @@ export default function AddTourGuides() {
                     </TextField>
                   </div> */}
 
-                  
+                  {/* <div className='col-md-12 '>
+                  <label for="exampleInputEmail1" className="d-flex mt-3"> اختر اليوم </label>
+                  <div className='col-md-12 d-flex'>
+
+                    <FormGroup className='d-flex col-md-3'>
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="السبت" />
+                      </div>
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاحد" />
+                      </div>
+                      
+                      
+                    </FormGroup>
+                    <FormGroup className='d-flex col-md-3'>
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاثنين" />
+                      </div>
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الثلاثاء" />
+                      </div>
+                      
+                      
+                    </FormGroup>
+                    <FormGroup className='d-flex col-md-3'>
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاربعاء" />
+                      </div>                      
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الخميس" />
+                      </div>                      
+                      
+                    </FormGroup>
+                    <FormGroup className='d-flex col-md-3'>
+                      <div className='col-md-2'>
+                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الجمعه" />
+                      </div>                      
+                                          
+                      
+                    </FormGroup>
+                  </div>
+                   
+                  </div> */}
+
                 </div>
 
               </div>
