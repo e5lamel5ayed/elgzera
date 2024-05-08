@@ -4,38 +4,23 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputAdornment
 import { Link } from 'react-router-dom';
 
 const currencies = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
+
 ];
 
-export default function AddCategory() {
+export default function AddPlaces() {
   return (
     <div>
       <Drawer />
       <Box height={65} sx={{ direction: "rtl" }} />
       <div>
-        <Link to='/AllCategories'>
+        <Link to='/AllPlaces'>
           <button className='btn btn-primary add-button'>رجوع </button>
         </Link>
       </div>
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div className='card table-style' style={{ direction: "rtl" }}>
           <div className="card-header d-flex">
-          أضف فئة التذكرة
+            اضف البيانات
           </div>
           <div className="card-body">
             <form>
@@ -49,7 +34,19 @@ export default function AddCategory() {
                     </div>
                   </div>
 
-                
+                  <div className='col-md-6'>
+                    <div className="form-group">
+                      <label for="exampleInputEmail1" className="d-flex">الموقع</label>
+                      <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                    </div>
+                  </div>
+
+                  <div className='col-md-6'>
+                    <div className="form-group">
+                      <label for="exampleInputEmail1" className="d-flex">اضافه صوره</label>
+                      <input type="file" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                    </div>
+                  </div>
 
                 </div>
 

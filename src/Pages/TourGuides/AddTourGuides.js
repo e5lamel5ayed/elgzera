@@ -28,7 +28,7 @@ export default function AddTourGuides() {
       <Drawer />
       <Box height={65} sx={{ direction: "rtl" }} />
       <div>
-        <Link to='/All'>
+        <Link to='/AllTourGuides'>
           <button className='btn btn-primary add-button'>رجوع </button>
         </Link>
       </div>

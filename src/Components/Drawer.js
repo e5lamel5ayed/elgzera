@@ -17,6 +17,10 @@ import CategoryIcon from '@mui/icons-material/Category';
 import ArticleIcon from '@mui/icons-material/Article';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import SailingIcon from '@mui/icons-material/Sailing';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 
 const drawerWidth = 240;
 
@@ -104,7 +108,8 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <CategoryIcon className='icon-edit' />
+                                <CategoryIcon  className='icon-edit' />
+                                
                                 <span className='span-edit'>فئات التذاكر</span>
                             </ListItemIcon>
                             <ListItemText />
@@ -114,8 +119,42 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <CategoryIcon className='icon-edit' />
+
+                                <EmojiPeopleIcon className='icon-edit' />
                                 <span className='span-edit'> المرشدين</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+
+                    
+                    <ListItem disablePadding onClick={() => navigate("/AllCruises")}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                           
+                                <SailingIcon className='icon-edit' />
+                                <span className='span-edit'>الرحلات البحرية</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding onClick={() => navigate("/AllPlaces")}>
+                        <ListItemButton>
+                            <ListItemIcon>                           
+                                <ApartmentIcon className='icon-edit' />
+                                <span className='span-edit'>مراكز البيع</span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+
+                    
+                    <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
+                        <ListItemButton>
+                            <ListItemIcon>                           
+                                <ProductionQuantityLimitsIcon className='icon-edit' />
+                                <span className='span-edit'>المنتجات</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>

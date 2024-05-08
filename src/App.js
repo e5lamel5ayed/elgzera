@@ -7,6 +7,12 @@ import AddCategory from './Pages/Ticket Categories/AddCategory';
 import AllCategories from './Pages/Ticket Categories/AllCategories';
 import AddTourGuides from './Pages/TourGuides/AddTourGuides';
 import AllTourGuides from './Pages/TourGuides/AllTourGuides';
+import AllCruises from './Pages/Cruises/AllCruises';
+import AddCruises from './Pages/Cruises/AddCruises';
+import AddPlaces from './Pages/Places/AddPlaces';
+import AllPlaces from './Pages/Places/AllPlaces';
+import AllProducts from './Pages/Products/AllProducts';
+import AddProducts from './Pages/Products/AddProducts';
 
 
 export default function App() {
@@ -21,6 +27,12 @@ export default function App() {
         <Route path="/AllCategories" exact element={<AllCategories/>}></Route>
         <Route path="/AddTourGuides" exact element={<AddTourGuides/>}></Route>
         <Route path="/AllTourGuides" exact element={<AllTourGuides/>}></Route>
+        <Route path="/AllCruises" exact element={<AllCruises/>}></Route>
+        <Route path="/AddCruises" exact element={<AddCruises/>}></Route>
+        <Route path="/AddPlaces" exact element={<AddPlaces/>}></Route>
+        <Route path="/AllPlaces" exact element={<AllPlaces/>}></Route>
+        <Route path="/AllProducts" exact element={<AllProducts/>}></Route>
+        <Route path="/AddProducts" exact element={<AddProducts/>}></Route>
         
         </Route>
       </Routes>
