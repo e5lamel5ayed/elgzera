@@ -27,13 +27,13 @@ export default function TourGidesList() {
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead className='table-head-stayl'>
           <TableRow>
-            <TableCell align="right">الاسم</TableCell>
-            <TableCell align="right">الحاله</TableCell>
-            <TableCell align="right">الايميل</TableCell>
-            <TableCell align="right">اسم الشركة</TableCell>
-            <TableCell align="right">نسبة الربح</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">الاسم</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">الحاله</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">الايميل</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">اسم الشركة</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">نسبة الربح</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

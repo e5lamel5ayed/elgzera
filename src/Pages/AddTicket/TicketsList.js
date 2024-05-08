@@ -27,13 +27,13 @@ export default function BasicTable() {
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead className='table-head-stayl'>
           <TableRow>
-            <TableCell align="right">الاسم</TableCell>
-            <TableCell align="right">نوع التذكره</TableCell>
-            <TableCell align="right">السعر</TableCell>
-            <TableCell align="right">الضرائب</TableCell>
-            <TableCell align="right">العمله</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">الاسم</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">نوع التذكره</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">السعر</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">الضرائب</TableCell>
+            <TableCell style={{color:"#fff"}} align="right">العمله</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -52,13 +52,7 @@ export default function BasicTable() {
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell sx={{fontSize:"20px"}} align="right" colSpan={2}>  المجموع:</TableCell>
-            <TableCell sx={{fontSize:"20px"}} align="right">{total}</TableCell>
-            <TableCell align="right" colSpan={2}></TableCell>
-          </TableRow>
-        </TableFooter>
+        
       </Table>
     </TableContainer>
   );

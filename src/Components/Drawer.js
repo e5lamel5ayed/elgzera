@@ -21,7 +21,8 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import SailingIcon from '@mui/icons-material/Sailing';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import BookOnlineIcon from '@mui/icons-material/BookOnline'; 
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 const drawerWidth = 240;
 
@@ -160,14 +161,27 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/AllReservation")}>
                         <ListItemButton>
-                            <ListItemIcon>     
-                                                 
-                                <BookOnlineIcon  className='icon-edit' />
+                            <ListItemIcon>
+
+                                <BookOnlineIcon className='icon-edit' />
                                 <span className='span-edit'>مواعيد الحجز</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
                     </ListItem>
+
+                    <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
+                        <ListItemButton>
+                            <ListItemIcon>
+
+                                <PaymentIcon className='icon-edit' />
+                                <span className='span-edit'>الدفع </span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+
+
                 </List>
                 <Divider />
             </Drawer>

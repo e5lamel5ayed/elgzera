@@ -13,6 +13,7 @@
   width: 85% !important;
   margin-right: auto !important;
   margin-left: auto !important;
+
 }
 
 .add-button {
@@ -21,10 +22,16 @@
   bottom: 25px;
 }
 
-.table-head{
+.table-head {
   display: flex;
-    justify-content: end;
-    position: relative;
-    right: 91px;
-    top: 13px;
+  justify-content: end;
+  position: relative;
+  right: 91px;
+  top: 13px;
+
+}
+
+.table-head-stayl{
+  background-color: #1976d2;
+  color: #fff;
 }

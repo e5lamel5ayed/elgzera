@@ -26,7 +26,7 @@ export default function AddCruises() {
       </div>
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div className='card table-style' style={{ direction: "rtl" }}>
-          <div className="card-header d-flex">
+          <div className="card-header d-flex table-head-stayl">
             اضف البيانات
           </div>
           <div className="card-body">
