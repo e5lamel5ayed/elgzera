@@ -35,7 +35,7 @@ export default function App() {
         <Route path="/AllPlaces" exact element={<AllPlaces/>}></Route>
         <Route path="/AllProducts" exact element={<AllProducts/>}></Route>
         <Route path="/AddProducts" exact element={<AddProducts/>}></Route>  
-        <Route path="/Reservation" exact element={<Reservation/>}></Route>  
+        {/* <Route path="/Reservation" exact element={<Reservation/>}></Route>   */}
         <Route path="/AllReservation" exact element={<AllReservation/>}></Route>  
         
         </Route>
