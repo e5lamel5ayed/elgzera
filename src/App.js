@@ -13,6 +13,8 @@ import AddPlaces from './Pages/Places/AddPlaces';
 import AllPlaces from './Pages/Places/AllPlaces';
 import AllProducts from './Pages/Products/AllProducts';
 import AddProducts from './Pages/Products/AddProducts';
+import Reservation from './Pages/Reservation/Reservation';
+import AllReservation from './Pages/Reservation/AllReservation';
 
 
 export default function App() {
@@ -32,7 +34,9 @@ export default function App() {
         <Route path="/AddPlaces" exact element={<AddPlaces/>}></Route>
         <Route path="/AllPlaces" exact element={<AllPlaces/>}></Route>
         <Route path="/AllProducts" exact element={<AllProducts/>}></Route>
-        <Route path="/AddProducts" exact element={<AddProducts/>}></Route>
+        <Route path="/AddProducts" exact element={<AddProducts/>}></Route>  
+        <Route path="/Reservation" exact element={<Reservation/>}></Route>  
+        <Route path="/AllReservation" exact element={<AllReservation/>}></Route>  
         
         </Route>
       </Routes>
