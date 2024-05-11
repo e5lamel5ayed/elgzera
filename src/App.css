@@ -35,3 +35,10 @@
   background-color: #1976d2;
   color: #fff;
 }
+
+.ticket{
+  border-radius: 6px;
+  padding: 23px;
+  background-color: #f2efef9e;
+  cursor: pointer;
+}

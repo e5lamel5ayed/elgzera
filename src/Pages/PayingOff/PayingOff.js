@@ -1,46 +1,98 @@
 import React, { useState } from 'react';
 import Drawer from '../../Components/Drawer';
-import { Box, FormControl, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TableFooter, Paper, Button } from '@mui/material';
-import QRCode from 'react-qr-code'; // Import QRCode library
+import { Box, FormControl, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TableFooter, Paper, Button, IconButton, Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import QRCode from 'react-qr-code'; // استيراد مكتبة QRCode
+import PersonIcon from '@mui/icons-material/Person';
+// استيراد الأيقونة المستخدمة لحذف التذاكر
+import DeleteIcon from '@mui/icons-material/Delete';
+import PaymentIcon from '@mui/icons-material/Payment';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+
+// الفئات المختلفة للتذاكر
+const ticketCategories = {
+    'مصري': [
+        { name: 'تذاكر اطفال', price: 50 },
+        { name: 'تذاكر كبار', price: 100 },
+        { name: 'تذاكر عائلية', price: 200 }
+    ],
+    'سعودي': [
+        { name: 'تذاكر اطفال', price: 20 },
+        { name: 'تذاكر كبار', price: 50 },
+        { name: 'تذاكر عائلية', price: 150 }
+    ],
+    'انجليزي': [
+        { name: 'تذاكر اطفال', price: 5 },
+        { name: 'تذاكر كبار', price: 10 },
+        { name: 'تذاكر عائلية', price: 25 }
+    ],
+    'امريكي': [
+        { name: 'تذاكر اطفال', price: 10 },
+        { name: 'تذاكر كبار', price: 20 },
+        { name: 'تذاكر عائلية', price: 50 }
+    ]
+};
 
 export default function PayingOff() {
-    const [tickets, setTickets] = useState([]);
-    const [showQRCodes, setShowQRCodes] = useState(false); // State to control QR code display
+    const [selectedNationality, setSelectedNationality] = useState("مصري"); // حالة لتخزين الجنسية المختارة
+    const [selectedGuideName, setSelectedGuideName] = useState(""); // حالة لتخزين اسم المرشد
+    const [tickets, setTickets] = useState([]); // حالة لتخزين التذاكر
+    const [showQRCodes, setShowQRCodes] = useState(false); // حالة لعرض رموز الاستجابة السريعة QR
+    const [openDialog, setOpenDialog] = useState(false); // حالة لعرض الحوار
 
-    const handleAddTicket = (event) => {
-        event.preventDefault();
-        const nationality = event.target.elements.nationality.value;
-        const guideName = event.target.elements.guideName.value;
-        const boatName = event.target.elements.boatName.value;
-        const ticketType = event.target.elements.ticketType.value;
-        const ticketPrice = event.target.elements.ticketPrice.value;
-        const ticketCount = event.target.elements.ticketCount.value; // Get ticket count
-        const total = parseInt(ticketPrice) * parseInt(ticketCount); // Calculate total based on ticket count
-
+    // إضافة تذكرة جديدة على أساس الفئة المختارة
+    const handleAddTicket = (category) => {
         const newTicket = {
-            nationality,
-            guideName,
-            boatName,
-            ticketType,
-            ticketPrice,
-            ticketCount, // Add ticket count to ticket object
-            total
+            nationality: selectedNationality,
+            guideName: selectedGuideName,
+            ticketType: category.name,
+            ticketPrice: category.price,
+            ticketCount: 1 // إضافة حقل جديد لعدد التذاكر
         };
 
         setTickets([...tickets, newTicket]);
     };
 
-    const handlePayment = () => {
-        // Handle payment logic here
-        // For now, let's just log a message
-        console.log("Payment processed");
+    // حذف تذكرة
+    const handleDeleteTicket = (index) => {
+        const updatedTickets = [...tickets];
+        updatedTickets.splice(index, 1);
+        setTickets(updatedTickets);
+    };
 
-        // Set showQRCodes to true to display QR codes
+    // زيادة عدد التذاكر
+    const handleIncreaseTicketCount = (index) => {
+        const updatedTickets = [...tickets];
+        updatedTickets[index].ticketCount++;
+        setTickets(updatedTickets);
+    };
+
+    // تقليل عدد التذاكر
+    const handleDecreaseTicketCount = (index) => {
+        const updatedTickets = [...tickets];
+        if (updatedTickets[index].ticketCount > 1) {
+            updatedTickets[index].ticketCount--;
+            setTickets(updatedTickets);
+        }
+    };
+
+    // معالجة الدفع
+    const handlePayment = () => {
         setShowQRCodes(true);
     };
 
-    // Calculate total
-    const total = tickets.reduce((acc, curr) => acc + curr.total, 0);
+    // إغلاق الحوار
+    const handleCloseDialog = () => {
+        setShowQRCodes(false);
+    };
+
+    // الطباعة
+    const handlePrint = () => {
+        window.print();
+    };
+
+    // حساب المجموع
+    const total = tickets.reduce((acc, curr) => acc + curr.ticketPrice * curr.ticketCount, 0);
 
     return (
         <div>
@@ -49,53 +101,49 @@ export default function PayingOff() {
             <Box sx={{ width: "80%" }}>
                 <div className='card table-style ' style={{ direction: "rtl" }}>
                     <div className="card-header table-head-stayl d-flex">
-                        حجز تذكره
+                        حجز تذكرة
                     </div>
                     <div className="card-body">
-                        <form onSubmit={handleAddTicket}>
-                            <div className='container'>
-                                <div className='row'>
-                                    <div className='col-md-6 mt-3'>
-                                        <label htmlFor="nationality" className="d-flex">الجنسيه</label>
-                                        <select id="nationality" className="form-control" name="nationality">
-                                            <option>مصري</option>
-                                            <option>سعودي</option>
-                                            <option>انجليزي</option>
-                                            <option>امريكي</option>
-                                        </select>
-                                    </div>
-                                    <div className='col-md-6 mt-3'>
-                                        <label htmlFor="guideName" className="d-flex">اسم المرشد</label>
-                                        <input type="text" className="form-control" id="guideName" name="guideName" />
-                                    </div>
-                                    <div className='col-md-6 mt-3'>
-                                        <label htmlFor="boatName" className="d-flex">اسم المركب</label>
-                                        <select id="boatName" className="form-control" name="boatName">
-                                            <option>مركب 1</option>
-                                            <option>مركب 2</option>
-                                            <option>مركب 3</option>
-                                        </select>
-                                    </div>
-                                    <div className='col-md-6 mt-3'>
-                                        <label htmlFor="ticketType" className="d-flex">نوع التذكره</label>
-                                        <select id="ticketType" className="form-control" name="ticketType">
-                                            <option>تذاكر اطفال</option>
-                                            <option>تذاكر كبار</option>
-                                            <option>تذاكر عائليه</option>
-                                        </select>
-                                    </div>
-                                    <div className='col-md-6 mt-3'>
-                                        <label htmlFor="ticketPrice" className="d-flex">سعر التذكره</label>
-                                        <input type="number" className="form-control" id="ticketPrice" name="ticketPrice" />
-                                    </div>
-                                    <div className='col-md-6 mt-3'>
-                                        <label htmlFor="ticketCount" className="d-flex">عدد التذاكر</label>
-                                        <input type="number" className="form-control" id="ticketCount" name="ticketCount" defaultValue="1" />
-                                    </div>
+                        <div className="container">
+                            <div className="row">
+                                <div className='col-md-6 mt-3'>
+                                    <label htmlFor="nationality" className="d-flex">الجنسية</label>
+                                    <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
+                                        {Object.keys(ticketCategories).map((nationality, index) => (
+                                            <MenuItem key={index} value={nationality}>{nationality}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                                <div className='col-md-6 mt-3'>
+                                    <label htmlFor="guideName" className="d-flex">اسم المرشد</label>
+                                    <OutlinedInput id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control" />
                                 </div>
                             </div>
-                            <button type="submit" className="btn btn-primary mt-4">اضافه</button>
-                        </form>
+                            <div className="row"
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                            >
+                                {ticketCategories[selectedNationality].map((category, index) => (
+                                    <div
+                                    
+                                    key={index} className='col-md-3 mt-4 '>
+                                        <div className="d-flex flex-column align-items-center ticket">
+                                            <IconButton className='' onClick={() => handleAddTicket(category)}>
+                                                <PersonIcon
+                                                sx={{
+                                                    color: "#000",
+                                                    fontSize: "100px"
+                                                }}
+                                                />
+                                            </IconButton>
+                                            <span>{category.name}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -103,14 +151,13 @@ export default function PayingOff() {
                     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead className='table-head-stayl'>
-                                <TableRow >
-                                    <TableCell style={{ color: "#fff" }} align="right">الجنسيه</TableCell>
+                                <TableRow>
+                                    <TableCell style={{ color: "#fff" }} align="right">الجنسية</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">اسم المرشد</TableCell>
-                                    <TableCell style={{ color: "#fff" }} align="right">اسم المركب</TableCell>
-                                    <TableCell style={{ color: "#fff" }} align="right">نوع التذكره</TableCell>
-                                    <TableCell style={{ color: "#fff" }} align="right">سعر التذكره</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">نوع التذكرة</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">عدد التذاكر</TableCell>
-                                    <TableCell style={{ color: "#fff" }} align="right">المجموع</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">السعر</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">حذف</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -118,45 +165,80 @@ export default function PayingOff() {
                                     <TableRow key={index}>
                                         <TableCell align="right">{ticket.nationality}</TableCell>
                                         <TableCell align="right">{ticket.guideName}</TableCell>
-                                        <TableCell align="right">{ticket.boatName}</TableCell>
                                         <TableCell align="right">{ticket.ticketType}</TableCell>
-                                        <TableCell align="right">{ticket.ticketPrice}</TableCell>
-                                        <TableCell align="right">{ticket.ticketCount}</TableCell>
-                                        <TableCell align="right">{ticket.total}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => handleDecreaseTicketCount(index)}>
+                                                <RemoveIcon
+                                                sx={{
+                                                    backgroundColor: "#c72c2c",
+                                                    borderRadius: "3px",
+                                                    padding:" 0px",
+                                                    marginLeft: "5px",
+                                                    color: "#fff"
+                                                }}
+                                                /></IconButton>
+                                            {ticket.ticketCount}
+                                            <IconButton onClick={() => handleIncreaseTicketCount(index)}>
+                                                
+                                                <AddIcon
+                                                sx={{
+                                                    backgroundColor: "#199119",
+                                                    borderRadius: "3px",
+                                                    padding:" 0px",
+                                                    marginRight: "5px",
+                                                    color: "#fff"
+                                                }}
+                                                /></IconButton>
+                                        </TableCell>
+                                        <TableCell align="right">{ticket.ticketPrice * ticket.ticketCount}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => handleDeleteTicket(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                             <TableFooter>
                                 <TableRow>
-                                    <TableCell sx={{ fontSize: "20px" }} align="right" colSpan={6}>المجموالكلي</TableCell>
+                                    <TableCell sx={{ fontSize: "20px" }} align="right" colSpan={4}>المجموع الكلي</TableCell>
                                     <TableCell sx={{ fontSize: "20px" }} align="right">{total}</TableCell>
                                 </TableRow>
                             </TableFooter>
                         </Table>
                     </TableContainer>
                 </div>
+
                 <div className='container' style={{ width: "87%" }}>
                     <div className="mt-4 mb-5">
-                        <Button variant="contained" style={{ backgroundColor: "#000" }} onClick={handlePayment}>دفع</Button>
-                        {/* Display QR codes for each ticket when showQRCodes is true */}
-                        {showQRCodes && tickets.map((ticket, index) => (
-                            <div className='container'>
-                                {/* <div className='row'> */}
-                                        <div className=''>
-                                    <div key={index} className="mt-4 text-center ">
-                                            <h3>QR Code for Ticket {index + 1}</h3>
-                                            <QRCode value={`Ticket ${index + 1}`} />
-                                        {/* </div> */}
-                                    </div>
-                                </div>
-                            </div>
-
-                        ))}
+                        <Button variant="contained" style={{ backgroundColor: "#000" }} onClick={handlePayment}><PaymentIcon sx={{marginRight:"4px",fontSize:"19px"}}/> دفع</Button>
                     </div>
                 </div>
 
-
-            </Box>
-        </div>
+                {/* حوار عرض رموز الاستجابة السريعة QR */ }
+    <Dialog maxWidth open={showQRCodes} onClose={handleCloseDialog}>
+        <DialogTitle>رموز الاستجابة السريعة</DialogTitle>
+        <DialogContent>
+            <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
+                {tickets.map((ticket, index) => (
+                    <div
+                        style={{
+                            border: "1px #000 solid",
+                            padding: "17px"
+                        }}
+                        key={index} className="mt-4 ml-2 text-center">
+                        <Typography variant="h6" gutterBottom>رمز الاستجابة السريعة QR للتذكرة {index + 1}</Typography>
+                        <QRCode value={`تذكرة ${index + 1}`} />
+                    </div>
+                ))}
+            </div>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handlePrint}>طباعة</Button>
+            <Button onClick={handleCloseDialog}>إلغاء</Button>
+        </DialogActions>
+    </Dialog>
+            </Box >
+        </div >
     );
 }
