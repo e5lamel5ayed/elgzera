@@ -50,9 +50,10 @@ body {
 
 .ticket{
   border-radius: 6px;
-  padding: 23px;
+  /* padding: 23px; */
   background-color: #f2efef9e;
   cursor: pointer;
+  width: 80%;
 }
 .addIcon{
   background-color: #1976d2;

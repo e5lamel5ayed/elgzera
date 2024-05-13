@@ -107,12 +107,16 @@ export default function PersistentDrawerRight() {
                         onClick={handleDrawerOpen}
                         sx={{ ...(open && { display: 'none' }) }}
                     >
+
                         <MenuIcon />
+                        
                     </IconButton>
+                    
                 </Toolbar>
             </AppBar>
             <Main open={open}>
                 <DrawerHeader />
+                
             </Main>
             <Drawer
                 sx={{
@@ -130,6 +134,7 @@ export default function PersistentDrawerRight() {
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
+                    {/* <img src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'></img> */}
                 </DrawerHeader>
                 <Divider />
                 <List>

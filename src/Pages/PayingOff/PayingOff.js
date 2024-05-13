@@ -91,6 +91,11 @@ export default function PayingOff() {
     // إغلاق الحوار
     const handleCloseDialog = () => {
         setShowQRCodes(false);
+        // مسح البيانات بعد إغلاق الحوار
+        setTickets([]);
+        setSelectedNationality("مصري");
+        setSelectedGuideName("");
+        setSelectedBoatName("");
     };
 
     // الطباعة
