@@ -14,7 +14,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CategoryIcon from '@mui/icons-material/Category';
-import ArticleIcon from '@mui/icons-material/Article';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -225,6 +225,17 @@ export default function PersistentDrawerRight() {
 
                                 <PaymentIcon className='icon-edit' />
                                 <span className='span-edit'>الدفع </span>
+                            </ListItemIcon>
+                            <ListItemText />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding onClick={() => navigate("/TraningBranches")}>
+                        <ListItemButton>
+                            <ListItemIcon>
+
+                                <Diversity3Icon className='icon-edit' />
+                                <span className='span-edit'>مراكز التدريب </span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
