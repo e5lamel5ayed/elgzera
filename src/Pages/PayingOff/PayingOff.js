@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { Link } from 'react-router-dom';
 
 // الفئات المختلفة للتذاكر
 const ticketCategories = {
@@ -33,9 +34,14 @@ const ticketCategories = {
     ]
 };
 
+
+const testGuideOptions = ['Guide 1', 'Guide 2', 'Guide 3']; // Test guide options
+const testBoatOptions = ['Boat 1', 'Boat 2', 'Boat 3']; // Test boat options
+
 export default function PayingOff() {
     const [selectedNationality, setSelectedNationality] = useState("مصري"); // حالة لتخزين الجنسية المختارة
     const [selectedGuideName, setSelectedGuideName] = useState(""); // حالة لتخزين اسم المرشد
+    const [selectedBoatName, setSelectedBoatName] = useState(""); // حالة لتخزين اسم المركب
     const [tickets, setTickets] = useState([]); // حالة لتخزين التذاكر
     const [showQRCodes, setShowQRCodes] = useState(false); // حالة لعرض رموز الاستجابة السريعة QR
     const [openDialog, setOpenDialog] = useState(false); // حالة لعرض الحوار
@@ -47,6 +53,7 @@ export default function PayingOff() {
             guideName: selectedGuideName,
             ticketType: category.name,
             ticketPrice: category.price,
+            boatName: selectedBoatName,
             ticketCount: 1 // إضافة حقل جديد لعدد التذاكر
         };
 
@@ -115,27 +122,50 @@ export default function PayingOff() {
                                     </Select>
                                 </div>
                                 <div className='col-md-6 mt-3'>
-                                    <label htmlFor="guideName" className="d-flex">اسم المرشد</label>
-                                    <OutlinedInput id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control" />
+                                    <label htmlFor="guideName" className="d-flex">
+                                        اسم المرشد
+                                        <Link to='/AddTOurGuides'>
+                                            <AddIcon className='addIcon' />
+                                        </Link>
+                                    </label>
+                                    <Select id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control">
+                                        {testGuideOptions.map((option, index) => (
+                                            <MenuItem key={index} value={option}>{option}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                                <div className='col-md-6 mt-3'>
+                                    <label htmlFor="boatName" className="d-flex">
+                                        اسم المركب
+                                        <Link to='/AddCruises'>
+                                            <AddIcon className='addIcon' />
+                                        </Link>
+                                    </label>
+                                    <Select id="boatName" value={selectedBoatName} onChange={(e) => setSelectedBoatName(e.target.value)} className="form-control">
+                                            {testBoatOptions.map((option, index) => (
+                                                <MenuItem key={index} value={option}>{option}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    
                                 </div>
                             </div>
                             <div className="row"
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
                             >
                                 {ticketCategories[selectedNationality].map((category, index) => (
                                     <div
-                                    
-                                    key={index} className='col-md-3 mt-4 '>
+
+                                        key={index} className='col-md-3 mt-4 '>
                                         <div className="d-flex flex-column align-items-center ticket">
                                             <IconButton className='' onClick={() => handleAddTicket(category)}>
                                                 <PersonIcon
-                                                sx={{
-                                                    color: "#000",
-                                                    fontSize: "100px"
-                                                }}
+                                                    sx={{
+                                                        color: "#000",
+                                                        fontSize: "100px"
+                                                    }}
                                                 />
                                             </IconButton>
                                             <span>{category.name}</span>
@@ -154,6 +184,7 @@ export default function PayingOff() {
                                 <TableRow>
                                     <TableCell style={{ color: "#fff" }} align="right">الجنسية</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">اسم المرشد</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">اسم المركب</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">نوع التذكرة</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">عدد التذاكر</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">السعر</TableCell>
@@ -165,29 +196,30 @@ export default function PayingOff() {
                                     <TableRow key={index}>
                                         <TableCell align="right">{ticket.nationality}</TableCell>
                                         <TableCell align="right">{ticket.guideName}</TableCell>
+                                        <TableCell align="right">{ticket.boatName}</TableCell>
                                         <TableCell align="right">{ticket.ticketType}</TableCell>
                                         <TableCell align="right">
                                             <IconButton onClick={() => handleDecreaseTicketCount(index)}>
                                                 <RemoveIcon
-                                                sx={{
-                                                    backgroundColor: "#c72c2c",
-                                                    borderRadius: "3px",
-                                                    padding:" 0px",
-                                                    marginLeft: "5px",
-                                                    color: "#fff"
-                                                }}
+                                                    sx={{
+                                                        backgroundColor: "#c72c2c",
+                                                        borderRadius: "3px",
+                                                        padding: " 0px",
+                                                        marginLeft: "5px",
+                                                        color: "#fff"
+                                                    }}
                                                 /></IconButton>
                                             {ticket.ticketCount}
                                             <IconButton onClick={() => handleIncreaseTicketCount(index)}>
-                                                
+
                                                 <AddIcon
-                                                sx={{
-                                                    backgroundColor: "#199119",
-                                                    borderRadius: "3px",
-                                                    padding:" 0px",
-                                                    marginRight: "5px",
-                                                    color: "#fff"
-                                                }}
+                                                    sx={{
+                                                        backgroundColor: "#199119",
+                                                        borderRadius: "3px",
+                                                        padding: " 0px",
+                                                        marginRight: "5px",
+                                                        color: "#fff"
+                                                    }}
                                                 /></IconButton>
                                         </TableCell>
                                         <TableCell align="right">{ticket.ticketPrice * ticket.ticketCount}</TableCell>
@@ -201,7 +233,7 @@ export default function PayingOff() {
                             </TableBody>
                             <TableFooter>
                                 <TableRow>
-                                    <TableCell sx={{ fontSize: "20px" }} align="right" colSpan={4}>المجموع الكلي</TableCell>
+                                    <TableCell sx={{ fontSize: "20px" }} align="right" colSpan={5}>المجموع الكلي</TableCell>
                                     <TableCell sx={{ fontSize: "20px" }} align="right">{total}</TableCell>
                                 </TableRow>
                             </TableFooter>
@@ -211,33 +243,33 @@ export default function PayingOff() {
 
                 <div className='container' style={{ width: "87%" }}>
                     <div className="mt-4 mb-5">
-                        <Button variant="contained" style={{ backgroundColor: "#000" }} onClick={handlePayment}><PaymentIcon sx={{marginRight:"4px",fontSize:"19px"}}/> دفع</Button>
+                        <Button variant="contained" style={{ backgroundColor: "#000" }} onClick={handlePayment}><PaymentIcon sx={{ marginRight: "4px", fontSize: "19px" }} /> دفع</Button>
                     </div>
                 </div>
 
-                {/* حوار عرض رموز الاستجابة السريعة QR */ }
-    <Dialog maxWidth open={showQRCodes} onClose={handleCloseDialog}>
-        <DialogTitle>رموز الاستجابة السريعة</DialogTitle>
-        <DialogContent>
-            <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
-                {tickets.map((ticket, index) => (
-                    <div
-                        style={{
-                            border: "1px #000 solid",
-                            padding: "17px"
-                        }}
-                        key={index} className="mt-4 ml-2 text-center">
-                        <Typography variant="h6" gutterBottom>رمز الاستجابة السريعة QR للتذكرة {index + 1}</Typography>
-                        <QRCode value={`تذكرة ${index + 1}`} />
-                    </div>
-                ))}
-            </div>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={handlePrint}>طباعة</Button>
-            <Button onClick={handleCloseDialog}>إلغاء</Button>
-        </DialogActions>
-    </Dialog>
+                {/* حوار عرض رموز الاستجابة السريعة QR */}
+                <Dialog maxWidth open={showQRCodes} onClose={handleCloseDialog}>
+                    <DialogTitle>رموز الاستجابة السريعة</DialogTitle>
+                    <DialogContent>
+                        <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
+                            {tickets.map((ticket, index) => (
+                                <div
+                                    style={{
+                                        border: "1px #000 solid",
+                                        padding: "17px"
+                                    }}
+                                    key={index} className="mt-4 ml-2 text-center">
+                                    <Typography variant="h6" gutterBottom>رمز الاستجابة السريعة QR للتذكرة {index + 1}</Typography>
+                                    <QRCode value={`تذكرة ${index + 1}`} />
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handlePrint}>طباعة</Button>
+                        <Button onClick={handleCloseDialog}>إلغاء</Button>
+                    </DialogActions>
+                </Dialog>
             </Box >
         </div >
     );

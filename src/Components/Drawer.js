@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -15,6 +15,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CategoryIcon from '@mui/icons-material/Category';
 import ArticleIcon from '@mui/icons-material/Article';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MenuIcon from '@mui/icons-material/Menu';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -23,11 +26,13 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import PaymentIcon from '@mui/icons-material/Payment';
+import { IconButton } from '@mui/material';
+
 
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme }) => ({
+    ({ theme, open }) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
         transition: theme.transitions.create('margin', {
@@ -35,25 +40,40 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
             duration: theme.transitions.duration.leavingScreen,
         }),
         marginRight: -drawerWidth,
+        ...(open && {
+            transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginRight: 0,
+        }),
+
         position: 'relative',
     }),
 );
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme }) => ({
+})(({ theme, open }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginRight: drawerWidth,
+    ...(open && {
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: drawerWidth,
+    }),
 }));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-start',
 }));
@@ -61,17 +81,37 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function PersistentDrawerRight() {
     const navigate = useNavigate();
 
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(true); // Set to true to open by default
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position="fixed">
+            <AppBar position="fixed" open={open}>
                 <Toolbar>
                     <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
                         Persistent drawer
                     </Typography>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="end"
+                        onClick={handleDrawerOpen}
+                        sx={{ ...(open && { display: 'none' }) }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
-            <Main>
+            <Main open={open}>
                 <DrawerHeader />
             </Main>
             <Drawer
@@ -84,9 +124,13 @@ export default function PersistentDrawerRight() {
                 }}
                 variant="persistent"
                 anchor="right"
-                open={true} // Set open to true to make the drawer always open
+                open={open}
             >
-                <DrawerHeader />
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </DrawerHeader>
                 <Divider />
                 <List>
                     <ListItem disablePadding onClick={() => navigate("/")}>

@@ -42,3 +42,9 @@
   background-color: #f2efef9e;
   cursor: pointer;
 }
+.addIcon{
+  background-color: #1976d2;
+  color: #fff;
+  border-radius: 4px;
+  margin-right: 10px;
+}
