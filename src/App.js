@@ -17,8 +17,7 @@ import ProductsList from './Pages/Products/ProductsList';
 import Reservation from './Pages/Reservation/Reservation';
 import AllReservation from './Pages/Reservation/AllReservation';
 import PayingOff from './Pages/PayingOff/PayingOff';
-import TraningBranches from './Pages/Traning/Branches/TraningBranches';
-import AddBranches from './Pages/Traning/Branches/Add';
+
 
 export default function App() {
   return (
@@ -43,8 +42,7 @@ export default function App() {
         {/* <Route path="/Reservation" exact element={<Reservation/>}></Route>   */}
         <Route path="/AllReservation" exact element={<AllReservation/>}></Route>  
         <Route path="/PayingOff" exact element={<PayingOff/>}></Route>  
-        <Route path="/TraningBranches" exact element={<TraningBranches/>}></Route>  
-        <Route path="/AddBranches" exact element={<AddBranches/>}></Route>  
+        
         
         </Route>
       </Routes>

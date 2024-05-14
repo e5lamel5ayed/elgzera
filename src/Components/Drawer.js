@@ -235,17 +235,7 @@ export default function PersistentDrawerRight() {
                         </ListItemButton>
                     </ListItem>
 
-                    <ListItem disablePadding onClick={() => navigate("/TraningBranches")}>
-                        <ListItemButton>
-                            <ListItemIcon >
-
-                                <Diversity3Icon className='icon-edit' />
-                                <span className='span-edit'>مراكز التدريب </span>
-                            </ListItemIcon>
-                            <ListItemText />
-                        </ListItemButton>
-                    </ListItem>
-
+                  
 
                 </List>
                 {/* <Divider /> */}
