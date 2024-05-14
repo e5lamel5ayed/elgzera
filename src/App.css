@@ -10,6 +10,10 @@ body {
   background-color: #ecf0f5 !important;
 }
 
+.graid-chart{
+  /* margin-left: -10px; */
+}
+
 .span-edit {
   font-size: 20px !important;
   margin-left: 30px !important;
@@ -32,6 +36,8 @@ body {
   position: relative;
   left: 89px;
   bottom: 25px;
+  font-size: 21px;
+  background-color: #1da2dc!important;
 }
 
 .table-head {
@@ -39,12 +45,18 @@ body {
   justify-content: end;
   position: relative;
   right: 91px;
-  top: 13px;
+  top: 27px;
 
+}
+.add-head{
+  display: flex;
+  position: relative;
+  top: 22px;
+  right: 8%;
 }
 
 .table-head-stayl{
-  background-color: #1976d2;
+  background-color: #1da2dc;
   color: #fff;
 }
 
@@ -53,11 +65,26 @@ body {
   /* padding: 23px; */
   background-color: #f2efef9e;
   cursor: pointer;
-  width: 80%;
+  width: 62%;
 }
 .addIcon{
   background-color: #1976d2;
   color: #fff;
   border-radius: 4px;
   margin-right: 10px;
+
+}
+
+.product-edit{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  justify-content: center;
+}
+
+.color{
+  background-color:"#fcf7f7" !important;
 }

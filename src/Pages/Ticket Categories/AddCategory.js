@@ -26,16 +26,23 @@ export default function AddCategory() {
   return (
     <div>
       <Drawer />
-      <Box height={65} sx={{ direction: "rtl" }} />
+      {/* <Box height={65} sx={{ direction: "rtl" }} /> */}
+      
+      <Box sx={{ width: "80%", direction: "rtl" }}>
       <div>
+      <h2 className='add-head' >فئة التذكرة</h2>
+
         <Link to='/AllCategories'>
           <button className='btn btn-primary add-button'>رجوع </button>
         </Link>
       </div>
-      <Box sx={{ width: "80%", direction: "rtl" }}>
+
         <div className='card table-style' style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-stayl">
+            <h3>
+
           أضف فئة التذكرة
+            </h3>
           </div>
           <div className="card-body">
             <form>
@@ -56,7 +63,7 @@ export default function AddCategory() {
               </div>
 
 
-              <button type="submit" className="btn btn-primary mt-4">حفظ</button>
+              <button style={{fontSize:"20px"}} type="submit" className="btn btn-primary mt-4">حفظ</button>
             </form>
           </div>
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
@@ -93,12 +94,12 @@ export default function PersistentDrawerRight() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex'}}>
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
+            <AppBar sx={{backgroundColor: "#fcf7f7"}} position="fixed" open={open}>
                 <Toolbar>
                     <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-                        Persistent drawer
+                       {/* <img style={{width:"10%"}} src='\imgs\orane.png'/> */}
                     </Typography>
                     <IconButton
                         color="inherit"
@@ -119,37 +120,41 @@ export default function PersistentDrawerRight() {
                 
             </Main>
             <Drawer
+            className='color'
                 sx={{
                     width: drawerWidth,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                     },
+                    
                 }}
                 variant="persistent"
                 anchor="right"
                 open={open}
             >
-                <DrawerHeader>
+                <DrawerHeader sx={{backgroundColor:"#fcf7f7"}}>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
                     {/* <img src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'></img> */}
+                    <img style={{width:"64%"}} src='\imgs\orane.png'/>
+
                 </DrawerHeader>
                 <Divider />
-                <List>
+                <List sx={{backgroundColor:"#fcf7f7",height:"100%"}} >
                     <ListItem disablePadding onClick={() => navigate("/")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon  >
                                 <SpaceDashboardIcon className='icon-edit' />
-                                <span className='span-edit'>الرئيسيه</span>
+                                <span  className='span-edit'>الرئيسيه</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding onClick={() => navigate("/All")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
                                 <ConfirmationNumberIcon className='icon-edit' />
                                 <span className='span-edit'>اضافه تذكره</span>
                             </ListItemIcon>
@@ -158,7 +163,7 @@ export default function PersistentDrawerRight() {
                     </ListItem>
                     <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
                                 <CategoryIcon className='icon-edit' />
 
                                 <span className='span-edit'>فئات التذاكر</span>
@@ -169,7 +174,7 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
                                 <EmojiPeopleIcon className='icon-edit' />
                                 <span className='span-edit'> المرشدين</span>
                             </ListItemIcon>
@@ -179,9 +184,9 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/AllCruises")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
                                 <SailingIcon className='icon-edit' />
-                                <span className='span-edit'>الرحلات البحرية</span>
+                                <span className='span-edit'>المراكب </span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
@@ -189,7 +194,7 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/AllPlaces")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
                                 <ApartmentIcon className='icon-edit' />
                                 <span className='span-edit'>مراكز البيع</span>
                             </ListItemIcon>
@@ -200,7 +205,7 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
                                 <ProductionQuantityLimitsIcon className='icon-edit' />
                                 <span className='span-edit'>المنتجات</span>
                             </ListItemIcon>
@@ -210,7 +215,7 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/AllReservation")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
 
                                 <BookOnlineIcon className='icon-edit' />
                                 <span className='span-edit'>مواعيد الحجز</span>
@@ -221,7 +226,7 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
 
                                 <PaymentIcon className='icon-edit' />
                                 <span className='span-edit'>الدفع </span>
@@ -232,7 +237,7 @@ export default function PersistentDrawerRight() {
 
                     <ListItem disablePadding onClick={() => navigate("/TraningBranches")}>
                         <ListItemButton>
-                            <ListItemIcon>
+                            <ListItemIcon >
 
                                 <Diversity3Icon className='icon-edit' />
                                 <span className='span-edit'>مراكز التدريب </span>
@@ -243,7 +248,7 @@ export default function PersistentDrawerRight() {
 
 
                 </List>
-                <Divider />
+                {/* <Divider /> */}
             </Drawer>
         </Box>
     );

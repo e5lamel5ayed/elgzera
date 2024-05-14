@@ -27,10 +27,10 @@ export default function CategoryList() {
           <TableRow>
             {/* <TableCell>Dessert (100g serving)</TableCell>
               <TableCell align="right">Calories</TableCell> */}
-            <TableCell style={{color:"#fff"}} align="center" >الاسم</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="center" >الاسم</TableCell>
 
-            <TableCell style={{color:"#fff"}} align="center" >رقم التذكرة</TableCell>
-            <TableCell style={{color:"#fff"}} align="center" >ايام النشاط</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="center" >رقم التذكرة</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="center" >ايام النشاط</TableCell>
 
 
 
@@ -43,14 +43,14 @@ export default function CategoryList() {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
 
-              <TableCell component="th" scope="row" align="center">
+              <TableCell component="th" scope="row" sx={{fontSize:"18px"}}  align="center">
                 {row.الاسم}
               </TableCell>
 
-              <TableCell align="center">{row.الرقم}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="center">{row.الرقم}</TableCell>
 
 
-              <TableCell align="center">{row.اليوم}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="center">{row.اليوم}</TableCell>
 
 
 

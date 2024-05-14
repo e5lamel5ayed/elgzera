@@ -15,11 +15,11 @@ const Row1 = () => {
     direction={"row"}
       flexWrap={"wrap"}
       gap={1}
-      justifyContent={{ xs: "center", sm: "space-between" }}
+      justifyContent={{ xs: "center", sm: "space-between", margin: "0 -8px" }}
     >
       <Card
        icon={<EmailIcon
-        sx={{ fontSize: "23px", color: theme.palette.secondary.main }} />}
+        sx={{ fontSize: "23px", color: theme.palette.secondary.main}} />}
       title={"12,361"}
       subTitle={"Visitors"}
       increase={"+14%"}

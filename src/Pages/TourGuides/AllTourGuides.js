@@ -9,7 +9,7 @@ export default function AllTourGuides() {
     return (
         <div>
             <Drawer />
-            <Box height={70} sx={{ direction: "rtl" }} />
+            {/* <Box height={70} sx={{ direction: "rtl" }} /> */}
             <Box sx={{ width: "80%" }}>
                 <div>
                     <h2 className='table-head' >المرشدين</h2>

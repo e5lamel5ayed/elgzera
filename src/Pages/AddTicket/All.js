@@ -8,17 +8,19 @@ export default function All() {
     return (
         <div>
             <Drawer />
-            <Box height={70} sx={{ direction: "rtl" }} />
+                <div style={{widows:"100%"}}>
+
             <Box sx={{ width: "80%" }}>
                 <div>
                     <h2 className='table-head' >قائمه التذاكر</h2>
                     <Link to='/AddTicket'>
-                        <button className='btn btn-primary add-button'>اضافه تذكره</button>
+                        <button className='btn btn-primary add-button '>اضافه تذكره</button>
                     </Link>
                 </div>
 
                 <TicketsList />
             </Box>
+                </div>
         </div>
     )
 }

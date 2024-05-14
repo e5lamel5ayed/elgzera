@@ -26,16 +26,22 @@ export default function AddTicket() {
   return (
     <div>
       <Drawer />
-      <Box height={65} sx={{ direction: "rtl" }} />
-      <div>
-        <Link to='/All'>
-          <button className='btn btn-primary add-button'>رجوع </button>
-        </Link>
-      </div>
+      {/* <Box height={40} sx={{ direction: "rtl" }} /> */}
+
       <Box sx={{ width: "80%", direction: "rtl" }}>
+        <div>
+          <h2 className='add-head' >اضف التذاكر</h2>
+          <Link to='/All'>
+            <button className='btn btn-primary add-button'>رجوع </button>
+          </Link>
+        </div>
+
         <div className='card table-style' style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-stayl">
-            اضف البيانات
+            <h4>
+
+              اضف البيانات
+            </h4>
           </div>
           <div className="card-body">
             <form>
@@ -103,47 +109,47 @@ export default function AddTicket() {
                   </div>
 
                   <div className='col-md-12 '>
-                  <label for="exampleInputEmail1" className="d-flex mt-3"> اختر اليوم </label>
-                  <div className='col-md-12 d-flex'>
+                    <label for="exampleInputEmail1" className="d-flex mt-3"> اختر اليوم </label>
+                    <div className='col-md-12 d-flex'>
 
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="السبت" />
-                      </div>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاحد" />
-                      </div>
-                      
-                      
-                    </FormGroup>
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاثنين" />
-                      </div>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الثلاثاء" />
-                      </div>
-                      
-                      
-                    </FormGroup>
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الاربعاء" />
-                      </div>                      
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الخميس" />
-                      </div>                      
-                      
-                    </FormGroup>
-                    <FormGroup className='d-flex col-md-3'>
-                      <div className='col-md-2'>
-                      <FormControlLabel className='d-flex' control={<Checkbox />} label="الجمعه" />
-                      </div>                      
-                                          
-                      
-                    </FormGroup>
-                  </div>
-                   
+                      <FormGroup className='d-flex col-md-3'>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="السبت" />
+                        </div>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="الاحد" />
+                        </div>
+
+
+                      </FormGroup>
+                      <FormGroup className='d-flex col-md-3'>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="الاثنين" />
+                        </div>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="الثلاثاء" />
+                        </div>
+
+
+                      </FormGroup>
+                      <FormGroup className='d-flex col-md-3'>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="الاربعاء" />
+                        </div>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="الخميس" />
+                        </div>
+
+                      </FormGroup>
+                      <FormGroup className='d-flex col-md-3'>
+                        <div className='col-md-2'>
+                          <FormControlLabel className='d-flex' control={<Checkbox />} label="الجمعه" />
+                        </div>
+
+
+                      </FormGroup>
+                    </div>
+
                   </div>
 
                 </div>
@@ -151,7 +157,7 @@ export default function AddTicket() {
               </div>
 
 
-              <button type="submit" className="btn btn-primary mt-4">حفظ</button>
+              <button type="submit" style={{fontSize:"20px"}} className="btn btn-primary mt-4">حفظ</button>
             </form>
           </div>
         </div>

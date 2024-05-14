@@ -14,25 +14,25 @@ export default function home() {
     <div>
       <Drawer />
      
-      <Box sx={{ width: "75%", ml:"50px",mr:"auto" }}>
+      <Box sx={{ width: "78%", ml:"50px",mr:"auto", marginTop: "-20px",marginBottom:"3%" }}>
 
-      <Row1/>
+      <Row1 />
 
 
-        <Grid container spacing={1} mt={5} display={"flex"} justifyContent={"space-between"}>
-          <Grid item md={6} xs={12} sx={{ backgroundColor: "#fff" }}>
+        <Grid container spacing={1} mt={2} display={"flex"} justifyContent={"space-between"}>
+          <Grid className='graid-chart' item md={6} xs={12} sx={{ backgroundColor: "#fff",marginLeft:"-10px" }}>
             <Chart1 />
           </Grid>
-          <Grid item md={5} xs={12} sx={{ backgroundColor: "#fff" }}>
+          <Grid item md={6} xs={12} sx={{ backgroundColor: "#fff",marginRight:"-10px" }}>
             <Chart2 />
           </Grid>
         </Grid>
 
-        <Grid container spacing={1} mt={5} display={"flex"} justifyContent={"space-between"}>
-          <Grid item md={6} xs={12} sx={{ backgroundColor: "#fff" , display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <Grid container spacing={1} mt={3} display={"flex"} justifyContent={"space-between"}>
+          <Grid item md={6} xs={12} sx={{ backgroundColor: "#fff" , display:"flex",alignItems:"center",justifyContent:"center",marginLeft:"-10px"}}>
             <Chart4 />
           </Grid>
-          <Grid item md={5} xs={12} sx={{ backgroundColor: "#fff" }}>
+          <Grid item md={6} xs={12} sx={{ backgroundColor: "#fff",marginRight:"-10px" }}>
             <Chart3 />
           </Grid>
         </Grid>

@@ -10,7 +10,7 @@ export default function AllPlaces() {
     return (
         <div>
             <Drawer />
-            <Box height={0} sx={{ direction: "rtl" }} />
+            {/* <Box height={0} sx={{ direction: "rtl" }} /> */}
             <Box sx={{ width: "80%" }}>
                 <div>
                     <h2 className='table-head' >الاماكن</h2>

@@ -18,16 +18,22 @@ export default function AddCruises() {
   return (
     <div>
       <Drawer />
-      <Box height={65} sx={{ direction: "rtl" }} />
-      <div>
+      {/* <Box height={65} sx={{ direction: "rtl" }} /> */}
+      
+      <Box sx={{ width: "80%", direction: "rtl" }}>
+        <div>
+        <h2 className='add-head' >المراكب</h2>
+
         <Link to='/AllCruises'>
           <button className='btn btn-primary add-button'>رجوع </button>
         </Link>
       </div>
-      <Box sx={{ width: "80%", direction: "rtl" }}>
         <div className='card table-style' style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-stayl">
+            <h3>
+
             اضف البيانات
+            </h3>
           </div>
           <div className="card-body">
             <form>

@@ -12,17 +12,17 @@ export default function PlacesList() {
   return (
    
     <div className='container'>
-        <div className='row'>
+        <div className='row product-edit'>
                
 
                     
 
                     <div className='col-md-4' style={{marginLeft:"90px"}}>
 
-                    <Card sx={{ maxWidth: 345 }} style={{marginTop:"30px"}}>
+                    <Card sx={{ maxWidth: 305 }} style={{marginTop:"30px"}}>
                   
 
-                    <img style={{height:"450px"}}
+                    <img style={{width:"100%",height:"330px"}}
                     src='https://d1agduesefcsfi.cloudfront.net/wp-content/uploads/2015/06/img-ice-creamery.jpg'></img>
 
                     <CardContent>
@@ -40,10 +40,10 @@ export default function PlacesList() {
 
                     <div className='col-md-4' >
 
-                    <Card sx={{ maxWidth: 345 }} style={{marginTop:"30px", marginBottom:"80px"}}>
+                    <Card sx={{ maxWidth: 305 }} style={{marginTop:"30px", marginBottom:"80px"}}>
                   
 
-                    <img style={{height:"450px"}}
+                    <img style={{width:"100%",height:"330px"}}
                     src='https://www.urban75.org/photos/wales/images/hayes-island-05.jpg'></img>
 
                     <CardContent>

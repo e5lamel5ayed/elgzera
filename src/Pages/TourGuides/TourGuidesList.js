@@ -29,11 +29,11 @@ export default function TourGidesList() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead className='table-head-stayl'>
           <TableRow>
-            <TableCell style={{color:"#fff"}} align="right">الاسم</TableCell>
-            <TableCell style={{color:"#fff"}} align="right">الحاله</TableCell>
-            <TableCell style={{color:"#fff"}} align="right">الايميل</TableCell>
-            <TableCell style={{color:"#fff"}} align="right">اسم الشركة</TableCell>
-            <TableCell style={{color:"#fff"}} align="right">نسبة الربح</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">الاسم</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">الحاله</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">الايميل</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">اسم الشركة</TableCell>
+            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">نسبة الربح</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -42,13 +42,13 @@ export default function TourGidesList() {
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="right" component="th" scope="row">
+              <TableCell sx={{fontSize:"18px"}}  align="right" component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="right">{row.calories}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="right">{row.fat}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="right">{row.carbs}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="right">{row.protein}</TableCell>
             </TableRow>
           ))}
         </TableBody>

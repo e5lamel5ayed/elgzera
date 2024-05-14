@@ -28,8 +28,8 @@ export default function CruisesList() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="right">الاسم</TableCell>
-            <TableCell align="right">الحاله</TableCell>
+            <TableCell sx={{fontSize:"18px"}}  align="right">الاسم</TableCell>
+            <TableCell sx={{fontSize:"18px"}}  align="right">الحاله</TableCell>
             <TableCell align="center">الوصف</TableCell>
             <TableCell align="center">صوره</TableCell>
            
@@ -42,10 +42,10 @@ export default function CruisesList() {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               
-              <TableCell  align="right"  component="th" scope="row">
+              <TableCell  sx={{fontSize:"18px"}}  align="right"  component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right" >{row.status}</TableCell>
+              <TableCell sx={{fontSize:"18px"}}  align="right" >{row.status}</TableCell>
               <TableCell  align="center">{row.caption}</TableCell>
               <TableCell  align="center">{row.image}</TableCell>
              

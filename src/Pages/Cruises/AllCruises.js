@@ -8,12 +8,12 @@ export default function AllCruises() {
     return (
         <div>
             <Drawer />
-            <Box height={70} sx={{ direction: "rtl" }} />
+            {/* <Box height={70} sx={{ direction: "rtl" }} /> */}
             <Box sx={{ width: "80%" }}>
                 <div>
-                    <h2 className='table-head' >الرحلات البحرية</h2>
+                    <h2 className='table-head' >المراكب </h2>
                     <Link to='/AddCruises'>
-                        <button className='btn btn-primary add-button'>اضافه رحله</button>
+                        <button className='btn btn-primary add-button'>اضافه مركب</button>
                     </Link>
                 </div>
 
