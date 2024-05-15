@@ -106,7 +106,7 @@ export default function PersistentDrawerRight() {
                         aria-label="open drawer"
                         edge="end"
                         onClick={handleDrawerOpen}
-                        sx={{ ...(open && { display: 'none' }) }}
+                        sx={{ ...(open && { display: 'none' }), color: "#000" }}
                     >
 
                         <MenuIcon />
@@ -134,16 +134,15 @@ export default function PersistentDrawerRight() {
                 open={open}
             >
                 <DrawerHeader sx={{backgroundColor:"#fcf7f7"}}>
-                    <IconButton onClick={handleDrawerClose}>
+                    <IconButton sx={{ color: "#000"}} onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
-                    {/* <img src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'></img> */}
                     <img style={{width:"64%"}} src='\imgs\orane.png'/>
 
                 </DrawerHeader>
                 <Divider />
                 <List sx={{backgroundColor:"#fcf7f7",height:"100%"}} >
-                    <ListItem disablePadding onClick={() => navigate("/")}>
+                    <ListItem disablePadding onClick={() => navigate("/Home")}>
                         <ListItemButton>
                             <ListItemIcon  >
                                 <SpaceDashboardIcon className='icon-edit' />

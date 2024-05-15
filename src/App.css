@@ -88,3 +88,19 @@ body {
 .color{
   background-color:"#fcf7f7" !important;
 }
+
+
+.login-edit{
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.all-login{
+
+  text-align: center;
+  height: 100vh;
+  background-size: 72% 100%;
+  overflow-y: auto;
+  background-color: #f7f7f7;
+}
