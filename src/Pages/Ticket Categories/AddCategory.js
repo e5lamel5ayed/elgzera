@@ -29,7 +29,7 @@ export default function AddCategory() {
     }
 
     try {
-      const response = await axios.post('http://org-bay.runasp.net/api/Categories', { name: categoryName });
+      const response = await axios.post('/api/Categories', { name: categoryName });
       console.log('Category added successfully', response.data);
 
       // تحقق من الاستجابة

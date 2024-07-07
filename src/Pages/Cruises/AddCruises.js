@@ -30,7 +30,7 @@ export default function AddCruises() {
     }
 
     try {
-      const response = await axios.post('http://org-bay.runasp.net/api/Cruises', formData);
+      const response = await axios.post('/api/Cruises', formData);
       console.log('Cruise added successfully:', response.data);
       if (response.data) {
         localStorage.setItem('alertMessage', 'تم إضافة المركب بنجاح');

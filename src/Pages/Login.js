@@ -9,26 +9,26 @@ export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [linkEnabled, setLinkEnabled] = useState(false);
-  
+
     const handleUsernameChange = (e) => {
-      const { value } = e.target;
-      setUsername(value);
-      checkInputValues(value, password);
+        const { value } = e.target;
+        setUsername(value);
+        checkInputValues(value, password);
     };
-  
+
     const handlePasswordChange = (e) => {
-      const { value } = e.target;
-      setPassword(value);
-      checkInputValues(username, value);
+        const { value } = e.target;
+        setPassword(value);
+        checkInputValues(username, value);
     };
-  
+
     const checkInputValues = (username, password) => {
-      // Check if both username and password fields are not empty
-      if (username.trim() !== '' && password.trim() !== '') {
-        setLinkEnabled(true); // Enable the link
-      } else {
-        setLinkEnabled(false); // Disable the link
-      }
+        // Check if both username and password fields are not empty
+        if (username.trim() !== '' && password.trim() !== '') {
+            setLinkEnabled(true); // Enable the link
+        } else {
+            setLinkEnabled(false); // Disable the link
+        }
     };
 
     return (
@@ -39,17 +39,17 @@ export default function Login() {
                         <img src='\imgs\Login.jpg' style={{ width: "100%", height: "90%" }}></img>
 
                     </div>
-                    
-                    <div className='col-md-6' style={{ height: "100vh", backgroundColor: "#fff" , display:"flex",alignItems:"center"}}>
+
+                    <div className='col-md-6' style={{ height: "100vh", backgroundColor: "#fff", display: "flex", alignItems: "center" }}>
                         <div className='col-md-8  ml-auto mr-auto login-edit'>
-                            <h3 className='text-center mb-4' style={{fontWeight: "600"}}>تسجيل الدخول</h3>
+                            <h3 className='text-center mb-4' style={{ fontWeight: "600" }}>تسجيل الدخول</h3>
                             <form>
                                 <div className="form-group">
-                                    <label className='d-flex'  style={{justifyContent:"end"}} for="username">اسم المستخدم</label>
-                                    <input type="text"  className="form-control " id="username" value={username} onChange={handleUsernameChange} />
+                                    <label className='d-flex' style={{ justifyContent: "end" }} htmlFor="username">اسم المستخدم</label>
+                                    <input type="text" className="form-control " id="username" value={username} onChange={handleUsernameChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label className='d-flex' style={{justifyContent:"end"}} for="password">كلمة المرور</label>
+                                    <label className='d-flex' style={{ justifyContent: "end" }} htmlFor="password">كلمة المرور</label>
                                     <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} />
                                 </div>
                                 <div>

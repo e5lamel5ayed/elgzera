@@ -37,9 +37,9 @@ export default function AddTourGuides() {
       return;
     }
     try {
-      const response = await axios.post('http://org-bay.runasp.net/api/TourGuides', formData);
+      const response = await axios.post('/api/TourGuides', formData);
       console.log('Tour guide added successfully', response.data);
-    
+
       if (response.data) {
         localStorage.setItem('alertMessage', 'تم إضافة المرشد بنجاح');
       }
@@ -82,7 +82,7 @@ export default function AddTourGuides() {
                       />
                     </div>
                     {errors.name && <h6 className="error-log">{errors.name}</h6>}
-                    </div>
+                  </div>
 
                   <div className='col-md-6'>
                     <div className="form-group">
@@ -97,7 +97,7 @@ export default function AddTourGuides() {
                       />
                     </div>
                     {errors.email && <h6 className="error-log">{errors.email}</h6>}
-                    </div>
+                  </div>
 
                   <div className='col-md-6'>
                     <label htmlFor="statusId" className="d-flex">الحاله</label>
@@ -113,7 +113,7 @@ export default function AddTourGuides() {
                       <option value="2">غير نشط</option>
                     </select>
                     {errors.statusId && <h6 className="error-log">{errors.statusId}</h6>}
-                    </div>
+                  </div>
 
                   <div className='col-md-6'>
                     <label htmlFor="phone" className="d-flex">رقم الهاتف</label>
@@ -127,7 +127,7 @@ export default function AddTourGuides() {
                       />
                     </FormControl>
                     {errors.phone && <h6 className="error-log">{errors.phone}</h6>}
-                    </div>
+                  </div>
 
                   <div className='col-md-3'>
                     <label htmlFor="profitRatio" className="d-flex">نسبة الربح</label>
@@ -142,7 +142,7 @@ export default function AddTourGuides() {
                       />
                     </FormControl>
                     {errors.profitRatio && <h6 className="error-log">{errors.profitRatio}</h6>}
-                    </div>
+                  </div>
                 </div>
               </div>
               <button style={{ fontSize: "20px" }} type="submit" className="btn btn-primary mt-4">حفظ</button>

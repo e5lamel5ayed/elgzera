@@ -50,7 +50,7 @@ export default function AddTicket() {
       return;
     }
     try {
-      const response = await axios.post('http://org-bay.runasp.net/api/Tickets', formData);
+      const response = await axios.post('/api/Tickets', formData);
       console.log('Ticket added successfully', response.data);
 
       if (response.data) {

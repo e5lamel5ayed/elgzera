@@ -15,7 +15,7 @@ export default function CruisesList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://org-bay.runasp.net/api/Cruises');
+        const response = await axios.get('/api/Cruises');
         setCruises(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -39,7 +39,7 @@ export default function CruisesList() {
         <TableBody align="center">
           {cruises.map((cruise) => (
             <TableRow
-              key={cruise.name}
+              key={cruise.id} 
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell sx={{ fontSize: "18px" }} align="right" component="th" scope="row">

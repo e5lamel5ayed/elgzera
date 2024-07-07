@@ -15,7 +15,7 @@ export default function BasicTable() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://org-bay.runasp.net/api/Tickets', {
+        const response = await axios.get('/api/Tickets', {
           headers: {
             'Accept': '*/*',
             'Content-Type': 'application/json',

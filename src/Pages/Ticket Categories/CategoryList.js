@@ -14,7 +14,7 @@ export default function CategoryList() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://org-bay.runasp.net/api/Categories');
+        const response = await axios.get('/api/Categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories', error);
