@@ -33,16 +33,24 @@ export default function CategoryList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {categories.map((category) => (
-            <TableRow
-              key={category.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row" sx={{ fontSize: "18px" }} align="center">
-                {category.name}
+          {Array.isArray(categories) && categories.length > 0 ? (
+            categories.map((category) => (
+              <TableRow
+                key={category.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row" sx={{ fontSize: "18px" }} align="center">
+                  {category.name}
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={1} align="center">
+                لا توجد بيانات
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>
