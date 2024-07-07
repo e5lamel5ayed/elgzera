@@ -27,7 +27,7 @@ export default function CategoryList() {
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className='table-head-stayl'>
+        <TableHead className='table-head-style'>
           <TableRow>
             <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">الاسم</TableCell>
           </TableRow>

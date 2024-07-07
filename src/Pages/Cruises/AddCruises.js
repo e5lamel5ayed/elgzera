@@ -55,7 +55,7 @@ export default function AddCruises() {
           </Link>
         </div>
         <div className='card table-style' style={{ direction: "rtl" }}>
-          <div className="card-header d-flex table-head-stayl">
+          <div className="card-header d-flex table-head-style">
             <h3>اضف البيانات</h3>
           </div>
           <div className="card-body">

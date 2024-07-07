@@ -76,7 +76,7 @@ export default function AddTicket() {
         </div>
 
         <div className='card table-style mb-5' style={{ direction: "rtl" }}>
-          <div className="card-header d-flex table-head-stayl">
+          <div className="card-header d-flex table-head-style">
             <h4>اضف البيانات</h4>
           </div>
           <div className="card-body">
