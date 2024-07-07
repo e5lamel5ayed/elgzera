@@ -58,6 +58,7 @@ export default function BasicTable() {
     console.log(id);
     navigate(`/addTicket`, { state: { id } });
   };
+
   const DeleteRow = async (id) => {
     console.log(id);
   };
@@ -74,7 +75,7 @@ export default function BasicTable() {
       component={Paper}
     >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className="table-head-stayl">
+        <TableHead className="table-head-style">
           <TableRow>
             <TableCell
               style={{ color: "#fff" }}
