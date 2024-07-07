@@ -1,6 +1,6 @@
 import React from 'react';
 import Drawer from '../../Components/Drawer';
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputAdornment, OutlinedInput, TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const currencies = [

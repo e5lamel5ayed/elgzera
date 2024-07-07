@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import { Drawer, Paper, Stack, Dialog, DialogTitle, DialogActions, Button } from "@mui/material";
+import { Paper, Stack, Dialog, DialogTitle, DialogActions, Button } from "@mui/material";
 import { formatDate } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -44,14 +44,10 @@ function renderSidebarEvent(event) {
 }
 
 const Reservation = () => {
-  const [weekendsVisible, setweekendsVisible] = useState(true);
   const [currentEvents, setcurrentEvents] = useState([]);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [eventToRemove, setEventToRemove] = useState(null);
 
-  const handleWeekendsToggle = () => {
-    setweekendsVisible(!weekendsVisible);
-  };
 
   let eventGuid = 0;
   function createEventId() {
@@ -117,7 +113,6 @@ const Reservation = () => {
           selectable={true}
           selectMirror={true}
           dayMaxEvents={true}
-          weekends={weekendsVisible}
           select={handleDateSelect}
           eventContent={renderEventContent}
           eventClick={handleEventClick}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Home from './Pages/Home/Home';
-import All from './Pages/AddTicket/All';
+import AllTickets from './Pages/AddTicket/AllTickets';
 import AddTicket from './Pages/AddTicket/AddTicket';
 import AddCategory from './Pages/Ticket Categories/AddCategory';
 import AllCategories from './Pages/Ticket Categories/AllCategories';
@@ -13,8 +13,6 @@ import AddPlaces from './Pages/Places/AddPlaces';
 import AllPlaces from './Pages/Places/AllPlaces';
 import AllProducts from './Pages/Products/AllProducts';
 import AddProducts from './Pages/Products/AddProducts';
-import ProductsList from './Pages/Products/ProductsList';
-import Reservation from './Pages/Reservation/Reservation';
 import AllReservation from './Pages/Reservation/AllReservation';
 import PayingOff from './Pages/PayingOff/PayingOff';
 import Login from './Pages/Login';
@@ -27,7 +25,7 @@ export default function App() {
         <Route>
           <Route path="/" exact element={<Login />}></Route>
           <Route path="/Home" exact element={<Home />}></Route>
-          <Route path="/All" exact element={<All />}></Route>
+          <Route path="/AllTickets" exact element={<AllTickets />}></Route>
           <Route path="/AddTicket" exact element={<AddTicket />}></Route>
           <Route path="/AddCategory" exact element={<AddCategory />}></Route>
           <Route path="/AllCategories" exact element={<AllCategories />}></Route>

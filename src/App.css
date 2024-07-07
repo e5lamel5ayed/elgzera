@@ -97,10 +97,18 @@ body {
 }
 
 .all-login{
-
   text-align: center;
   height: 100vh;
   background-size: 72% 100%;
   overflow-y: auto;
   background-color: #f7f7f7;
 }
+.error-log {
+  color: red;
+  margin-top: 7px;
+  transition: all 10s ease;
+  font-weight: 500;
+  display: flex;
+  justify-content: start;
+}
+

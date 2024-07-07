@@ -15,7 +15,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CategoryIcon from '@mui/icons-material/Category';
-import Diversity3Icon from '@mui/icons-material/Diversity3';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -74,7 +73,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-start',
 }));
@@ -83,7 +81,7 @@ export default function PersistentDrawerRight() {
     const navigate = useNavigate();
 
     const theme = useTheme();
-    const [open, setOpen] = React.useState(true); // Set to true to open by default
+    const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -99,7 +97,6 @@ export default function PersistentDrawerRight() {
             <AppBar sx={{backgroundColor: "#fcf7f7"}} position="fixed" open={open}>
                 <Toolbar>
                     <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-                       {/* <img style={{width:"10%"}} src='\imgs\orane.png'/> */}
                     </Typography>
                     <IconButton
                         color="inherit"
@@ -151,7 +148,7 @@ export default function PersistentDrawerRight() {
                             <ListItemText />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem disablePadding onClick={() => navigate("/All")}>
+                    <ListItem disablePadding onClick={() => navigate("/AllTickets")}>
                         <ListItemButton>
                             <ListItemIcon >
                                 <ConfirmationNumberIcon className='icon-edit' />

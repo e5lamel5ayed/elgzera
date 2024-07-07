@@ -1,60 +1,57 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Alice Smith', 'active', 'alice@example.com', 'test 1', '2%'),
-  createData('Bob Johnson', 'active', 'alice@example.com', 'test 1', '5%'),
-  createData('Charlie Brown', 'in active', 'alice@example.com', 'test 2', '1%'),
-  createData('Diana Lee', 'active',  'alice@example.com', 'test 1','2%'),
- 
-];
-
 export default function TourGidesList() {
-  // Calculate total price
-  const total = rows.reduce((acc, row) => acc + row.calories, 0);
+  const [guides, setGuides] = useState([]);
+
+  useEffect(() => {
+    const fetchGuides = async () => {
+      try {
+        const response = await axios.get('http://org-bay.runasp.net/api/TourGuides');
+        setGuides(response.data);
+      } catch (error) {
+        console.error('Error fetching tour guides', error);
+      }
+    };
+
+    fetchGuides();
+  }, []);
 
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead className='table-head-stayl'>
           <TableRow>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">الاسم</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">الحاله</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">الايميل</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">اسم الشركة</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}}  align="right">نسبة الربح</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الاسم</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الحاله</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الايميل</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">رقم التليفون</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">نسبة الربح</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {guides.map((guide) => (
             <TableRow
-              key={row.name}
+              key={guide.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell sx={{fontSize:"18px"}}  align="right" component="th" scope="row">
-                {row.name}
+              <TableCell sx={{ fontSize: "18px" }} align="right" component="th" scope="row">
+                {guide.name}
               </TableCell>
-              <TableCell sx={{fontSize:"18px"}}  align="right">{row.calories}</TableCell>
-              <TableCell sx={{fontSize:"18px"}}  align="right">{row.fat}</TableCell>
-              <TableCell sx={{fontSize:"18px"}}  align="right">{row.carbs}</TableCell>
-              <TableCell sx={{fontSize:"18px"}}  align="right">{row.protein}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{guide.statusId === 1 ? 'active' : 'inactive'}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{guide.email}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{guide.phone}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">%{guide.profitRatio}</TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          
-        </TableFooter>
       </Table>
     </TableContainer>
   );

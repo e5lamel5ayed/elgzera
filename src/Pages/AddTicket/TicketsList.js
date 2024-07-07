@@ -5,54 +5,89 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, '$'),
-  createData('Ice cream sandwich', 237, 9.0, 37, '€'),
-  createData('Eclair', 262, 16.0, 24, '฿'),
-  createData('Cupcake', 305, 3.7, 67, '¥'),
-  createData('Gingerbread', 356, 16.0, 49, '€'),
-];
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function BasicTable() {
-  // Calculate total price
-  const total = rows.reduce((acc, row) => acc + row.calories, 0);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get('http://org-bay.runasp.net/api/Tickets', {
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+          }
+        });
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const dayMapping = {
+    1: 'السبت',
+    2: 'الأحد',
+    3: 'الاثنين',
+    4: 'الثلاثاء',
+    5: 'الأربعاء',
+    6: 'الخميس',
+    7: 'الجمعة'
+  };
+
+  const categoryMapping = {
+    1: 'عائلي',
+    2: 'خاص',
+    3: 'فردي'
+  };
+
+  const currencyMapping = {
+    1: '$',
+    2: '€',
+    3: '฿',
+    4: '¥'
+  };
+
+  const getDayNames = (dayNumbers) => {
+    if (!Array.isArray(dayNumbers)) return '';
+    return dayNumbers.map((day) => dayMapping[day] || day).join(', ');
+  };
 
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead className='table-head-stayl'>
           <TableRow>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}} align="right">الاسم</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}} align="right">نوع التذكره</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}} align="right">السعر</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}} align="right">الضرائب</TableCell>
-            <TableCell style={{color:"#fff"}} sx={{fontSize:"18px"}} align="right">العمله</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الاسم</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">نوع التذكره</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">السعر</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الضرائب</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">العملة</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الايام</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell sx={{fontSize:"18px"}} align="right" component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell  sx={{fontSize:"18px"}} align="right">{row.calories}</TableCell>
-              <TableCell sx={{fontSize:"18px"}} align="right">{row.fat}</TableCell>
-              <TableCell sx={{fontSize:"18px"}} align="right">{row.carbs}</TableCell>
-              <TableCell sx={{fontSize:"18px"}} align="right">{row.protein}</TableCell>
+          {data.length > 0 ? data.map((ticket) => (
+            <TableRow key={ticket.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell sx={{ fontSize: "18px" }} align="right" component="th" scope="row">{ticket.name}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{categoryMapping[ticket.categoryId]}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{ticket.price}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{ticket.taxes}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{currencyMapping[ticket.currencyId]}</TableCell>
+              <TableCell sx={{ fontSize: "18px" }} align="right">{getDayNames(ticket.days)}</TableCell>
             </TableRow>
-          ))}
+          )) : (
+            <TableRow>
+              <TableCell colSpan={6} align="center">
+                {"No data available"}
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
-        
       </Table>
     </TableContainer>
   );

@@ -44,22 +44,22 @@ export default function Login() {
                         <div className='col-md-8  ml-auto mr-auto login-edit'>
                             <h3 className='text-center mb-4' style={{fontWeight: "600"}}>تسجيل الدخول</h3>
                             <form>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label className='d-flex'  style={{justifyContent:"end"}} for="username">اسم المستخدم</label>
-                                    <input type="text"  class="form-control " id="username" value={username} onChange={handleUsernameChange} />
+                                    <input type="text"  className="form-control " id="username" value={username} onChange={handleUsernameChange} />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label className='d-flex' style={{justifyContent:"end"}} for="password">كلمة المرور</label>
-                                    <input type="password" class="form-control" id="password" value={password} onChange={handlePasswordChange} />
+                                    <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} />
                                 </div>
                                 <div>
                                     {/* Disable the link when the fields are empty */}
                                     {linkEnabled ? (
                                         <Link to="/Home" className='text-decoration'>
-                                            <button type="submit" class="btn btn-primary btn-block text-center mb-2">دخول</button>
+                                            <button type="submit" className="btn btn-primary btn-block text-center mb-2">دخول</button>
                                         </Link>
                                     ) : (
-                                        <button type="submit" class="btn btn-primary btn-block text-center mb-2" disabled>دخول</button>
+                                        <button type="submit" className="btn btn-primary btn-block text-center mb-2" disabled>دخول</button>
                                     )}
                                 </div>
                             </form>

@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,53 +9,52 @@ import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
 
-function createData(name, status, caption, image) {
-  return { name, status, caption, image};
-}
-
-const rows = [
-  createData('Caribbean Adventure', 'active', 'Captain Jack Sparrow', <img style={{height:"100px",width:"100px"}} src='https://cruisefever.net/wp-content/uploads/2019/03/nclsky4.jpg'></img> ),
-  createData('Mediterranean Magic', 'active', 'Captain Jack Sparrow',  <img style={{height:"100px",width:"100px"}} src='https://cruisefever.net/wp-content/uploads/2019/03/nclsky4.jpg'></img>  ),
-  createData('Pacific Paradise', 'in-active', 'Captain Jack Sparrow',  <img style={{height:"100px",width:"100px"}} src='https://cruisefever.net/wp-content/uploads/2019/03/nclsky4.jpg'></img> ),
-
-];
-
 export default function CruisesList() {
-  // Calculate total price
-  const total = rows.reduce((acc, row) => acc + row.calories, 0);
+  const [cruises, setCruises] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://org-bay.runasp.net/api/Cruises');
+        setCruises(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead className='table-head-stayl'>
           <TableRow>
-            <TableCell sx={{fontSize:"18px"}}  align="right">الاسم</TableCell>
-            <TableCell sx={{fontSize:"18px"}}  align="right">الحاله</TableCell>
-            <TableCell align="center">الوصف</TableCell>
-            <TableCell align="center">صوره</TableCell>
-           
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الاسم</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الحاله</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">الوصف</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">صوره</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody align="center" >
-          {rows.map((row) => (
-            <TableRow 
-              key={row.name}
+        <TableBody align="center">
+          {cruises.map((cruise) => (
+            <TableRow
+              key={cruise.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              
-              <TableCell  sx={{fontSize:"18px"}}  align="right"  component="th" scope="row">
-                {row.name}
+              <TableCell sx={{ fontSize: "18px" }} align="right" component="th" scope="row">
+                {cruise.name}
               </TableCell>
-              <TableCell sx={{fontSize:"18px"}}  align="right" >{row.status}</TableCell>
-              <TableCell  align="center">{row.caption}</TableCell>
-              <TableCell  align="center">{row.image}</TableCell>
-             
+              <TableCell sx={{ fontSize: "18px" }} align="right" >{cruise.statusId === 1 ? 'نشط' : 'غير نشط'}</TableCell>
+              <TableCell align="center">{cruise.caption}</TableCell>
+              <TableCell align="center">
+                {cruise.image ? <img src={cruise.image} alt={cruise.name} style={{ width: '100px', height: 'auto' }} /> : 'لا توجد صورة'}
+              </TableCell>
             </TableRow>
-            
           ))}
         </TableBody>
         <TableFooter>
-          
+
         </TableFooter>
       </Table>
     </TableContainer>

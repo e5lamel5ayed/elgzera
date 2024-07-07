@@ -1,31 +1,26 @@
 import React from 'react';
 import Drawer from '../../Components/Drawer';
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputAdornment, OutlinedInput, TextField } from '@mui/material';
+import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-const currencies = [
-
-];
 
 export default function AddPlaces() {
   return (
     <div>
       <Drawer />
-      {/* <Box height={65} sx={{ direction: "rtl" }} /> */}
-      
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>
-        <h2 className='add-head' >مراكز البيع </h2>
+          <h2 className='add-head' >مراكز البيع </h2>
 
-        <Link to='/AllPlaces'>
-          <button className='btn btn-primary add-button'>رجوع </button>
-        </Link>
-      </div>
+          <Link to='/AllPlaces'>
+            <button className='btn btn-primary add-button'>رجوع </button>
+          </Link>
+        </div>
         <div className='card table-style' style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-stayl">
             <h3>
 
-            اضف البيانات
+              اضف البيانات
             </h3>
           </div>
           <div className="card-body">
@@ -53,13 +48,9 @@ export default function AddPlaces() {
                       <input type="file" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
                     </div>
                   </div>
-
                 </div>
-
               </div>
-
-
-              <button style={{fontSize:"20px"}} type="submit" className="btn btn-primary mt-4">حفظ</button>
+              <button style={{ fontSize: "20px" }} type="submit" className="btn btn-primary mt-4">حفظ</button>
             </form>
           </div>
         </div>
