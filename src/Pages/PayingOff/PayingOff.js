@@ -122,7 +122,7 @@
 //                     </div>
 //                 </div>
 //                 <div className='card table-style ' style={{ direction: "rtl" }}>
-//                     <div className="card-header table-head-stayl d-flex">
+//                     <div className="card-header table-head-style d-flex">
 //                         <h3>حجز تذكرة</h3>
 //                     </div>
 //                     <div className="card-body">
@@ -181,7 +181,7 @@
 //                 <div className="mt-3">
 //                     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
 //                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-//                             <TableHead className='table-head-stayl'>
+//                             <TableHead className='table-head-style'>
 //                                 <TableRow>
 //                                     <TableCell style={{ color: "#fff" }} align="right">الجنسية</TableCell>
 //                                     <TableCell style={{ color: "#fff" }} align="right">اسم المرشد</TableCell>
@@ -259,7 +259,7 @@
 
 //                         إضافة مرشد جديد
 //                         </h3>
-                        
+
 //                     </DialogTitle>
 //                     <DialogContent>
 //                         <form>
@@ -496,7 +496,7 @@ export default function PayingOff() {
                     </div>
                 </div>
                 <div className='card table-style ' style={{ direction: "rtl" }}>
-                    <div className="card-header table-head-stayl d-flex">
+                    <div className="card-header table-head-style d-flex">
                         <h3>حجز تذكرة</h3>
                     </div>
                     <div className="card-body">
@@ -566,7 +566,7 @@ export default function PayingOff() {
                 <div className="mt-3">
                     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead className='table-head-stayl'>
+                            <TableHead className='table-head-style'>
                                 <TableRow>
                                     <TableCell style={{ color: "#fff" }} align="right">الجنسية</TableCell>
                                     <TableCell style={{ color: "#fff" }} align="right">اسم المرشد</TableCell>

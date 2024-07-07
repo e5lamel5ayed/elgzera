@@ -4,16 +4,16 @@ import { Box, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const currencies = [
-  
+
   {
-   
+
     label: 'Ice Cream Shop',
-   
+
   },
   {
-   
+
     label: 'Snacks bar ',
-   
+
   }
 ];
 
@@ -29,7 +29,7 @@ export default function AddProducts() {
       </div>
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div className='card table-style' style={{ direction: "rtl" }}>
-          <div className="card-header d-flex table-head-stayl">
+          <div className="card-header d-flex table-head-style">
             اضف البيانات
           </div>
           <div className="card-body">
@@ -67,14 +67,14 @@ export default function AddProducts() {
                       {currencies.map((option) => (
                         // <option>Default select</option>
                         <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                       
+                          {option.label}
+                        </option>
+
                       ))}
                     </TextField>
                   </div>
 
-                 
+
 
                   <div className='col-md-6'>
                     <div className="form-group">
@@ -83,7 +83,7 @@ export default function AddProducts() {
                     </div>
                   </div>
 
-                  
+
 
                 </div>
 

@@ -35,7 +35,7 @@ export default function AddCategory() {
       // تحقق من الاستجابة
       if (response.data) {
         localStorage.setItem('alertMessage', 'تم إضافة فئة التذكرة بنجاح');
-      } 
+      }
 
       navigate('/AllCategories');
     } catch (error) {
@@ -56,7 +56,7 @@ export default function AddCategory() {
         </div>
 
         <div className='card table-style' style={{ direction: "rtl" }}>
-          <div className="card-header d-flex table-head-stayl">
+          <div className="card-header d-flex table-head-style">
             <h3>أضف فئة التذكرة</h3>
           </div>
           <div className="card-body">

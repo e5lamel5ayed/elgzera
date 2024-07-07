@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export default function TourGidesList() {
+export default function TourGuidesList() {
   const [guides, setGuides] = useState([]);
 
   useEffect(() => {
@@ -27,30 +27,35 @@ export default function TourGidesList() {
   return (
     <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className='table-head-stayl'>
+        <TableHead className='table-head-style'>
           <TableRow>
             <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الاسم</TableCell>
-            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الحاله</TableCell>
-            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الايميل</TableCell>
-            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">رقم التليفون</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">الحالة</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">البريد الإلكتروني</TableCell>
+            <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">رقم الهاتف</TableCell>
             <TableCell style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">نسبة الربح</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {guides.map((guide) => (
-            <TableRow
-              key={guide.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell sx={{ fontSize: "18px" }} align="right" component="th" scope="row">
-                {guide.name}
+          {Array.isArray(guides) && guides.length > 0 ? (
+            guides.map((guide) => (
+              <TableRow key={guide.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell sx={{ fontSize: "18px" }} align="right" component="th" scope="row">
+                  {guide.name}
+                </TableCell>
+                <TableCell sx={{ fontSize: "18px" }} align="right">{guide.statusId === 1 ? 'نشط' : 'غير نشط'}</TableCell>
+                <TableCell sx={{ fontSize: "18px" }} align="right">{guide.email}</TableCell>
+                <TableCell sx={{ fontSize: "18px" }} align="right">{guide.phone}</TableCell>
+                <TableCell sx={{ fontSize: "18px" }} align="right">%{guide.profitRatio}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} align="center">
+                لا توجد بيانات
               </TableCell>
-              <TableCell sx={{ fontSize: "18px" }} align="right">{guide.statusId === 1 ? 'active' : 'inactive'}</TableCell>
-              <TableCell sx={{ fontSize: "18px" }} align="right">{guide.email}</TableCell>
-              <TableCell sx={{ fontSize: "18px" }} align="right">{guide.phone}</TableCell>
-              <TableCell sx={{ fontSize: "18px" }} align="right">%{guide.profitRatio}</TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>
