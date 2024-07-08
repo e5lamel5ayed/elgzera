@@ -21,7 +21,7 @@ export default function BasicTable() {
           "Content-Type": "application/json",
         },
       });
-      //console.log(response);
+      console.log(response);
       setData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);

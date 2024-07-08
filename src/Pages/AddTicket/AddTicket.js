@@ -38,7 +38,7 @@ export default function AddTicket() {
     try {
       const response = await axios.get(`/api/Tickets`);
       const ticket = response.data.find((ticket) => ticket.id === id);
-      //console.log(ticket);
+      // console.log(ticket);
       const { name, price, taxes, categoryId, currencyId } = ticket;
       setFormData({
         name: name,
