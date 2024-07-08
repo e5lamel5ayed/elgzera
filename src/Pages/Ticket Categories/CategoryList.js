@@ -15,7 +15,7 @@ export default function CategoryList() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("/api/Categories");
+      const response = await axios.get("http://org-bay.runasp.net/api/Categories");
       // console.log("cat data", response.data);
       let newData = response.data.filter((res) => res.name != "");
       setCategories(newData);

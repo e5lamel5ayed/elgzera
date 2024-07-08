@@ -36,7 +36,7 @@ export default function AddTicket() {
   //get ticket that will be edited
   const fetchTicketDetails = async (id) => {
     try {
-      const response = await axios.get(`/api/Tickets`);
+      const response = await axios.get(`http://org-bay.runasp.net/api/Tickets`);
       const ticket = response.data.find((ticket) => ticket.id === id);
       // console.log(ticket);
       const { name, price, taxes, categoryId, currencyId } = ticket;
@@ -98,7 +98,7 @@ export default function AddTicket() {
         console.log("Ticket updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       } else {
-        const response = await axios.post("/api/Tickets", formData);
+        const response = await axios.post("http://org-bay.runasp.net/api/Tickets", formData);
         console.log("Ticket added successfully", response.data);
 
         if (response.data) {

@@ -65,7 +65,7 @@ export default function AddCruises() {
         console.log("Cruise updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
-        const response = await axios.post("/api/Cruises", formData, {
+        const response = await axios.post("http://org-bay.runasp.net/api/Cruises", formData, {
           headers: {
             "Content-Type": "application/json",
           },

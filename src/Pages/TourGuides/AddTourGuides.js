@@ -64,7 +64,7 @@ export default function AddTourGuides() {
         //console.log("Category updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
-        const response = await axios.post("/api/TourGuides", formData);
+        const response = await axios.post("http://org-bay.runasp.net/api/TourGuides", formData);
         console.log("Tour guide added successfully", response.data);
 
         if (response.data) {

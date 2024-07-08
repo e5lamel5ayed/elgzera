@@ -13,7 +13,7 @@ export default function TourGuidesList() {
   const navigate = useNavigate();
   const fetchGuides = async () => {
     try {
-      const response = await axios.get("/api/TourGuides");
+      const response = await axios.get("http://org-bay.runasp.net/api/TourGuides");
       setGuides(response.data);
     } catch (error) {
       console.error("Error fetching tour guides", error);

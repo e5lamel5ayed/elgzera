@@ -55,7 +55,7 @@ export default function AddCategory() {
         //console.log("Category updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {
-        const response = await axios.post("/api/Categories", {
+        const response = await axios.post("http://org-bay.runasp.net/api/Categories", {
           name: categoryName,
         });
         //console.log("Category added successfully", response.data);
