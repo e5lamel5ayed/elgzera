@@ -58,6 +58,7 @@ export default function BasicTable() {
     //console.log(id);
     navigate(`/addTicket`, { state: { id } });
   };
+
   const DeleteRow = async (id) => {
     const res = await axios.delete(
       `http://org-bay.runasp.net/api/Tickets/${id}`
