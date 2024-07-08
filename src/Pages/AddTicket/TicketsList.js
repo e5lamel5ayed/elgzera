@@ -18,22 +18,27 @@ export default function BasicTable() {
     try {
       const response = await axios.get("/api/Tickets", {
         headers: {
-          Accept: "*/*",
+          Accept: "application/json", // Ensure the server knows you expect JSON
           "Content-Type": "application/json",
         },
       });
-      console.log(response);
-
-      // التحقق من أن البيانات المستلمة هي مصفوفة
-      if (Array.isArray(response.data)) {
-        setData(response.data);
+  
+      // Ensure the response has the correct content type
+      if (response.headers['content-type'].includes('application/json')) {
+        // Check if the response data is an array
+        if (Array.isArray(response.data)) {
+          setData(response.data);
+        } else {
+          console.error("Error: Data received is not an array", response.data);
+        }
       } else {
-        console.error("Error: Data received is not an array", response.data);
+        console.error("Error: Expected JSON response but got", response.headers['content-type']);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
+  
 
   useEffect(() => {
     fetchData();
