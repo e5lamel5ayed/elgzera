@@ -18,10 +18,12 @@ export default function BasicTable() {
     try {
       const response = await axios.get("/api/Tickets", {
         headers: {
-          Accept: "application/json", // Ensure the server knows you expect JSON
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
       });
+  
+      console.log("Response Headers:", response.headers);
   
       // Ensure the response has the correct content type
       if (response.headers['content-type'].includes('application/json')) {
@@ -33,11 +35,17 @@ export default function BasicTable() {
         }
       } else {
         console.error("Error: Expected JSON response but got", response.headers['content-type']);
+        console.log("Full response:", response);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      if (error.response) {
+        console.error("Server responded with status:", error.response.status);
+        console.error("Response data:", error.response.data);
+      }
     }
   }
+  
   
 
   useEffect(() => {
