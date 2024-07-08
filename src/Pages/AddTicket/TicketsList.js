@@ -13,21 +13,21 @@ import { useNavigate } from "react-router";
 export default function BasicTable() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get("/api/Tickets", {
-          headers: {
-            Accept: "*/*",
-            "Content-Type": "application/json",
-          },
-        });
-        console.log(response);
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+  async function fetchData() {
+    try {
+      const response = await axios.get("/api/Tickets", {
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+      });
+      //console.log(response);
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
+  }
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -55,11 +55,15 @@ export default function BasicTable() {
   };
 
   const EditRow = (id) => {
-    console.log(id);
+    //console.log(id);
     navigate(`/addTicket`, { state: { id } });
   };
   const DeleteRow = async (id) => {
-    console.log(id);
+    const res = await axios.delete(
+      `http://org-bay.runasp.net/api/Tickets/${id}`
+    );
+    //console.log(res);
+    fetchData();
   };
 
   const getDayNames = (dayNumbers) => {
@@ -74,7 +78,7 @@ export default function BasicTable() {
       component={Paper}
     >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className="table-head-stayl">
+        <TableHead className="table-head-style">
           <TableRow>
             <TableCell
               style={{ color: "#fff" }}
