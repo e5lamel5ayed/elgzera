@@ -16,7 +16,7 @@ export default function CategoryList() {
   const fetchCategories = async () => {
     try {
       const response = await axios.get("http://org-bay.runasp.net/api/Categories");
-      // console.log("cat data", response.data);
+      // eslint-disable-next-line eqeqeq
       let newData = response.data.filter((res) => res.name != "");
       setCategories(newData);
     } catch (error) {
@@ -28,11 +28,9 @@ export default function CategoryList() {
   }, []);
 
   const EditRow = (id) => {
-    //console.log(id);
     navigate(`/AddCategory`, { state: { id } });
   };
   const DeleteRow = async (id) => {
-    // console.log(id);
     await axios.delete(`http://org-bay.runasp.net/api/Categories/${id}`);
     fetchCategories();
   };

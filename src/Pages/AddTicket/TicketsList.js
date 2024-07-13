@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -21,12 +22,12 @@ export default function BasicTable() {
           "Content-Type": "application/json",
         },
       });
-      console.log(response);
       setData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -55,7 +56,6 @@ export default function BasicTable() {
   };
 
   const EditRow = (id) => {
-    //console.log(id);
     navigate(`/addTicket`, { state: { id } });
   };
 
@@ -63,7 +63,6 @@ export default function BasicTable() {
     const res = await axios.delete(
       `http://org-bay.runasp.net/api/Tickets/${id}`
     );
-    //console.log(res);
     fetchData();
   };
 

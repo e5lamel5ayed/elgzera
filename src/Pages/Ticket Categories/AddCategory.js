@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
@@ -19,9 +20,8 @@ export default function AddCategory() {
   }, [location.state]);
   const fetchCategoryDetails = async (id) => {
     try {
-      const response = await axios.get(`/api/Categories`);
+      const response = await axios.get(`http://org-bay.runasp.net/api/Categories`);
       const category = response.data.find((cat) => cat.id === id);
-      //console.log(category);
       setCategoryName(category.name);
     } catch {
       console.log("error fetching data of category ");
@@ -49,16 +49,14 @@ export default function AddCategory() {
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
-          `/api/Categories/${location.state.id}`,
+          `http://org-bay.runasp.net/api/Categories/${location.state.id}`,
           { name: categoryName }
         );
-        //console.log("Category updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {
         const response = await axios.post("http://org-bay.runasp.net/api/Categories", {
           name: categoryName,
         });
-        //console.log("Category added successfully", response.data);
 
         // تحقق من الاستجابة
         if (response.data) {

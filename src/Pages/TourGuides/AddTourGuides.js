@@ -24,9 +24,8 @@ export default function AddTourGuides() {
   }, [location.state]);
   const fetchTourGuideDetails = async (id) => {
     try {
-      const response = await axios.get(`/api/TourGuides`);
+      const response = await axios.get(`http://org-bay.runasp.net/api/TourGuides`);
       const tour = response.data.find((tour) => tour.id === id);
-      console.log(tour);
       setFormData(tour);
     } catch {
       console.log("error");
@@ -58,14 +57,12 @@ export default function AddTourGuides() {
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
-          `/api/TourGuides/${location.state.id}`,
+          `http://org-bay.runasp.net/api/TourGuides/${location.state.id}`,
           formData
         );
-        //console.log("Category updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
         const response = await axios.post("http://org-bay.runasp.net/api/TourGuides", formData);
-        console.log("Tour guide added successfully", response.data);
 
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة المرشد بنجاح");

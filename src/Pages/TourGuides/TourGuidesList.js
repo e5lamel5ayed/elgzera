@@ -23,11 +23,9 @@ export default function TourGuidesList() {
     fetchGuides();
   }, []);
   const EditRow = (id) => {
-    //console.log(id);
     navigate(`/AddTourGuides`, { state: { id } });
   };
   const DeleteRow = async (id) => {
-    //console.log(id);
     try {
       await axios.delete(`http://org-bay.runasp.net/api/TourGuides/${id}`);
       fetchGuides();

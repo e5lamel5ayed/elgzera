@@ -22,11 +22,10 @@ export default function AddCruises() {
 
   const fetchCruiseDetails = async (id) => {
     try {
-      const response = await axios.get(`/api/Cruises`);
+      const response = await axios.get(`http://org-bay.runasp.net/api/Cruises`);
       const { name, statusId } = response.data.find(
         (cruise) => cruise.id === id
       );
-      //console.log(cruise);
       setFormData({ name: name, statusId: statusId });
     } catch (error) {
       console.error("Error fetching cruise details:", error);
@@ -52,7 +51,6 @@ export default function AddCruises() {
     try {
       if (location.state && location.state.id) {
         // Editing existing Cruise
-        //console.log(formData);
         const response = await axios.put(
           `http://org-bay.runasp.net/api/Cruises/${location.state.id}`,
           formData,
@@ -62,7 +60,6 @@ export default function AddCruises() {
             },
           }
         );
-        console.log("Cruise updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
         const response = await axios.post("http://org-bay.runasp.net/api/Cruises", formData, {
@@ -70,7 +67,6 @@ export default function AddCruises() {
             "Content-Type": "application/json",
           },
         });
-        console.log("Cruise added successfully:", response.data);
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة المركب بنجاح");
         }

@@ -23,25 +23,24 @@ export default function AddTicket() {
     currencyId: "",
     days: [],
   });
+  const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
 
-  //get it=d from edit button
   useEffect(() => {
     const { id } = location.state || {};
     if (id) {
       fetchTicketDetails(id);
     }
+    fetchCategories();
   }, [location.state]);
 
-  //get ticket that will be edited
   const fetchTicketDetails = async (id) => {
     try {
       const response = await axios.get(`http://org-bay.runasp.net/api/Tickets`);
       const ticket = response.data.find((ticket) => ticket.id === id);
-      // console.log(ticket);
       const { name, price, taxes, categoryId, currencyId } = ticket;
       setFormData({
-        name: name,
+        name,
         price,
         taxes,
         categoryId,
@@ -52,10 +51,20 @@ export default function AddTicket() {
       console.log("error fetching data of ticket ");
     }
   };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://org-bay.runasp.net/api/Categories");
+      setCategories(response.data);
+    } catch {
+      console.log("error fetching categories");
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      const dayValue = parseInt(value); // Convert value to integer
+      const dayValue = parseInt(value);
       setFormData((prevState) => {
         if (checked) {
           return { ...prevState, days: [...prevState.days, dayValue] };
@@ -90,17 +99,17 @@ export default function AddTicket() {
     }
     try {
       if (location.state && location.state.id) {
-        // Editing existing ticket
         const response = await axios.put(
-          `/api/Tickets/${location.state.id}`,
+          `http://org-bay.runasp.net/api/Tickets/${location.state.id}`,
           formData
         );
-        console.log("Ticket updated successfully", response);
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       } else {
-        const response = await axios.post("http://org-bay.runasp.net/api/Tickets", formData);
-        console.log("Ticket added successfully", response.data);
-
+        const response = await axios.post(
+          "http://org-bay.runasp.net/api/Tickets",
+          formData
+        );
+        console.log(response);
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
         }
@@ -159,9 +168,11 @@ export default function AddTicket() {
                       className="form-control"
                     >
                       <option value="">اختر نوع التذكرة</option>
-                      <option value="1">عائلي</option>
-                      <option value="2">خاص</option>
-                      <option value="3">فردي</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
                     {errors.categoryId && (
                       <h6 className="error-log">{errors.categoryId}</h6>

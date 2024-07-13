@@ -20,7 +20,6 @@ export default function AllCruises() {
         <div>
             <Drawer />
             <ToastContainer />
-            {/* <Box height={70} sx={{ direction: "rtl" }} /> */}
             <Box sx={{ width: "80%" }}>
                 <div>
                     <h2 className='table-head' >المراكب </h2>

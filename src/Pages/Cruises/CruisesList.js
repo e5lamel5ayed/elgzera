@@ -24,16 +24,13 @@ export default function CruisesList() {
     fetchData();
   }, []);
   const EditRow = (id) => {
-    //console.log(id);
     navigate(`/AddCruises`, { state: { id } });
   };
   const DeleteRow = async (id) => {
-    console.log(id);
     try {
       const res = await axios.delete(
         `http://org-bay.runasp.net/api/Cruises/${id}`
       );
-      console.log(res);
       fetchData();
     } catch (error) {
       console.error("Error deleting data:", error);
@@ -62,7 +59,7 @@ export default function CruisesList() {
             >
               الحالة
             </TableCell>
-            <TableCell
+            {/* <TableCell
               style={{ color: "#fff" }}
               sx={{ fontSize: "18px" }}
               align="center"
@@ -75,7 +72,7 @@ export default function CruisesList() {
               align="center"
             >
               صورة
-            </TableCell>
+            </TableCell> */}
             <TableCell
               style={{ color: "#fff" }}
               sx={{ fontSize: "18px" }}
@@ -103,8 +100,8 @@ export default function CruisesList() {
                 <TableCell sx={{ fontSize: "18px" }} align="right">
                   {cruise.statusId === 1 ? "نشط" : "غير نشط"}
                 </TableCell>
-                <TableCell align="center">{cruise.caption}</TableCell>
-                <TableCell align="center">
+                {/* <TableCell align="center">{cruise.caption}</TableCell> */}
+                {/* <TableCell align="center">
                   {cruise.image ? (
                     <img
                       src={cruise.image}
@@ -114,7 +111,7 @@ export default function CruisesList() {
                   ) : (
                     "لا توجد صورة"
                   )}
-                </TableCell>
+                </TableCell> */}
                 <TableCell sx={{ fontSize: "18px" }} align="center">
                   <button
                     className="btn btn-primary ml-2"
