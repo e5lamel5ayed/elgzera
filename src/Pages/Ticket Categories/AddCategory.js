@@ -20,7 +20,7 @@ export default function AddCategory() {
   }, [location.state]);
   const fetchCategoryDetails = async (id) => {
     try {
-      const response = await axios.get(`//org-bay.runasp.net/api/Categories`);
+      const response = await axios.get(`http://org-bay.runasp.net/api/Categories`);
       const category = response.data.find((cat) => cat.id === id);
       setCategoryName(category.name);
     } catch {
@@ -49,12 +49,12 @@ export default function AddCategory() {
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
-          `//org-bay.runasp.net/api/Categories/${location.state.id}`,
+          `http://org-bay.runasp.net/api/Categories/${location.state.id}`,
           { name: categoryName }
         );
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {
-        const response = await axios.post("//org-bay.runasp.net/api/Categories", {
+        const response = await axios.post("http://org-bay.runasp.net/api/Categories", {
           name: categoryName,
         });
 
