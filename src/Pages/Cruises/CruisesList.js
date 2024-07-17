@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Table from "@mui/material/Table";
@@ -8,13 +9,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
+import { baseURL, CRUISES } from "../../Components/Api";
 
 export default function CruisesList() {
   const [cruises, setCruises] = useState([]);
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://org-bay.runasp.net/api/Cruises");
+      const response = await axios.get(`${baseURL}/${CRUISES}`);
       setCruises(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -23,19 +25,22 @@ export default function CruisesList() {
   useEffect(() => {
     fetchData();
   }, []);
+
   const EditRow = (id) => {
     navigate(`/AddCruises`, { state: { id } });
   };
+
   const DeleteRow = async (id) => {
     try {
       const res = await axios.delete(
-        `http://org-bay.runasp.net/api/Cruises/${id}`
+        `${baseURL}/${CRUISES}/${id}`
       );
       fetchData();
     } catch (error) {
       console.error("Error deleting data:", error);
     }
   };
+  
   return (
     <TableContainer
       className="table-style table table-hover"

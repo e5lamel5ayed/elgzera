@@ -8,12 +8,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
+import { baseURL } from "../../Components/Api";
+
+
 export default function TourGuidesList() {
   const [guides, setGuides] = useState([]);
   const navigate = useNavigate();
   const fetchGuides = async () => {
     try {
-      const response = await axios.get("http://org-bay.runasp.net/api/TourGuides");
+      const response = await axios.get(`${baseURL}/TourGuides`);
       setGuides(response.data);
     } catch (error) {
       console.error("Error fetching tour guides", error);
@@ -23,11 +26,11 @@ export default function TourGuidesList() {
     fetchGuides();
   }, []);
   const EditRow = (id) => {
-    navigate(`/AddTourGuides`, { state: { id } });
+    navigate(`/ AddTourGuides`, { state: { id } });
   };
   const DeleteRow = async (id) => {
     try {
-      await axios.delete(`http://org-bay.runasp.net/api/TourGuides/${id}`);
+      await axios.delete(`${ baseURL } / TourGuides / ${ id }`);
       fetchGuides();
     } catch (error) {
       console.log("error", error);

@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
 import { Box, TextField } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { baseURL, CRUISES, CRUISES_CREATE } from "../../Components/Api";
 
 export default function AddCruises() {
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ export default function AddCruises() {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
-    statusId: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -22,11 +24,11 @@ export default function AddCruises() {
 
   const fetchCruiseDetails = async (id) => {
     try {
-      const response = await axios.get(`http://org-bay.runasp.net/api/Cruises`);
-      const { name, statusId } = response.data.find(
+      const response = await axios.get(`${baseURL}/cruises`);
+      const { name, status } = response.data.find(
         (cruise) => cruise.id === id
       );
-      setFormData({ name: name, statusId: statusId });
+      setFormData({ name: name, status: status });
     } catch (error) {
       console.error("Error fetching cruise details:", error);
     }
@@ -41,7 +43,7 @@ export default function AddCruises() {
     e.preventDefault();
     const newErrors = {};
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
-    if (!formData.statusId) newErrors.statusId = " من فضلك اختر الحالة";
+    if (!formData.status) newErrors.status = " من فضلك اختر الحالة";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -49,11 +51,16 @@ export default function AddCruises() {
     }
 
     try {
+      const payload = {
+        ...formData,
+        status: parseInt(formData.status, 10), // Convert status to integer
+      };
+
       if (location.state && location.state.id) {
         // Editing existing Cruise
         const response = await axios.put(
-          `http://org-bay.runasp.net/api/Cruises/${location.state.id}`,
-          formData,
+          `${baseURL}/${CRUISES}/${location.state.id}`,
+          payload,
           {
             headers: {
               "Content-Type": "application/json",
@@ -62,7 +69,7 @@ export default function AddCruises() {
         );
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
-        const response = await axios.post("http://org-bay.runasp.net/api/Cruises", formData, {
+        const response = await axios.post(`${baseURL}/${CRUISES_CREATE}`, payload, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -95,6 +102,7 @@ export default function AddCruises() {
             <form onSubmit={handleSubmit}>
               <div className="container">
                 <div className="row">
+                  
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="name" className="d-flex">
@@ -116,14 +124,14 @@ export default function AddCruises() {
                   </div>
 
                   <div className="col-md-6">
-                    <label htmlFor="statusId" className="d-flex">
+                    <label htmlFor="status" className="d-flex">
                       الحالة
                     </label>
                     <TextField
-                      id="statusId"
-                      name="statusId"
+                      id="status"
+                      name="status"
                       select
-                      value={formData.statusId}
+                      value={formData.status}
                       onChange={handleChange}
                       size="small"
                       fullWidth
@@ -135,10 +143,11 @@ export default function AddCruises() {
                       <option value="1">نشط</option>
                       <option value="2">غير نشط</option>
                     </TextField>
-                    {errors.statusId && (
-                      <h6 className="error-log">{errors.statusId}</h6>
+                    {errors.status && (
+                      <h6 className="error-log">{errors.status}</h6>
                     )}
                   </div>
+
                 </div>
               </div>
               <button type="submit" className="btn btn-primary mt-4">

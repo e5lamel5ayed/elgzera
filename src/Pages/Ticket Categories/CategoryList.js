@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
+import { baseURL, CATEGORIES } from "../../Components/Api";
 
 export default function CategoryList() {
   const [categories, setCategories] = useState([]);
@@ -15,7 +16,7 @@ export default function CategoryList() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://org-bay.runasp.net/api/Categories");
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       // eslint-disable-next-line eqeqeq
       let newData = response.data.filter((res) => res.name != "");
       setCategories(newData);
@@ -31,7 +32,7 @@ export default function CategoryList() {
     navigate(`/AddCategory`, { state: { id } });
   };
   const DeleteRow = async (id) => {
-    await axios.delete(`http://org-bay.runasp.net/api/Categories/${id}`);
+    await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
     fetchCategories();
   };
   return (
@@ -72,7 +73,7 @@ export default function CategoryList() {
                   sx={{ fontSize: "18px" }}
                   align="center"
                 >
-                  {category.name}
+                  {category.title}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="center">
                   <button

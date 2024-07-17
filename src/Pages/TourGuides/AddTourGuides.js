@@ -3,6 +3,7 @@ import axios from "axios";
 import Drawer from "../../Components/Drawer";
 import { Box, FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { baseURL } from "../../Components/Api";
 
 export default function AddTourGuides() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function AddTourGuides() {
   }, [location.state]);
   const fetchTourGuideDetails = async (id) => {
     try {
-      const response = await axios.get(`http://org-bay.runasp.net/api/TourGuides`);
+      const response = await axios.get(`${baseURL}/TourGuides`);
       const tour = response.data.find((tour) => tour.id === id);
       setFormData(tour);
     } catch {
@@ -57,12 +58,12 @@ export default function AddTourGuides() {
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
-          `http://org-bay.runasp.net/api/TourGuides/${location.state.id}`,
+          `${baseURL}/TourGuides/${location.state.id}`,
           formData
         );
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
-        const response = await axios.post("http://org-bay.runasp.net/api/TourGuides", formData);
+        const response = await axios.post(`${baseURL}/TourGuides`, formData);
 
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة المرشد بنجاح");

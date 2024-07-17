@@ -27,7 +27,6 @@ export default function AllCruises() {
                         <button className='btn btn-primary add-button'>اضافه مركب</button>
                     </Link>
                 </div>
-
                 <CruisesList />
             </Box>
         </div>

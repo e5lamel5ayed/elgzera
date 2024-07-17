@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,6 +9,8 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
 import PersonIcon from '@mui/icons-material/Person';
+import { baseURL, CATEGORIES, CRUISES, CRUISES_CREATE } from "../../Components/Api";
+import Swal from 'sweetalert2';
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -23,17 +26,17 @@ function PayingOff() {
     const [showQRCodes, setShowQRCodes] = useState(false);
 
     useEffect(() => {
-        axios.get('http://org-bay.runasp.net/api/Cruises').then(response => setNationalities(response.data));
-        axios.get('http://org-bay.runasp.net/api/TourGuides').then(response => setGuides(response.data));
-        axios.get('http://org-bay.runasp.net/api/Cruises').then(response => setBoats(response.data));
-        axios.get('http://org-bay.runasp.net/api/Categories').then(response => setTicketCategories(response.data));
+        axios.get(`${baseURL}/${CRUISES}`).then(response => setNationalities(response.data));
+        axios.get(`${baseURL}/products`).then(response => setGuides(response.data));
+        axios.get(`${baseURL}/${CRUISES}`).then(response => setBoats(response.data));
+        axios.get(`${baseURL}/${CATEGORIES}`).then(response => setTicketCategories(response.data));
         fetchGuides();
         fetchBoats();
     }, []);
 
     const handleAddTicket = (category) => {
         setTickets([...tickets, {
-            ticketType: category.name,
+            ticketType: category.title,
             ticketCount: 1,
             ticketPrice: category.price,
             nationality: selectedNationality,
@@ -81,7 +84,7 @@ function PayingOff() {
 
     const fetchGuides = async () => {
         try {
-            const response = await axios.get('http://org-bay.runasp.net/api/TourGuides');
+            const response = await axios.get(`${baseURL}/products`);
             setGuides(response.data);
         } catch (error) {
             console.error("There was an error fetching the guides!", error);
@@ -90,7 +93,7 @@ function PayingOff() {
 
     const fetchBoats = async () => {
         try {
-            const response = await axios.get('http://org-bay.runasp.net/api/Cruises');
+            const response = await axios.get(`${baseURL}/${CRUISES}`);
             setBoats(response.data);
         } catch (error) {
             console.error("There was an error fetching the boats!", error);
@@ -101,8 +104,9 @@ function PayingOff() {
     const [addBoat, setAddBoat] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
-        statusId: "",
+        status: "",
     });
+
     const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
@@ -110,34 +114,46 @@ function PayingOff() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmitBoat = async (e) => {
         e.preventDefault();
-        // Validate form fields
         const newErrors = {};
         if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
-        if (!formData.statusId) newErrors.statusId = "من فضلك اختر الحالة";
+        if (!formData.status) newErrors.status = " من فضلك اختر الحالة";
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-        await axios.post("http://org-bay.runasp.net/api/Cruises", formData, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        try {
+            const payload = {
+                ...formData,
+                status: parseInt(formData.status, 10), // Convert status to integer
+            };
 
-        fetchBoats();
-        setAddBoat(false);
 
+            const response = await axios.post(`${baseURL}/${CRUISES_CREATE}`, payload, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+
+            fetchBoats();
+            setAddBoat(false);
+            Swal.fire("تم إضافة المركب بنجاح");
+
+        } catch (error) {
+            console.log("Error adding cruise:", error, error.message);
+        }
     };
+
 
     // add guide 
     const [addGuide, setAddGuide] = useState(false);
     const [formDataguide, setFormDataguide] = useState({
         name: "",
-        statusId: "",
+        status: "",
         email: "",
         phone: "",
         profitRatio: "",
@@ -157,14 +173,14 @@ function PayingOff() {
         if (!formDataguide.email) newErrors.email = "من فضلك ادخل البريد الالكتروني";
         if (!formDataguide.phone) newErrors.phone = "من فضلك ادخل الهاتف";
         if (!formDataguide.profitRatio) newErrors.profitRatio = "من فضلك ادخل نسبة الربح";
-        if (!formDataguide.statusId) newErrors.statusId = "من فضلك اختر الحالة";
+        if (!formDataguide.status) newErrors.status = "من فضلك اختر الحالة";
 
         if (Object.keys(newErrors).length > 0) {
             setGuideErrors(newErrors);
             return;
         }
 
-        await axios.post("http://org-bay.runasp.net/api/TourGuides", formDataguide, {
+        await axios.post(`${baseURL}/products`, formDataguide, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -172,6 +188,7 @@ function PayingOff() {
 
         fetchGuides();
         setAddGuide(false);
+        Swal.fire("تم إضافة المرشد بنجاح");
 
     };
 
@@ -230,10 +247,10 @@ function PayingOff() {
                                             {Array.isArray(ticketCategories) && ticketCategories.map((category) => (
                                                 <div className='my-1' key={category.id}>
                                                     <div className="d-flex flex-column align-items-center ticket px-3">
-                                                        <IconButton variant="outlined" disabled={selectedTicketCategories[category.name]} onClick={() => handleAddTicket(category)}>
+                                                        <IconButton variant="outlined" disabled={selectedTicketCategories[category.title]} onClick={() => handleAddTicket(category)}>
                                                             <PersonIcon sx={{ color: "#000", fontSize: "55px" }} />
                                                         </IconButton>
-                                                        <span>{category.name}</span>
+                                                        <span>{category.title}</span>
                                                     </div>
                                                 </div>
                                             ))}
@@ -310,49 +327,57 @@ function PayingOff() {
                     <div className='container'>
                         <div className='row'>
 
-                            <div className='col-md-6'>
-                                <FormControl fullWidth error={!!errors.name}>
-                                    <OutlinedInput
-                                        size='small'
-                                        autoFocus
-                                        margin="dense"
-                                        id="boatNameInput"
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="name" className="d-flex">
+                                        الاسم
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="name"
                                         name="name"
-                                        placeholder="اسم المركب"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        aria-describedby="nameHelp"
                                     />
-                                </FormControl>
-                                {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
+                                    {errors.name && (
+                                        <h6 className="error-log">{errors.name}</h6>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className='col-md-6'>
-                                <FormControl fullWidth error={!!errors.statusId}>
-                                    <Select
-                                        size='small'
-                                        id="boatStatusSelect"
-                                        name="statusId"
-                                        value={formData.statusId}
-                                        onChange={handleChange}
-                                        displayEmpty
-                                        fullWidth
-                                        inputProps={{ 'aria-label': 'Without label' }}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            اختر حالة المركب
-                                        </MenuItem>
-                                        <MenuItem value="1">نشط</MenuItem>
-                                        <MenuItem value="2">غير نشط</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                {errors.statusId && <p style={{ color: 'red' }}>{errors.statusId}</p>}
+                            <div className="col-md-6">
+                                <label htmlFor="status" className="d-flex">
+                                    الحالة
+                                </label>
+                                <TextField
+                                    id="status"
+                                    name="status"
+                                    select
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                    size="small"
+                                    fullWidth
+                                    SelectProps={{
+                                        native: true,
+                                    }}
+                                >
+                                    <option value="">اختر الحالة</option>
+                                    <option value="1">نشط</option>
+                                    <option value="2">غير نشط</option>
+                                </TextField>
+                                {errors.status && (
+                                    <h6 className="error-log">{errors.status}</h6>
+                                )}
                             </div>
+
                         </div>
                     </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setAddBoat(false)}>إلغاء</Button>
-                    <Button onClick={handleSubmit} variant="contained" disableElevation>
+                    <Button onClick={handleSubmitBoat} variant="contained" disableElevation>
                         إضافة
                     </Button>
                 </DialogActions>
@@ -386,13 +411,13 @@ function PayingOff() {
                             </div>
 
                             <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.statusId}>
+                                <FormControl fullWidth error={!!guideErrors.status}>
                                     <Select
                                         size='small'
                                         labelId="guideStatusLabel"
                                         id="guideStatusSelect"
-                                        name="statusId"
-                                        value={formDataguide.statusId}
+                                        name="status"
+                                        value={formDataguide.status}
                                         onChange={handleChangeGuide}
                                         displayEmpty
                                         fullWidth
@@ -405,7 +430,7 @@ function PayingOff() {
                                     </Select>
                                 </FormControl>
                                 <div className='error-log'>
-                                    {guideErrors.statusId}
+                                    {guideErrors.status}
                                 </div>
                             </div>
 

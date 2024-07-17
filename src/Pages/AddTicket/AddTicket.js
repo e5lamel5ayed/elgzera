@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
+import { baseURL, CATEGORIES, TICKETS, TICKETS_CREATE } from "../../Components/Api";
 import {
   Box,
   Checkbox,
@@ -16,11 +18,11 @@ export default function AddTicket() {
   const location = useLocation();
 
   const [formData, setFormData] = useState({
-    name: "",
+    title: "",
     price: "",
-    taxes: "",
+    tax: "",
     categoryId: "",
-    currencyId: "",
+    currency: "",
     days: [],
   });
   const [categories, setCategories] = useState([]);
@@ -36,25 +38,25 @@ export default function AddTicket() {
 
   const fetchTicketDetails = async (id) => {
     try {
-      const response = await axios.get(`http://org-bay.runasp.net/api/Tickets`);
+      const response = await axios.get(`${baseURL}/${TICKETS}`);
       const ticket = response.data.find((ticket) => ticket.id === id);
-      const { name, price, taxes, categoryId, currencyId } = ticket;
+      const { title, price, tax, categoryId, currency, days } = ticket;
       setFormData({
-        name,
+        title,
         price,
-        taxes,
+        tax,
         categoryId,
-        currencyId,
-        days: [],
+        currency,
+        days,
       });
     } catch {
-      console.log("error fetching data of ticket ");
+      console.log("error fetching data of ticket");
     }
   };
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://org-bay.runasp.net/api/Categories");
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       setCategories(response.data);
     } catch {
       console.log("error fetching categories");
@@ -64,7 +66,7 @@ export default function AddTicket() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      const dayValue = parseInt(value);
+      const dayValue = parseInt(value, 10);
       setFormData((prevState) => {
         if (checked) {
           return { ...prevState, days: [...prevState.days, dayValue] };
@@ -86,29 +88,44 @@ export default function AddTicket() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
+    if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
     if (!formData.price) newErrors.price = " من فضلك ادخل السعر";
-    if (!formData.taxes) newErrors.taxes = "من فضلك ادخل الضرائب";
+    if (!formData.tax) newErrors.tax = "من فضلك ادخل الضرائب";
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
-    if (!formData.currencyId) newErrors.currencyId = "من فضلك اختر العملة";
+    if (!formData.currency) newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
     try {
+      const payload = {
+        ...formData,
+        price: parseFloat(formData.price),
+        tax: parseFloat(formData.tax),
+        currency: parseInt(formData.currency, 10),
+        days: formData.days.map((day) => parseInt(day, 10)),
+      };
+
       if (location.state && location.state.id) {
         const response = await axios.put(
-          `http://org-bay.runasp.net/api/Tickets/${location.state.id}`,
-          formData
+          `${baseURL}/${TICKETS}/${location.state.id}`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       } else {
-        const response = await axios.post(
-          "http://org-bay.runasp.net/api/Tickets",
-          formData
-        );
+        const response = await axios.post(`${baseURL}/${TICKETS_CREATE}`, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         console.log(response);
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
@@ -118,6 +135,17 @@ export default function AddTicket() {
     } catch (error) {
       console.error("There was an error adding the ticket!", error);
     }
+  };
+
+
+  const currencyNames = {
+    0: "دولار أمريكي",
+    1: "يورو",
+    2: "جنيه مصري",
+    3: "جنيه إسترليني",
+    4: "ريال سعودي",
+    5: "درهم إماراتي",
+    6: "دينار كويتي"
   };
 
   return (
@@ -145,14 +173,14 @@ export default function AddTicket() {
                       </label>
                       <input
                         type="text"
-                        name="name"
-                        value={formData.name}
+                        name="title"
+                        value={formData.title}
                         onChange={handleChange}
                         className="form-control"
                         id="name"
                       />
-                      {errors.name && (
-                        <h6 className="error-log">{errors.name}</h6>
+                      {errors.title && (
+                        <h6 className="error-log">{errors.title}</h6>
                       )}
                     </div>
                   </div>
@@ -170,7 +198,7 @@ export default function AddTicket() {
                       <option value="">اختر نوع التذكرة</option>
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
-                          {category.name}
+                          {category.title}
                         </option>
                       ))}
                     </select>
@@ -198,41 +226,44 @@ export default function AddTicket() {
                   </div>
 
                   <div className="col-md-3">
-                    <label htmlFor="taxes" className="d-flex">
+                    <label htmlFor="tax" className="d-flex">
                       الضرائب
                     </label>
                     <FormControl fullWidth>
                       <OutlinedInput
                         size="small"
-                        id="taxes"
-                        name="taxes"
-                        value={formData.taxes}
+                        id="tax"
+                        name="tax"
+                        value={formData.tax}
                         onChange={handleChange}
                       />
                     </FormControl>
-                    {errors.taxes && (
-                      <h6 className="error-log">{errors.taxes}</h6>
+                    {errors.tax && (
+                      <h6 className="error-log">{errors.tax}</h6>
                     )}
                   </div>
 
                   <div className="col-md-3">
-                    <label htmlFor="currencyId" className="d-flex">
+                    <label htmlFor="currency" className="d-flex">
                       العملة
                     </label>
                     <select
-                      name="currencyId"
-                      value={formData.currencyId}
+                      name="currency"
+                      value={formData.currency}
                       onChange={handleChange}
                       className="form-control"
                     >
                       <option value="">اختر العملة</option>
-                      <option value="1">$</option>
-                      <option value="2">€</option>
-                      <option value="3">฿</option>
-                      <option value="4">¥</option>
+                      <option value="0">دولار أمريكي</option>
+                      <option value="1">يورو</option>
+                      <option value="2">جنيه مصري</option>
+                      <option value="3">جنيه إسترليني</option>
+                      <option value="4">ريال سعودي</option>
+                      <option value="5">درهم إماراتي</option>
+                      <option value="6">دينار كويتي</option>
                     </select>
-                    {errors.currencyId && (
-                      <h6 className="error-log">{errors.currencyId}</h6>
+                    {errors.currency && (
+                      <h6 className="error-log">{errors.currency}</h6>
                     )}
                   </div>
 

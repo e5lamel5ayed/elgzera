@@ -53,7 +53,7 @@ export default function PayingOff() {
 
     const fetchGuides = async () => {
         try {
-            const response = await axios.get('http://org-bay.runasp.net/api/TourGuides');
+            const response = await axios.get('${baseURL}/TourGuides');
             setGuides(response.data);
         } catch (error) {
             console.error("There was an error fetching the guides!", error);
@@ -62,7 +62,7 @@ export default function PayingOff() {
 
     const fetchBoats = async () => {
         try {
-            const response = await axios.get('http://org-bay.runasp.net/api/Cruises');
+            const response = await axios.get('${baseURL}/Cruises');
             setBoats(response.data);
         } catch (error) {
             console.error("There was an error fetching the boats!", error);
@@ -71,7 +71,7 @@ export default function PayingOff() {
 
     const fetchNationalities = async () => {
         try {
-            const response = await axios.get('http://org-bay.runasp.net/api/Payings');
+            const response = await axios.get('${baseURL}/Payings');
             setNationalities(response.data);
             console.log(setNationalities);
         } catch (error) {
@@ -138,7 +138,7 @@ export default function PayingOff() {
         }).filter(payment => payment !== null); // Remove any null entries
 
         try {
-            await axios.post('http://org-bay.runasp.net/api/Cruises', { payings: payingsData });
+            await axios.post('${baseURL}/Cruises', { payings: payingsData });
             // handle success if needed
         } catch (error) {
             console.error("There was an error posting the payment data!", error);

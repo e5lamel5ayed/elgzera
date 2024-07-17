@@ -10,13 +10,15 @@ import Paper from "@mui/material/Paper";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { baseURL } from "../../Components/Api";
 
 export default function BasicTable() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+
   async function fetchData() {
     try {
-      const response = await axios.get("http://org-bay.runasp.net/api/Tickets", {
+      const response = await axios.get(`${baseURL}/tickets`, {
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
@@ -32,43 +34,38 @@ export default function BasicTable() {
     fetchData();
   }, []);
 
-  const dayMapping = {
-    1: "السبت",
-    2: "الأحد",
-    3: "الاثنين",
-    4: "الثلاثاء",
-    5: "الأربعاء",
-    6: "الخميس",
-    7: "الجمعة",
-  };
-
-  const categoryMapping = {
-    1: "عائلي",
-    2: "خاص",
-    3: "فردي",
-  };
-
-  const currencyMapping = {
-    1: "$",
-    2: "€",
-    3: "฿",
-    4: "¥",
-  };
-
   const EditRow = (id) => {
     navigate(`/addTicket`, { state: { id } });
   };
 
   const DeleteRow = async (id) => {
-    const res = await axios.delete(
-      `http://org-bay.runasp.net/api/Tickets/${id}`
-    );
-    fetchData();
+    try {
+      await axios.delete(`${baseURL}/tickets/${id}`);
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
   };
 
-  const getDayNames = (dayNumbers) => {
-    if (!Array.isArray(dayNumbers)) return "";
-    return dayNumbers.map((day) => dayMapping[day] || day).join(", ");
+  const currencyNames = {
+    0: "دولار أمريكي",
+    1: "يورو",
+    2: "جنيه مصري",
+    3: "جنيه إسترليني",
+    4: "ريال سعودي",
+    5: "درهم إماراتي",
+    6: "دينار كويتي"
+  };
+  
+
+  const dayNames = {
+    Saturday: "السبت",
+    Sunday: "الأحد",
+    Monday: "الاثنين",
+    Tuesday: "الثلاثاء",
+    Wednesday: "الأربعاء",
+    Thursday: "الخميس",
+    Friday: "الجمعة",
   };
 
   return (
@@ -92,7 +89,7 @@ export default function BasicTable() {
               sx={{ fontSize: "18px" }}
               align="right"
             >
-              نوع التذكره
+              نوع التذكرة
             </TableCell>
             <TableCell
               style={{ color: "#fff" }}
@@ -120,14 +117,14 @@ export default function BasicTable() {
               sx={{ fontSize: "18px" }}
               align="right"
             >
-              الايام
+              الأيام
             </TableCell>
             <TableCell
               style={{ color: "#fff" }}
               sx={{ fontSize: "18px" }}
               align="right"
             >
-              الاجراءات
+              الإجراءات
             </TableCell>
           </TableRow>
         </TableHead>
@@ -147,19 +144,19 @@ export default function BasicTable() {
                   {ticket.name}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {categoryMapping[ticket.categoryId]}
+                  {ticket.categoryName}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="right">
                   {ticket.price}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {ticket.taxes}
+                  {ticket.tax}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {currencyMapping[ticket.currencyId]}
+                  {currencyNames[ticket.currency]}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {getDayNames(ticket.days)}
+                  {ticket.days.map((day) => dayNames[day.name]).join(", ")}
                 </TableCell>
                 <TableCell sx={{ fontSize: "18px" }} align="right">
                   <button
@@ -179,7 +176,7 @@ export default function BasicTable() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} align="center">
+              <TableCell colSpan={7} align="center">
                 لا توجد بيانات
               </TableCell>
             </TableRow>

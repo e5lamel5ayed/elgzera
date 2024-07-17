@@ -4,6 +4,7 @@ import axios from "axios";
 import Drawer from "../../Components/Drawer";
 import { Box } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { baseURL, CATEGORIES, CATEGORIES_CREATE } from "../../Components/Api";
 
 export default function AddCategory() {
   const [categoryName, setCategoryName] = useState("");
@@ -20,9 +21,10 @@ export default function AddCategory() {
   }, [location.state]);
   const fetchCategoryDetails = async (id) => {
     try {
-      const response = await axios.get(`http://org-bay.runasp.net/api/Categories`);
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       const category = response.data.find((cat) => cat.id === id);
       setCategoryName(category.name);
+      console.log(setCategoryName)
     } catch {
       console.log("error fetching data of category ");
     }
@@ -44,20 +46,20 @@ export default function AddCategory() {
       setErrors(newErrors);
       return;
     }
-
+  
     try {
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
-          `http://org-bay.runasp.net/api/Categories/${location.state.id}`,
-          { name: categoryName }
+          `${baseURL}/${CATEGORIES}/${location.state.id}`,
+          { title: categoryName } 
         );
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {
-        const response = await axios.post("http://org-bay.runasp.net/api/Categories", {
-          name: categoryName,
+        const response = await axios.post(`${baseURL}/${CATEGORIES_CREATE}`, {
+          title: categoryName,
         });
-
+  
         // تحقق من الاستجابة
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة فئة التذكرة بنجاح");
@@ -68,6 +70,7 @@ export default function AddCategory() {
       console.error("There was an error adding the category!", error);
     }
   };
+  
 
   return (
     <div>
@@ -97,7 +100,7 @@ export default function AddCategory() {
                       <input
                         type="text"
                         className="form-control"
-                        name="name"
+                        name="title"
                         value={categoryName}
                         onChange={handleInputChange}
                       />
