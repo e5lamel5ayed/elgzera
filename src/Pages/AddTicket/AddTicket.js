@@ -40,17 +40,17 @@ export default function AddTicket() {
     try {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
       const ticket = response.data.find((ticket) => ticket.id === id);
-      const { title, price, tax, categoryId, currency, days } = ticket;
+      const { name, price, tax, categoryId, currency, days } = ticket;
       setFormData({
-        title,
-        price,
-        tax,
-        categoryId,
-        currency,
-        days,
+        title: name,
+        price: price,
+        tax: tax,
+        categoryId: categoryId,
+        currency: currency,
+        days: days.map(day => day.id) || [],
       });
-    } catch {
-      console.log("error fetching data of ticket");
+    } catch (error) {
+      console.log("Error fetching data of ticket:", error);
     }
   };
 
@@ -137,7 +137,6 @@ export default function AddTicket() {
     }
   };
 
-
   const currencyNames = {
     0: "دولار أمريكي",
     1: "يورو",
@@ -187,7 +186,7 @@ export default function AddTicket() {
 
                   <div className="col-md-6">
                     <label htmlFor="categoryId" className="d-flex">
-                      نوع التذكره
+                      نوع التذكرة
                     </label>
                     <select
                       name="categoryId"
@@ -254,13 +253,11 @@ export default function AddTicket() {
                       className="form-control"
                     >
                       <option value="">اختر العملة</option>
-                      <option value="0">دولار أمريكي</option>
-                      <option value="1">يورو</option>
-                      <option value="2">جنيه مصري</option>
-                      <option value="3">جنيه إسترليني</option>
-                      <option value="4">ريال سعودي</option>
-                      <option value="5">درهم إماراتي</option>
-                      <option value="6">دينار كويتي</option>
+                      {Object.entries(currencyNames).map(([key, value]) => (
+                        <option key={key} value={key}>
+                          {value}
+                        </option>
+                      ))}
                     </select>
                     {errors.currency && (
                       <h6 className="error-log">{errors.currency}</h6>

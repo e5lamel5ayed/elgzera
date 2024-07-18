@@ -16,3 +16,5 @@ export const CATEGORIES_CREATE = 'categories/create'
 
 export const PRODUCTS = 'products'
 export const PRODUCTS_CREATE = 'products/create'
+
+export const NATIONALITY = 'nationalities'

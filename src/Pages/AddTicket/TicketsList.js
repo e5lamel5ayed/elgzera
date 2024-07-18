@@ -11,21 +11,28 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { baseURL } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function BasicTable() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
 
   async function fetchData() {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/tickets`, {
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
         },
       });
+      setLoading(false);
       setData(response.data);
     } catch (error) {
+      setLoading(false);
+
       console.error("Error fetching data:", error);
     }
   }
@@ -56,7 +63,7 @@ export default function BasicTable() {
     5: "درهم إماراتي",
     6: "دينار كويتي"
   };
-  
+
 
   const dayNames = {
     Saturday: "السبت",
@@ -69,120 +76,126 @@ export default function BasicTable() {
   };
 
   return (
-    <TableContainer
-      className="table-style table table-hover"
-      sx={{ direction: "rtl" }}
-      component={Paper}
-    >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className="table-head-style">
-          <TableRow>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الاسم
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              نوع التذكرة
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              السعر
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الضرائب
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              العملة
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الأيام
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الإجراءات
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.length > 0 ? (
-            data.map((ticket) => (
-              <TableRow
-                key={ticket.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell
-                  sx={{ fontSize: "18px" }}
-                  align="right"
-                  component="th"
-                  scope="row"
-                >
-                  {ticket.name}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {ticket.categoryName}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {ticket.price}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {ticket.tax}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {currencyNames[ticket.currency]}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {ticket.days.map((day) => dayNames[day.name]).join(", ")}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  <button
-                    className="btn btn-primary ml-2"
-                    onClick={() => EditRow(ticket.id)}
-                  >
-                    تعديل
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => DeleteRow(ticket.id)}
-                  >
-                    حذف
-                  </button>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
+    <div>
+      {loading && <Loading />}
+
+      <TableContainer
+        className="table-style table table-hover"
+        sx={{ direction: "rtl" }}
+        component={Paper}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead className="table-head-style">
             <TableRow>
-              <TableCell colSpan={7} align="center">
-                لا توجد بيانات
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الاسم
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                نوع التذكرة
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                السعر
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                العملة
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الضرائب
+              </TableCell>
+
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الأيام
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الإجراءات
               </TableCell>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {data.length > 0 ? (
+              data.map((ticket) => (
+                <TableRow
+                  key={ticket.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell
+                    sx={{ fontSize: "18px" }}
+                    align="right"
+                    component="th"
+                    scope="row"
+                  >
+                    {ticket.name}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {ticket.categoryName}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {ticket.price}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {currencyNames[ticket.currency]}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {ticket.tax}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {ticket.days.map((day) => dayNames[day.name]).join(", ")}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    <button
+                      className="btn btn-primary ml-2"
+                      onClick={() => EditRow(ticket.id)}
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => DeleteRow(ticket.id)}
+                    >
+                      حذف
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  لا توجد بيانات
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+
   );
 }

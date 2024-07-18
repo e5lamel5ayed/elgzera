@@ -23,7 +23,7 @@ export default function AddCategory() {
     try {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       const category = response.data.find((cat) => cat.id === id);
-      setCategoryName(category.name);
+      setCategoryName(category.title);
       console.log(setCategoryName)
     } catch {
       console.log("error fetching data of category ");

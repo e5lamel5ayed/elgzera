@@ -4,24 +4,39 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { baseURL, IMG_URL, SALES_CENTERS } from "../../Components/Api";
+import { useNavigate } from "react-router";
 
 export default function PlacesList() {
   const [salesCenters, setSalesCenters] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
+      setSalesCenters(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchSalesCenters = async () => {
-      try {
-        const response = await axios.get(
-          `${baseURL}/${SALES_CENTERS}`
-        );
-        setSalesCenters(response.data);
-      } catch (error) {
-        console.error("Error fetching sales centers:", error);
-      }
-    };
-
-    fetchSalesCenters();
+    fetchData();
   }, []);
+
+  const EditRow = (id) => {
+    navigate(`/AddProducts`, { state: { id } });
+  };
+
+  const DeleteRow = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${baseURL}/${SALES_CENTERS}/${id}`
+      );
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
+  };
 
   return (
     <div className="container">
@@ -42,10 +57,15 @@ export default function PlacesList() {
                   {center.location} Products
                 </Typography>
                 <div className="d-flex justify-content-between mt-2">
-                  <button className="btn btn-primary ml-2">
+                  <button className="btn btn-primary ml-2"
+                    onClick={() => EditRow(center.id)}
+                  >
                     تعديل
                   </button>
-                  <button className="btn btn-danger">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => DeleteRow(center.id)}
+                  >
                     حذف
                   </button>
                 </div>

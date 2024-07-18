@@ -9,8 +9,9 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
 import PersonIcon from '@mui/icons-material/Person';
-import { baseURL, CATEGORIES, CRUISES, CRUISES_CREATE } from "../../Components/Api";
+import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, PRODUCTS, PRODUCTS_CREATE, TICKETS } from "../../Components/Api";
 import Swal from 'sweetalert2';
+import utf8 from 'utf8';
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -26,24 +27,27 @@ function PayingOff() {
     const [showQRCodes, setShowQRCodes] = useState(false);
 
     useEffect(() => {
-        axios.get(`${baseURL}/${CRUISES}`).then(response => setNationalities(response.data));
+        axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
         axios.get(`${baseURL}/products`).then(response => setGuides(response.data));
         axios.get(`${baseURL}/${CRUISES}`).then(response => setBoats(response.data));
-        axios.get(`${baseURL}/${CATEGORIES}`).then(response => setTicketCategories(response.data));
+        axios.get(`${baseURL}/${TICKETS}`).then(response => setTicketCategories(response.data));
         fetchGuides();
         fetchBoats();
     }, []);
 
-    const handleAddTicket = (category) => {
+    const handleAddTicket = (ticket) => {
         setTickets([...tickets, {
-            ticketType: category.title,
+            ticketType: ticket.name,
+            ticketcurrency: ticket.currency,
             ticketCount: 1,
-            ticketPrice: category.price,
+            ticketPrice: ticket.price,
             nationality: selectedNationality,
             guideName: selectedGuideName,
-            boatName: selectedBoatName
+            boatName: selectedBoatName,
+
         }]);
-        setSelectedTicketCategories({ ...selectedTicketCategories, [category.name]: true });
+        console.log(ticket.name);
+        setSelectedTicketCategories({ ...selectedTicketCategories, [ticket.name]: true });
     };
 
     const handleIncreaseTicketCount = (index) => {
@@ -68,14 +72,17 @@ function PayingOff() {
         setSelectedTicketCategories(newSelectedTicketCategories);
     };
 
-    const handlePayment = () => {
+    useEffect(() => {
         const totalAmount = tickets.reduce((acc, ticket) => acc + (ticket.ticketPrice * ticket.ticketCount), 0);
         setTotal(totalAmount);
-        setShowQRCodes(true);
-    };
+    }, [tickets]);
 
     const handleCloseDialog = () => {
         setShowQRCodes(false);
+    };
+
+    const handlePayment = () => {
+        setShowQRCodes(true);
     };
 
     const handlePrint = () => {
@@ -84,7 +91,7 @@ function PayingOff() {
 
     const fetchGuides = async () => {
         try {
-            const response = await axios.get(`${baseURL}/products`);
+            const response = await axios.get(`${baseURL}/${PRODUCTS}`);
             setGuides(response.data);
         } catch (error) {
             console.error("There was an error fetching the guides!", error);
@@ -180,7 +187,7 @@ function PayingOff() {
             return;
         }
 
-        await axios.post(`${baseURL}/products`, formDataguide, {
+        await axios.post(`${baseURL}/${PRODUCTS_CREATE}`, formDataguide, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -192,6 +199,32 @@ function PayingOff() {
 
     };
 
+    const nationalityTranslations = {
+        "Egyptian": "مصري",
+        "Saudi": "سعودي",
+        "Kuwaiti": "كويتي",
+        "Emirati": "إماراتي",
+        "Qatari": "قطري",
+        "Bahraini": "بحريني",
+        "Omani": "عماني",
+        "Jordanian": "أردني",
+        "Lebanese": "لبناني",
+        "Syrian": "سوري",
+        "British": "بريطاني",
+        "American": "أمريكي",
+        "Canadian": "كندي",
+        "Australian": "أسترالي"
+    };
+
+    const currencyNames = {
+        0: "دولار أمريكي",
+        1: "يورو",
+        2: "جنيه مصري",
+        3: "جنيه إسترليني",
+        4: "ريال سعودي",
+        5: "درهم إماراتي",
+        6: "دينار كويتي"
+    };
 
     return (
         <div>
@@ -212,7 +245,7 @@ function PayingOff() {
                                                 <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
                                                 <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
                                                     {nationalities.map((nationality) => (
-                                                        <MenuItem key={nationality.id} value={nationality.name}>{nationality.name}</MenuItem>
+                                                        <MenuItem key={nationality.id} value={nationality.name}>{nationalityTranslations[nationality.name]}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </div>
@@ -244,13 +277,13 @@ function PayingOff() {
                                             </div>
                                         </div>
                                         <div className="row mt-4">
-                                            {Array.isArray(ticketCategories) && ticketCategories.map((category) => (
-                                                <div className='my-1' key={category.id}>
+                                            {Array.isArray(ticketCategories) && ticketCategories.map((ticket) => (
+                                                <div className='my-1' key={ticket.id}>
                                                     <div className="d-flex flex-column align-items-center ticket px-3">
-                                                        <IconButton variant="outlined" disabled={selectedTicketCategories[category.title]} onClick={() => handleAddTicket(category)}>
+                                                        <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
                                                             <PersonIcon sx={{ color: "#000", fontSize: "55px" }} />
                                                         </IconButton>
-                                                        <span>{category.title}</span>
+                                                        <span>{ticket.name}</span>
                                                     </div>
                                                 </div>
                                             ))}
@@ -262,6 +295,7 @@ function PayingOff() {
                                                         <TableRow className=' text-white'>
                                                             <TableCell style={{ color: "#fff", fontSize: "17px" }}>نوع التذكرة</TableCell>
                                                             <TableCell style={{ color: "#fff", fontSize: "17px" }}>السعر</TableCell>
+                                                            <TableCell style={{ color: "#fff", fontSize: "17px" }}>العملة</TableCell>
                                                             <TableCell style={{ color: "#fff", fontSize: "17px" }}>الجنسية</TableCell>
                                                             <TableCell style={{ color: "#fff", fontSize: "17px" }}>اسم المرشد</TableCell>
                                                             <TableCell style={{ color: "#fff", fontSize: "17px" }}>اسم المركب</TableCell>
@@ -274,7 +308,8 @@ function PayingOff() {
                                                             <TableRow key={index}>
                                                                 <TableCell>{ticket.ticketType}</TableCell>
                                                                 <TableCell>{ticket.ticketPrice * ticket.ticketCount}</TableCell>
-                                                                <TableCell>{ticket.nationality}</TableCell>
+                                                                <TableCell>{currencyNames[ticket.ticketcurrency]}</TableCell>
+                                                                <TableCell>{nationalityTranslations[ticket.nationality]}</TableCell>
                                                                 <TableCell>{ticket.guideName}</TableCell>
                                                                 <TableCell>{ticket.boatName}</TableCell>
                                                                 <TableCell>
@@ -299,7 +334,12 @@ function PayingOff() {
                                                             <TableCell sx={{ fontSize: "20px" }} align="right" colSpan={5}>المجموع الكلي</TableCell>
                                                             <TableCell sx={{ fontSize: "20px" }} align="right">{total}</TableCell>
                                                             <TableCell>
-                                                                <Button variant="contained" style={{ backgroundColor: "" }} sx={{ marginRight: "4px", fontSize: "19px" }} startIcon={<PaymentIcon className='ml-2' />} onClick={handlePayment}>
+                                                                <Button variant="contained" style={{ backgroundColor: "" }}
+                                                                    sx={{ marginRight: "4px", fontSize: "19px" }}
+                                                                    startIcon={<PaymentIcon className='ml-2' />}
+                                                                    onClick={handlePayment}
+                                                                >
+
                                                                     دفع
                                                                 </Button>
                                                             </TableCell>
@@ -314,10 +354,11 @@ function PayingOff() {
                         </div>
                     </div>
                 </div>
-            </Box>
+            </Box >
 
             {/* add boats dialog  */}
-            <Dialog open={addBoat} onClose={() => setAddBoat(false)} fullWidth style={{ direction: "rtl" }}>
+            <Dialog Dialog open={addBoat} onClose={() => setAddBoat(false)
+            } fullWidth style={{ direction: "rtl" }}>
                 <DialogTitle>
                     <Typography style={{ display: "flex", justifyContent: "start", fontSize: "20px" }}>
                         إضافة مركب جديد
@@ -381,10 +422,10 @@ function PayingOff() {
                         إضافة
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
 
             {/* add guides dialog  */}
-            <Dialog open={addGuide} onClose={() => setAddGuide(false)} fullWidth style={{ direction: "rtl" }}>
+            < Dialog open={addGuide} onClose={() => setAddGuide(false)} fullWidth style={{ direction: "rtl" }}>
                 <DialogTitle>
                     <Typography style={{ display: "flex", justifyContent: "start", fontSize: "20px" }}>
                         إضافة مرشد جديد
@@ -496,30 +537,36 @@ function PayingOff() {
                         إضافة
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
 
             {/* QRCode dialog  */}
-            <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
+            < Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
                 <DialogTitle>الـQR Code</DialogTitle>
                 <DialogContent>
-                    {tickets.map((ticket, index) => (
-                        <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
-                            <QRCode value={`نوع التذكرة: ${ticket.ticketType}, العدد: ${ticket.ticketCount}, السعر: ${ticket.ticketPrice * ticket.ticketCount}, الجنسية: ${ticket.nationality}, اسم الدليل: ${ticket.guideName}, اسم المركب: ${ticket.boatName}`} />
-                            <Typography variant="subtitle1">نوع التذكرة: {ticket.ticketType}</Typography>
-                            <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography>
-                            <Typography variant="subtitle1">السعر: {ticket.ticketPrice * ticket.ticketCount}</Typography>
-                            <Typography variant="subtitle1">الجنسية: {ticket.nationality}</Typography>
-                            <Typography variant="subtitle1">اسم المرشد: {ticket.guideName}</Typography>
-                            <Typography variant="subtitle1">اسم المركب: {ticket.boatName}</Typography>
-                        </div>
-                    ))}
+                    {tickets.map((ticket, index) => {
+                        const qrValue = `نوع التذكرة: ${ticket.ticketType} | العدد: ${ticket.ticketCount} | السعر: ${ticket.ticketPrice * ticket.ticketCount} | الجنسية: ${ticket.nationality} | اسم المرشد: ${ticket.guideName} | اسم المركب: ${ticket.boatName}`;
+                        const encodedQRValue = utf8.encode(qrValue);
+
+                        return (
+                            <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
+                                <QRCode value={encodedQRValue} />
+                                <Typography variant="subtitle1">نوع التذكرة: {ticket.ticketType}</Typography>
+                                <Typography variant="subtitle1">اسم المرشد: {ticket.guideName}</Typography>
+                                <Typography variant="subtitle1">الجنسية: {nationalityTranslations[ticket.nationality]}</Typography>
+                                <Typography variant="subtitle1">اسم المركب: {ticket.boatName}</Typography>
+                                <Typography variant="subtitle1">السعر: {ticket.ticketPrice * ticket.ticketCount}</Typography>
+                                <Typography variant="subtitle1">العملة: {currencyNames[ticket.ticketcurrency]}</Typography>
+                                <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography>
+                            </div>
+                        );
+                    })}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handlePrint}>طباعة</Button>
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
-            </Dialog>
-        </div>
+            </Dialog >
+        </div >
     );
 }
 

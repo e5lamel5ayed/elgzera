@@ -10,15 +10,23 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
 import { baseURL, CRUISES } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function CruisesList() {
   const [cruises, setCruises] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const fetchData = async () => {
     try {
+      setLoading(true);
+
       const response = await axios.get(`${baseURL}/${CRUISES}`);
       setCruises(response.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       console.error("Error fetching data:", error);
     }
   };
@@ -40,31 +48,34 @@ export default function CruisesList() {
       console.error("Error deleting data:", error);
     }
   };
-  
+
   return (
-    <TableContainer
-      className="table-style table table-hover"
-      sx={{ direction: "rtl" }}
-      component={Paper}
-    >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className="table-head-style">
-          <TableRow>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الاسم
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الحالة
-            </TableCell>
-            {/* <TableCell
+    <div>
+      {loading && <Loading />}
+
+      <TableContainer
+        className="table-style table table-hover"
+        sx={{ direction: "rtl" }}
+        component={Paper}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead className="table-head-style">
+            <TableRow>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الاسم
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الحالة
+              </TableCell>
+              {/* <TableCell
               style={{ color: "#fff" }}
               sx={{ fontSize: "18px" }}
               align="center"
@@ -78,35 +89,35 @@ export default function CruisesList() {
             >
               صورة
             </TableCell> */}
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="center"
-            >
-              الاجراءات
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Array.isArray(cruises) && cruises.length > 0 ? (
-            cruises.map((cruise) => (
-              <TableRow
-                key={cruise.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="center"
               >
-                <TableCell
-                  sx={{ fontSize: "18px" }}
-                  align="right"
-                  component="th"
-                  scope="row"
+                الاجراءات
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(cruises) && cruises.length > 0 ? (
+              cruises.map((cruise) => (
+                <TableRow
+                  key={cruise.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  {cruise.name}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {cruise.statusId === 1 ? "نشط" : "غير نشط"}
-                </TableCell>
-                {/* <TableCell align="center">{cruise.caption}</TableCell> */}
-                {/* <TableCell align="center">
+                  <TableCell
+                    sx={{ fontSize: "18px" }}
+                    align="right"
+                    component="th"
+                    scope="row"
+                  >
+                    {cruise.name}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {cruise.statusId === 1 ? "نشط" : "غير نشط"}
+                  </TableCell>
+                  {/* <TableCell align="center">{cruise.caption}</TableCell> */}
+                  {/* <TableCell align="center">
                   {cruise.image ? (
                     <img
                       src={cruise.image}
@@ -117,31 +128,33 @@ export default function CruisesList() {
                     "لا توجد صورة"
                   )}
                 </TableCell> */}
-                <TableCell sx={{ fontSize: "18px" }} align="center">
-                  <button
-                    className="btn btn-primary ml-2"
-                    onClick={() => EditRow(cruise.id)}
-                  >
-                    تعديل
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => DeleteRow(cruise.id)}
-                  >
-                    حذف
-                  </button>
+                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                    <button
+                      className="btn btn-primary ml-2"
+                      onClick={() => EditRow(cruise.id)}
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => DeleteRow(cruise.id)}
+                    >
+                      حذف
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  لا توجد بيانات
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={4} align="center">
-                لا توجد بيانات
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+
   );
 }
