@@ -558,11 +558,11 @@ function PayingOff() {
                             <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
                                 <QRCode value={encodedQRValue} />
                                 <Typography variant="subtitle1">نوع التذكرة: {ticket.ticketType}</Typography>
+                                <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography>
+                                <Typography variant="subtitle1">اسم المركب: {ticket.boatName}</Typography>
                                 <Typography variant="subtitle1">اسم المرشد: {ticket.guideName}</Typography>
                                 <Typography variant="subtitle1">الجنسية: {nationalityTranslations[ticket.nationality]}</Typography>
-                                <Typography variant="subtitle1">اسم المركب: {ticket.boatName}</Typography>
                                 <Typography variant="subtitle1">السعر: {ticket.ticketPrice * ticket.ticketCount}  {currencyNames[ticket.ticketcurrency]}</Typography>
-                                <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography>
                                 <Typography variant="subtitle1">المجموع الكلي : {total}</Typography>
                             </div>
                         );
