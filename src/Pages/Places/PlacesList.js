@@ -5,16 +5,23 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { baseURL, IMG_URL, SALES_CENTERS } from "../../Components/Api";
 import { useNavigate } from "react-router";
+import { Loading } from "../../Components/Loading";
 
 export default function PlacesList() {
   const [salesCenters, setSalesCenters] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
       setSalesCenters(response.data);
+      setLoading(false);
+
     } catch (error) {
+      setLoading(false);
+
       console.error("Error fetching data:", error);
     }
   };
@@ -40,6 +47,8 @@ export default function PlacesList() {
 
   return (
     <div className="container">
+      {loading && <Loading />}
+
       <div className="row product-edit">
         {salesCenters.map((center) => (
           <div className="col-md-4 ml-1" key={center.id}>

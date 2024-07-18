@@ -9,18 +9,24 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
 import { baseURL, CATEGORIES } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function CategoryList() {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       // eslint-disable-next-line eqeqeq
       let newData = response.data.filter((res) => res.name != "");
       setCategories(newData);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       console.error("Error fetching categories", error);
     }
   };
@@ -36,70 +42,74 @@ export default function CategoryList() {
     fetchCategories();
   };
   return (
-    <TableContainer
-      className="table-style table table-hover"
-      sx={{ direction: "rtl" }}
-      component={Paper}
-    >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className="table-head-style">
-          <TableRow>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="center"
-            >
-              الاسم
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff", width: "40%" }}
-              sx={{ fontSize: "18px" }}
-              align="center"
-            >
-              الاجراءات
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Array.isArray(categories) && categories.length > 0 ? (
-            categories.map((category) => (
-              <TableRow
-                key={category.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  sx={{ fontSize: "18px" }}
-                  align="center"
-                >
-                  {category.title}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="center">
-                  <button
-                    className="btn btn-primary ml-2"
-                    onClick={() => EditRow(category.id)}
-                  >
-                    تعديل
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => DeleteRow(category.id)}
-                  >
-                    حذف
-                  </button>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
+    <div>
+      {loading && <Loading />}
+      <TableContainer
+        className="table-style table table-hover"
+        sx={{ direction: "rtl" }}
+        component={Paper}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead className="table-head-style">
             <TableRow>
-              <TableCell colSpan={1} align="center">
-                لا توجد بيانات
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="center"
+              >
+                الاسم
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff", width: "40%" }}
+                sx={{ fontSize: "18px" }}
+                align="center"
+              >
+                الاجراءات
               </TableCell>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(categories) && categories.length > 0 ? (
+              categories.map((category) => (
+                <TableRow
+                  key={category.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{ fontSize: "18px" }}
+                    align="center"
+                  >
+                    {category.title}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                    <button
+                      className="btn btn-primary ml-2"
+                      onClick={() => EditRow(category.id)}
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => DeleteRow(category.id)}
+                    >
+                      حذف
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={1} align="center">
+                  لا توجد بيانات
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+
   );
 }

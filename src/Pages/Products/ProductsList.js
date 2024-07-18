@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { baseURL, IMG_URL, PRODUCTS } from "../../Components/Api";
 import { useNavigate } from "react-router";
+import { Loading } from "../../Components/Loading";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -18,6 +19,7 @@ export default function ProductList() {
       const response = await axios.get(`${baseURL}/${PRODUCTS}`);
       setProducts(response.data);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
@@ -43,10 +45,11 @@ export default function ProductList() {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="container">
+            {loading && <Loading />}
+
       <div className="row product-edit">
         {products.length === 0 ? (
           <p>No products found.</p>

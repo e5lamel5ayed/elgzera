@@ -9,16 +9,22 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
 import { baseURL } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 
 export default function TourGuidesList() {
   const [guides, setGuides] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const fetchGuides = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/TourGuides`);
       setGuides(response.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching tour guides", error);
     }
   };
@@ -30,117 +36,122 @@ export default function TourGuidesList() {
   };
   const DeleteRow = async (id) => {
     try {
-      await axios.delete(`${ baseURL } / TourGuides / ${ id }`);
+      await axios.delete(`${baseURL} / TourGuides / ${id}`);
       fetchGuides();
     } catch (error) {
       console.log("error", error);
     }
   };
   return (
-    <TableContainer
-      className="table-style table table-hover"
-      sx={{ direction: "rtl" }}
-      component={Paper}
-    >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead className="table-head-style">
-          <TableRow>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الاسم
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              الحالة
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              البريد الإلكتروني
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              رقم الهاتف
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="right"
-            >
-              نسبة الربح
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="center"
-            >
-              الاجراءات
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Array.isArray(guides) && guides.length > 0 ? (
-            guides.map((guide) => (
-              <TableRow
-                key={guide.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell
-                  sx={{ fontSize: "18px" }}
-                  align="right"
-                  component="th"
-                  scope="row"
-                >
-                  {guide.name}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {guide.statusId === 1 ? "نشط" : "غير نشط"}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {guide.email}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  {guide.phone}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="right">
-                  %{guide.profitRatio}
-                </TableCell>
-                <TableCell sx={{ fontSize: "18px" }} align="center">
-                  <button
-                    className="btn btn-primary ml-2"
-                    onClick={() => EditRow(guide.id)}
-                  >
-                    تعديل
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => DeleteRow(guide.id)}
-                  >
-                    حذف
-                  </button>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
+    <div>
+      {loading && <Loading />}
+
+      <TableContainer
+        className="table-style table table-hover"
+        sx={{ direction: "rtl" }}
+        component={Paper}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead className="table-head-style">
             <TableRow>
-              <TableCell colSpan={5} align="center">
-                لا توجد بيانات
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الاسم
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الحالة
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                البريد الإلكتروني
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                رقم الهاتف
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                نسبة الربح
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="center"
+              >
+                الاجراءات
               </TableCell>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(guides) && guides.length > 0 ? (
+              guides.map((guide) => (
+                <TableRow
+                  key={guide.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell
+                    sx={{ fontSize: "18px" }}
+                    align="right"
+                    component="th"
+                    scope="row"
+                  >
+                    {guide.name}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {guide.statusId === 1 ? "نشط" : "غير نشط"}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {guide.email}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    {guide.phone}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    %{guide.profitRatio}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                    <button
+                      className="btn btn-primary ml-2"
+                      onClick={() => EditRow(guide.id)}
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => DeleteRow(guide.id)}
+                    >
+                      حذف
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  لا توجد بيانات
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+
   );
 }

@@ -28,7 +28,7 @@ function PayingOff() {
 
     useEffect(() => {
         axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
-        axios.get(`${baseURL}/products`).then(response => setGuides(response.data));
+        axios.get(`${baseURL}/${PRODUCTS}`).then(response => setGuides(response.data));
         axios.get(`${baseURL}/${CRUISES}`).then(response => setBoats(response.data));
         axios.get(`${baseURL}/${TICKETS}`).then(response => setTicketCategories(response.data));
         fetchGuides();

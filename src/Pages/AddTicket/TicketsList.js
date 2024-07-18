@@ -10,7 +10,7 @@ import Paper from "@mui/material/Paper";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import { baseURL } from "../../Components/Api";
+import { baseURL, TICKETS } from "../../Components/Api";
 import { Loading } from "../../Components/Loading";
 
 export default function BasicTable() {
@@ -22,7 +22,7 @@ export default function BasicTable() {
   async function fetchData() {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/tickets`, {
+      const response = await axios.get(`${baseURL}/${TICKETS}`, {
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function BasicTable() {
 
   const DeleteRow = async (id) => {
     try {
-      await axios.delete(`${baseURL}/tickets/${id}`);
+      await axios.delete(`${baseURL}/${TICKETS}/${id}`);
       fetchData();
     } catch (error) {
       console.error("Error deleting data:", error);
