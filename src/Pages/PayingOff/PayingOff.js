@@ -544,7 +544,14 @@ function PayingOff() {
                 <DialogTitle>الـQR Code</DialogTitle>
                 <DialogContent>
                     {tickets.map((ticket, index) => {
-                        const qrValue = `نوع التذكرة: ${ticket.ticketType} | العدد: ${ticket.ticketCount} | السعر: ${ticket.ticketPrice * ticket.ticketCount} | الجنسية: ${ticket.nationality} | اسم المرشد: ${ticket.guideName} | اسم المركب: ${ticket.boatName}`;
+                        const qrValue = `نوع التذكرة: ${ticket.ticketType} 
+                            عدد التذاكر: ${ticket.ticketCount} 
+                            اسم المركب: ${ticket.boatName}
+                            اسم المرشد: ${ticket.guideName} 
+                            الجنسية: ${nationalityTranslations[ticket.nationality]} 
+                            السعر: ${ticket.ticketPrice * ticket.ticketCount} ${currencyNames[ticket.ticketcurrency]}
+                            المجموع الكلي : ${total}
+                            `;
                         const encodedQRValue = utf8.encode(qrValue);
 
                         return (
@@ -554,9 +561,9 @@ function PayingOff() {
                                 <Typography variant="subtitle1">اسم المرشد: {ticket.guideName}</Typography>
                                 <Typography variant="subtitle1">الجنسية: {nationalityTranslations[ticket.nationality]}</Typography>
                                 <Typography variant="subtitle1">اسم المركب: {ticket.boatName}</Typography>
-                                <Typography variant="subtitle1">السعر: {ticket.ticketPrice * ticket.ticketCount}</Typography>
-                                <Typography variant="subtitle1">العملة: {currencyNames[ticket.ticketcurrency]}</Typography>
+                                <Typography variant="subtitle1">السعر: {ticket.ticketPrice * ticket.ticketCount}  {currencyNames[ticket.ticketcurrency]}</Typography>
                                 <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography>
+                                <Typography variant="subtitle1">المجموع الكلي : {total}</Typography>
                             </div>
                         );
                     })}
