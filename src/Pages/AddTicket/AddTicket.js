@@ -2,7 +2,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
-import { baseURL, CATEGORIES, TICKETS, TICKETS_CREATE } from "../../Components/Api";
+import {
+  baseURL,
+  CATEGORIES,
+  TICKETS,
+  TICKETS_CREATE,
+} from "../../Components/Api";
 import {
   Box,
   Checkbox,
@@ -47,7 +52,7 @@ export default function AddTicket() {
         tax: tax,
         categoryId: categoryId,
         currency: currency,
-        days: days.map(day => day.id) || [],
+        days: days.map((day) => day.id) || [],
       });
     } catch (error) {
       console.log("Error fetching data of ticket:", error);
@@ -121,11 +126,15 @@ export default function AddTicket() {
         );
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       } else {
-        const response = await axios.post(`${baseURL}/${TICKETS_CREATE}`, payload, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.post(
+          `${baseURL}/${TICKETS_CREATE}`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         console.log(response);
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
@@ -144,7 +153,7 @@ export default function AddTicket() {
     3: "جنيه إسترليني",
     4: "ريال سعودي",
     5: "درهم إماراتي",
-    6: "دينار كويتي"
+    6: "دينار كويتي",
   };
 
   return (
@@ -237,9 +246,7 @@ export default function AddTicket() {
                         onChange={handleChange}
                       />
                     </FormControl>
-                    {errors.tax && (
-                      <h6 className="error-log">{errors.tax}</h6>
-                    )}
+                    {errors.tax && <h6 className="error-log">{errors.tax}</h6>}
                   </div>
 
                   <div className="col-md-3">

@@ -1,32 +1,49 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import Drawer from '../../Components/Drawer';
-import { Box, TextField } from '@mui/material';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { baseURL, SALES_CENTERS, SALES_CENTERS_CREATE } from '../../Components/Api';
+import React, { useEffect, useState } from "react";
+import Drawer from "../../Components/Drawer";
+import { Box, TextField } from "@mui/material";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import {
+  baseURL,
+  SALES_CENTERS,
+  SALES_CENTERS_CREATE,
+} from "../../Components/Api";
 
 export default function AddPlaces() {
   const navigate = useNavigate();
   const location = useLocation();
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
-    image: null
+    name: "",
+    location: "",
+    image: null,
   });
+  useEffect(() => {
+    const { id } = location.state || {};
+    if (id) {
+      fetchPlace(id);
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const fetchPlace = async (id) => {
+    const res = await axios.get(
+      `http://org-bay.runasp.net/api/sales-centers/${id}`
+    );
+    //console.log(res.data);
+    setFormData(res.data);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!formData.name) newErrors.name = 'من فضلك ادخل الاسم';
-    if (!formData.location) newErrors.location = 'من فضلك ادخل الموقع';
-    if (!formData.image) newErrors.image = 'من فضلك ادخل الصورة';
+    if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
+    if (!formData.location) newErrors.location = "من فضلك ادخل الموقع";
+    if (!formData.image) newErrors.image = "من فضلك ادخل الصورة";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -35,30 +52,30 @@ export default function AddPlaces() {
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('Name', formData.name);
-      formDataToSend.append('Location', formData.location);
-      formDataToSend.append('Img', formData.image);
+      formDataToSend.append("Name", formData.name);
+      formDataToSend.append("Location", formData.location);
+      formDataToSend.append("Image", formData.image);
 
       if (location.state && location.state.id) {
         // Editing existing place
         const response = await axios.put(
-          `${baseURL}/${SALES_CENTERS}/${location.state.id}`,
+          ` http://org-bay.runasp.net/api/sales-centers/${location.state.id}`,
           formDataToSend,
           {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
         localStorage.setItem("alertMessage", "تم تعديل مركز البيع بنجاح");
       } else {
         const response = await axios.post(
-          `${baseURL}/${SALES_CENTERS_CREATE}`,
+          `http://org-bay.runasp.net/api/sales-centers/create`,
           formDataToSend,
           {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
 
@@ -67,23 +84,23 @@ export default function AddPlaces() {
         }
       }
 
-      navigate('/AllPlaces');
+      navigate("/AllPlaces");
     } catch (error) {
-      console.error('Error adding or editing place:', error);
+      console.error("Error adding or editing place:", error);
     }
   };
 
   return (
     <div>
       <Drawer />
-      <Box sx={{ width: '80%', direction: 'rtl' }}>
+      <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>
           <h2 className="add-head">مراكز البيع</h2>
           <Link to="/AllPlaces">
             <button className="btn btn-primary add-button">رجوع</button>
           </Link>
         </div>
-        <div className="card table-style" style={{ direction: 'rtl' }}>
+        <div className="card table-style" style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-style">
             <h3>اضف البيانات</h3>
           </div>
@@ -144,7 +161,7 @@ export default function AddPlaces() {
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            image: e.target.files[0]
+                            image: e.target.files[0],
                           })
                         }
                         aria-describedby="imageHelp"

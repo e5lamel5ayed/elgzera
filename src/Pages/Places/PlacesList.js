@@ -17,11 +17,10 @@ export default function PlacesList() {
       setLoading(true);
       const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
       setSalesCenters(response.data);
+      console.log(salesCenters);
       setLoading(false);
-
     } catch (error) {
       setLoading(false);
-
       console.error("Error fetching data:", error);
     }
   };
@@ -31,14 +30,12 @@ export default function PlacesList() {
   }, []);
 
   const EditRow = (id) => {
-    navigate(`/AddProducts`, { state: { id } });
+    navigate(`/AddPlaces`, { state: { id } });
   };
 
   const DeleteRow = async (id) => {
     try {
-      const res = await axios.delete(
-        `${baseURL}/${SALES_CENTERS}/${id}`
-      );
+      const res = await axios.delete(`${baseURL}/${SALES_CENTERS}/${id}`);
       fetchData();
     } catch (error) {
       console.error("Error deleting data:", error);
@@ -66,7 +63,8 @@ export default function PlacesList() {
                   {center.location} Products
                 </Typography>
                 <div className="d-flex justify-content-between mt-2">
-                  <button className="btn btn-primary ml-2"
+                  <button
+                    className="btn btn-primary ml-2"
                     onClick={() => EditRow(center.id)}
                   >
                     تعديل

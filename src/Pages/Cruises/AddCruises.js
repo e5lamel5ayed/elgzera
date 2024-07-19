@@ -25,9 +25,7 @@ export default function AddCruises() {
   const fetchCruiseDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/cruises`);
-      const { name, status } = response.data.find(
-        (cruise) => cruise.id === id
-      );
+      const { name, status } = response.data.find((cruise) => cruise.id === id);
       setFormData({ name: name, status: status });
     } catch (error) {
       console.error("Error fetching cruise details:", error);
@@ -69,11 +67,15 @@ export default function AddCruises() {
         );
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
-        const response = await axios.post(`${baseURL}/${CRUISES_CREATE}`, payload, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.post(
+          `${baseURL}/${CRUISES_CREATE}`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة المركب بنجاح");
         }
@@ -102,7 +104,6 @@ export default function AddCruises() {
             <form onSubmit={handleSubmit}>
               <div className="container">
                 <div className="row">
-                  
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="name" className="d-flex">
@@ -147,7 +148,6 @@ export default function AddCruises() {
                       <h6 className="error-log">{errors.status}</h6>
                     )}
                   </div>
-
                 </div>
               </div>
               <button type="submit" className="btn btn-primary mt-4">

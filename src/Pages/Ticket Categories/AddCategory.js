@@ -24,7 +24,7 @@ export default function AddCategory() {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       const category = response.data.find((cat) => cat.id === id);
       setCategoryName(category.title);
-      console.log(setCategoryName)
+      console.log(setCategoryName);
     } catch {
       console.log("error fetching data of category ");
     }
@@ -46,20 +46,20 @@ export default function AddCategory() {
       setErrors(newErrors);
       return;
     }
-  
+
     try {
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
           `${baseURL}/${CATEGORIES}/${location.state.id}`,
-          { title: categoryName } 
+          { name: categoryName }
         );
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {
         const response = await axios.post(`${baseURL}/${CATEGORIES_CREATE}`, {
           title: categoryName,
         });
-  
+
         // تحقق من الاستجابة
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة فئة التذكرة بنجاح");
@@ -70,7 +70,6 @@ export default function AddCategory() {
       console.error("There was an error adding the category!", error);
     }
   };
-  
 
   return (
     <div>
