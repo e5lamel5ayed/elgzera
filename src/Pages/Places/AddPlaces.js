@@ -33,37 +33,30 @@ export default function AddPlaces() {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setFormData({ ...formData, image: files[0], imageUrl: URL.createObjectURL(files[0]) });
+      setFormData({
+        ...formData,
+        image: files[0],
+        imageUrl: URL.createObjectURL(files[0]),
+      });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
   const fetchPlace = async (id) => {
-    try {
-      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
-      const center = response.data.find((center) => center.id === id);
-      const completeImageUrl = `${IMG_URL}${center.imgUrl}`;
-
-      setFormData({
-        ...formData,
-        name: center.name,
-        location: center.location,
-        image: null,
-        imageUrl: completeImageUrl,
-      });
-    } catch (error) {
-      console.error("Error fetching place:", error);
-    }
+    const res = await axios.get(
+      `http://org-bay.runasp.net/api/sales-centers/${id}`
+    );
+    //console.log(res.data);
+    setFormData(res.data);
   };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
     if (!formData.location) newErrors.location = "من فضلك ادخل الموقع";
-    if (!formData.image && !formData.imageUrl) newErrors.image = "من فضلك ادخل الصورة";
+    if (!formData.image && !formData.imageUrl)
+      newErrors.image = "من فضلك ادخل الصورة";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -189,7 +182,11 @@ export default function AddPlaces() {
                         <img
                           src={formData.imageUrl}
                           alt="sales-center"
-                          style={{ marginTop: "10px", width: "100px", height: "100px" }}
+                          style={{
+                            marginTop: "10px",
+                            width: "100px",
+                            height: "100px",
+                          }}
                         />
                       )}
                     </div>

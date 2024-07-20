@@ -50,23 +50,28 @@ export default function AddProducts() {
       const response = await axios.get(`${baseURL}/${PRODUCTS}`);
       const product = response.data.find((product) => product.id === id);
       const completeImageUrl = `${IMG_URL}${product.imgUrl}`;
+      console.log(product);
       setFormData({
         name: product.name,
         price: product.price,
         image: null,
         imageUrl: completeImageUrl,
-        salesCenterId: product.salesCenterId || "",
+        salesCenterId: product.salesCenterId,
       });
+      console.log(formData);
     } catch (error) {
       console.error("Error fetching product:", error);
     }
   };
 
-
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setFormData({ ...formData, image: files[0], imageUrl: URL.createObjectURL(files[0]) });
+      setFormData({
+        ...formData,
+        image: files[0],
+        imageUrl: URL.createObjectURL(files[0]),
+      });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -85,8 +90,10 @@ export default function AddProducts() {
       newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
     }
 
-    if (!formData.image && !formData.imageUrl) newErrors.image = "من فضلك ادخل الصورة";
-    if (!formData.salesCenterId) newErrors.salesCenterId = "من فضلك اختر المكان";
+    if (!formData.image && !formData.imageUrl)
+      newErrors.image = "من فضلك ادخل الصورة";
+    if (!formData.salesCenterId)
+      newErrors.salesCenterId = "من فضلك اختر المكان";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -244,12 +251,15 @@ export default function AddProducts() {
                         <img
                           src={formData.imageUrl}
                           alt="Product"
-                          style={{ marginTop: "10px", width: "100px", height: "100px" }}
+                          style={{
+                            marginTop: "10px",
+                            width: "100px",
+                            height: "100px",
+                          }}
                         />
                       )}
                     </div>
                   </div>
-
                 </div>
               </div>
 

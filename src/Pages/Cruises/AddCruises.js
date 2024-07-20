@@ -25,13 +25,8 @@ export default function AddCruises() {
   const fetchCruiseDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/cruises`);
-      const cruise = response.data.find((cruise) => cruise.id === id);
-      if (cruise) {
-        setFormData({
-          name: cruise.name,
-          status: cruise.status === 'Active' ? '1' : '2'
-        });
-      }
+      const { name, status } = response.data.find((cruise) => cruise.id === id);
+      setFormData({ name: name, status: status });
     } catch (error) {
       console.error("Error fetching cruise details:", error);
     }
