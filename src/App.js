@@ -16,6 +16,7 @@ import AddProducts from "./Pages/Products/AddProducts";
 import AllReservation from "./Pages/Reservation/AllReservation";
 import PayingOff from "./Pages/PayingOff/PayingOff";
 import Login from "./Pages/Login";
+import EditTicket from "./Pages/AddTicket/EditTicket";
 
 export default function App() {
   return (

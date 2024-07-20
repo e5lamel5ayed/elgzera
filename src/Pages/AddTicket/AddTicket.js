@@ -21,7 +21,6 @@ import { Loading } from "../../Components/Loading";
 
 export default function AddTicket() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     title: "",
     price: "",
@@ -37,32 +36,6 @@ export default function AddTicket() {
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  useEffect(() => {
-    const { id } = location.state || {};
-    if (id) {
-      fetchTicketDetails(id);
-    }
-    fetchCategories();
-  }, [location.state]);
-
-  const fetchTicketDetails = async (id) => {
-    try {
-      const response = await axios.get(`${baseURL}/${TICKETS}`);
-      const ticket = response.data.find((ticket) => ticket.id === id);
-      const { name, price, tax, categoryId, currency, days } = ticket;
-      setFormData({
-        title: name,
-        price: price,
-        tax: tax,
-        categoryId: categoryId,
-        currency: currency,
-        days: days.map((day) => day.id) || [],
-      });
-    } catch (error) {
-      console.log("Error fetching data of ticket:", error);
-    }
-  };
 
   const fetchCategories = async () => {
     try {
@@ -117,8 +90,7 @@ export default function AddTicket() {
     }
 
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
-    if (!formData.currency && !location.state)
-      newErrors.currency = "من فضلك اختر العملة";
+    if (!formData.currency) newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
 
     if (Object.keys(newErrors).length > 0) {
@@ -136,33 +108,20 @@ export default function AddTicket() {
           : undefined,
         days: formData.days.map((day) => parseInt(day, 10)),
       };
-
-      if (location.state && location.state.id) {
-        const response = await axios.put(
-          `${baseURL}/${TICKETS}/${location.state.id}`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
-      } else {
-        const response = await axios.post(
-          `${baseURL}/${TICKETS_CREATE}`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log(response);
-        if (response.data) {
-          localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
+      const response = await axios.post(
+        `${baseURL}/${TICKETS_CREATE}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
+      console.log(response);
+      if (response.data) {
+        localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
       }
+
       navigate("/AllTickets");
     } catch (error) {
       console.error("There was an error submitting the ticket!", error);
