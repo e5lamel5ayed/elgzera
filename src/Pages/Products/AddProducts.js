@@ -10,6 +10,7 @@ import {
   PRODUCTS,
   IMG_URL,
 } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function AddProducts() {
   const [formData, setFormData] = useState({
@@ -24,20 +25,26 @@ export default function AddProducts() {
   const navigate = useNavigate();
   const location = useLocation();
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const { id } = location.state || {};
     if (id) {
       fetchProduct(id);
+    } else {
+      setLoading(false);
     }
   }, [location.state]);
 
   useEffect(() => {
     const fetchSalesCenters = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
         setSalesCenters(response.data);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching sales centers:", error);
       }
     };
@@ -47,19 +54,20 @@ export default function AddProducts() {
 
   const fetchProduct = async (id) => {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/${PRODUCTS}`);
       const product = response.data.find((product) => product.id === id);
       const completeImageUrl = `${IMG_URL}${product.imgUrl}`;
-      console.log(product);
       setFormData({
         name: product.name,
         price: product.price,
         image: null,
         imageUrl: completeImageUrl,
-        salesCenterId: product.salesCenterId,
+        salesCenterId: product.salesCenterId, 
       });
-      console.log(formData);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching product:", error);
     }
   };
@@ -101,6 +109,7 @@ export default function AddProducts() {
     }
 
     try {
+      setLoading(true);
       const formDataToSend = new FormData();
       formDataToSend.append("Name", formData.name);
       formDataToSend.append("Price", formData.price);
@@ -112,7 +121,6 @@ export default function AddProducts() {
 
       let response;
       if (location.state && location.state.id) {
-        // Editing existing product
         response = await axios.put(
           `${baseURL}/${PRODUCTS}/${location.state.id}`,
           formDataToSend,
@@ -124,7 +132,6 @@ export default function AddProducts() {
         );
         localStorage.setItem("alertMessage", "تم تعديل المنتج بنجاح");
       } else {
-        // Adding new product
         response = await axios.post(
           `${baseURL}/${PRODUCTS_CREATE}`,
           formDataToSend,
@@ -138,15 +145,17 @@ export default function AddProducts() {
           localStorage.setItem("alertMessage", "تم إضافة المنتج بنجاح");
         }
       }
-
+      setLoading(false);
       navigate("/AllProducts");
     } catch (error) {
+      setLoading(false);
       console.error("Error adding product:", error);
     }
   };
 
   return (
     <div>
+      {loading && <Loading />}
       <Drawer />
       <Box height={65} sx={{ direction: "rtl" }} />
       <div>
@@ -211,7 +220,7 @@ export default function AddProducts() {
                       id="salesCenterId"
                       select
                       name="salesCenterId"
-                      value={formData.salesCenterId}
+                      value={formData.salesCenterId} 
                       onChange={handleChange}
                       size="small"
                       fullWidth

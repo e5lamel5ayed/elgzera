@@ -44,7 +44,6 @@ function PayingOff() {
             nationality: selectedNationality,
             guideName: selectedGuideName,
             boatName: selectedBoatName,
-
         }]);
         setSelectedTicketCategories({ ...selectedTicketCategories, [ticket.name]: true });
     };
@@ -131,13 +130,11 @@ function PayingOff() {
             return;
         }
 
-
         try {
             const payload = {
                 name: formData.name,
                 status: formData.status === "Active" ? 1 : 2,
             };
-
 
             const response = await axios.post(
                 `${baseURL}/${CRUISES_CREATE}`,
@@ -156,7 +153,6 @@ function PayingOff() {
             console.log("Error adding cruise:", error, error.message);
         }
     };
-
 
     // add guide 
     const [addGuide, setAddGuide] = useState(false);
@@ -221,7 +217,6 @@ function PayingOff() {
                 status: formDataguide.status === "Active" ? 1 : 2,
             };
 
-
             await axios.post(`${baseURL}/tour-guides/create`, payload, {
                 headers: {
                     "Content-Type": "application/json"
@@ -230,13 +225,11 @@ function PayingOff() {
             fetchGuides();
             setAddGuide(false);
             Swal.fire("تم إضافة المرشد بنجاح");
-
         }
         catch (error) {
             console.error("There was an error adding the tour guide!", error);
         }
     };
-
 
     const nationalityTranslations = {
         "Egyptian": "مصري",

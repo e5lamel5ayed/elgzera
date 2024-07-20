@@ -11,8 +11,10 @@ import {
   SALES_CENTERS,
   SALES_CENTERS_CREATE,
 } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function AddPlaces() {
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const [errors, setErrors] = useState({});
@@ -27,6 +29,9 @@ export default function AddPlaces() {
     const { id } = location.state || {};
     if (id) {
       fetchPlace(id);
+    } else {
+      setLoading(false);
+
     }
   }, [location.state]);
 
@@ -44,12 +49,28 @@ export default function AddPlaces() {
   };
 
   const fetchPlace = async (id) => {
-    const res = await axios.get(
-      `http://org-bay.runasp.net/api/sales-centers/${id}`
-    );
-    //console.log(res.data);
-    setFormData(res.data);
+    try {
+      setLoading(true);
+
+      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
+      const center = response.data.find((center) => center.id === id);
+      const completeImageUrl = `${IMG_URL}${center.imgUrl}`;
+      setFormData({
+        name: center.name,
+        location: center.location,
+        image: null,
+        imageUrl: completeImageUrl,
+      });
+      setLoading(false);
+
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching center:", error);
+    }
   };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
@@ -64,6 +85,7 @@ export default function AddPlaces() {
     }
 
     try {
+      setLoading(true);
       const formDataToSend = new FormData();
       formDataToSend.append("Name", formData.name);
       formDataToSend.append("Location", formData.location);
@@ -97,15 +119,19 @@ export default function AddPlaces() {
           localStorage.setItem("alertMessage", "تم إضافة مركز البيع بنجاح");
         }
       }
+      setLoading(false);
 
       navigate("/AllPlaces");
     } catch (error) {
+      setLoading(false);
+
       console.error("Error adding or editing place:", error);
     }
   };
 
   return (
     <div>
+      {loading && <Loading />}
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>

@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 export default function BasicTable() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function fetchData() {
     try {
@@ -42,13 +42,16 @@ export default function BasicTable() {
   }, []);
 
   const EditRow = (id) => {
-    navigate(`/EditTicket`, { state: { id } });
+    navigate(`/AddTicket`, { state: { id } });
   };
 
   const DeleteRow = async (id) => {
     try {
+      setLoading(true);
       await axios.delete(`${baseURL}/${TICKETS}/${id}`);
       fetchData();
+      setLoading(false);
+
       Swal.fire("تم الحذف بنجاح");
 
     } catch (error) {

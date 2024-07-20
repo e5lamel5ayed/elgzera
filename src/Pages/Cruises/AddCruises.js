@@ -5,10 +5,13 @@ import Drawer from "../../Components/Drawer";
 import { Box, TextField } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { baseURL, CRUISES, CRUISES_CREATE } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function AddCruises() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
+
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
@@ -19,15 +22,23 @@ export default function AddCruises() {
     const { id } = location.state || {};
     if (id) {
       fetchCruiseDetails(id);
+    } else {
+      setLoading(false);
     }
   }, [location.state]);
 
   const fetchCruiseDetails = async (id) => {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/cruises`);
-      const { name, status } = response.data.find((cruise) => cruise.id === id);
-      setFormData({ name: name, status: status });
+      const cruise = response.data.find((cruise) => cruise.id === id);
+      if (cruise) {
+        const { name, status } = cruise;
+        setFormData({ name, status });
+      }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching cruise details:", error);
     }
   };
@@ -41,7 +52,7 @@ export default function AddCruises() {
     e.preventDefault();
     const newErrors = {};
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
-    if (!formData.status) newErrors.status = " من فضلك اختر الحالة";
+    if (!formData.status) newErrors.status = "من فضلك اختر الحالة";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -49,14 +60,15 @@ export default function AddCruises() {
     }
 
     try {
+      setLoading(true);
       const payload = {
-        ...formData,
-        status: parseInt(formData.status, 10),
+        name: formData.name,
+        status: formData.status === "Active" ? 1 : 2,
       };
 
       if (location.state && location.state.id) {
         // Editing existing Cruise
-        const response = await axios.put(
+        await axios.put(
           `${baseURL}/${CRUISES}/${location.state.id}`,
           payload,
           {
@@ -67,7 +79,7 @@ export default function AddCruises() {
         );
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
-        const response = await axios.post(
+        await axios.post(
           `${baseURL}/${CRUISES_CREATE}`,
           payload,
           {
@@ -76,18 +88,19 @@ export default function AddCruises() {
             },
           }
         );
-        if (response.data) {
-          localStorage.setItem("alertMessage", "تم إضافة المركب بنجاح");
-        }
+        localStorage.setItem("alertMessage", "تم إضافة المركب بنجاح");
       }
       navigate("/AllCruises");
+      setLoading(false);
     } catch (error) {
-      console.log("Error adding cruise:", error, error.message);
+      setLoading(false);
+      console.log("Error adding cruise:", error.response?.data || error.message);
     }
   };
 
   return (
     <div>
+      {loading && <Loading />}
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>
@@ -141,8 +154,8 @@ export default function AddCruises() {
                       }}
                     >
                       <option value="">اختر الحالة</option>
-                      <option value="1">نشط</option>
-                      <option value="2">غير نشط</option>
+                      <option value="Active">نشط</option>
+                      <option value="InActive">غير نشط</option>
                     </TextField>
                     {errors.status && (
                       <h6 className="error-log">{errors.status}</h6>

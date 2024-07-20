@@ -5,6 +5,7 @@ import Drawer from "../../Components/Drawer";
 import { Box } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { baseURL, CATEGORIES, CATEGORIES_CREATE } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function AddCategory() {
   const [categoryName, setCategoryName] = useState("");
@@ -12,19 +13,25 @@ export default function AddCategory() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const { id } = location.state || {};
     if (id) {
       fetchCategoryDetails(id);
+    } else {
+      setLoading(false);
     }
   }, [location.state]);
   const fetchCategoryDetails = async (id) => {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       const category = response.data.find((cat) => cat.id === id);
       setCategoryName(category.title);
+      setLoading(false);
     } catch {
+      setLoading(false);
       console.log("error fetching data of category ");
     }
   };
@@ -47,6 +54,7 @@ export default function AddCategory() {
     }
 
     try {
+      setLoading(true);
       if (location.state && location.state.id) {
         // Editing existing Category
         const response = await axios.put(
@@ -64,14 +72,17 @@ export default function AddCategory() {
           localStorage.setItem("alertMessage", "تم إضافة فئة التذكرة بنجاح");
         }
       }
+      setLoading(false);
       navigate("/AllCategories");
     } catch (error) {
+      setLoading(false);
       console.error("There was an error adding the category!", error);
     }
   };
 
   return (
     <div>
+      {loading && <Loading />}
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>

@@ -5,10 +5,13 @@ import Drawer from "../../Components/Drawer";
 import { Box, FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { baseURL, TOURGUIDE, TOURGUIDE_CREATE } from "../../Components/Api";
+import { Loading } from "../../Components/Loading";
 
 export default function AddTourGuides() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,14 +25,19 @@ export default function AddTourGuides() {
     const { id } = location.state || {};
     if (id) {
       fetchTourGuideDetails(id);
+    } else {
+      setLoading(false);
     }
   }, [location.state]);
 
   const fetchTourGuideDetails = async (id) => {
     try {
+      setLoading(true);
       const response = await axios.get(`${baseURL}/${TOURGUIDE}/${id}`);
       setFormData(response.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("There was an error fetching the tour guide details!", error);
     }
   };
@@ -56,7 +64,7 @@ export default function AddTourGuides() {
       newErrors.phoneNumber = "رقم الهاتف يجب أن يبدأ بـ 012 أو 010 أو 011 أو 015 ويكون 11 رقم";
     }
     const profitRate = parseFloat(formData.profitRate);
-    if (!formData.profitRate ) {
+    if (!formData.profitRate) {
       newErrors.profitRate = "من فضلك ادخل نسبة الربح";
     }
     if (profitRate > 100) {
@@ -65,7 +73,7 @@ export default function AddTourGuides() {
     if (profitRate <= 0) {
       newErrors.profitRate = "يجب أن تكون رقمًا أكبر من صفر";
     }
-    if ( isNaN(profitRate)) {
+    if (isNaN(profitRate)) {
       newErrors.profitRate = "يجب أن تكون رقمًا";
     }
 
@@ -75,6 +83,7 @@ export default function AddTourGuides() {
     }
 
     try {
+      setLoading(true);
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -102,15 +111,16 @@ export default function AddTourGuides() {
         }
       }
       navigate("/AllTourGuides");
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("There was an error adding the tour guide!", error);
     }
   };
 
-
-
   return (
     <div>
+      {loading && <Loading />}
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>

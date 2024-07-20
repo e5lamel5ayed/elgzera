@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
 export default function CruisesList() {
   const [cruises, setCruises] = useState([]);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
@@ -41,13 +41,15 @@ export default function CruisesList() {
 
   const DeleteRow = async (id) => {
     try {
+      setLoading(true)
       const res = await axios.delete(
         `${baseURL}/${CRUISES}/${id}`
       );
       fetchData();
+      setLoading(false)
       Swal.fire("تم الحذف بنجاح");
-
     } catch (error) {
+      setLoading(false);
       console.error("Error deleting data:", error);
     }
   };

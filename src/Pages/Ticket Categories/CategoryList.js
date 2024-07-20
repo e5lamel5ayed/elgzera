@@ -15,14 +15,13 @@ import Swal from "sweetalert2";
 export default function CategoryList() {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchCategories = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
-      // eslint-disable-next-line eqeqeq
-      let newData = response.data.filter((res) => res.name != "");
+      let newData = response.data.filter((res) => res.name !== "");
       setCategories(newData);
       setLoading(false);
     } catch (error) {
@@ -39,9 +38,17 @@ export default function CategoryList() {
     navigate(`/AddCategory`, { state: { id } });
   };
   const DeleteRow = async (id) => {
-    await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
-    fetchCategories();
-    Swal.fire("تم الحذف بنجاح");
+    try {
+      setLoading(true);
+      await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
+      fetchCategories();
+      Swal.fire("تم الحذف بنجاح");
+      setLoading(false);
+
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
 
   };
   return (

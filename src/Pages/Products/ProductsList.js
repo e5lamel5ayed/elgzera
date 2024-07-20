@@ -52,13 +52,15 @@ export default function ProductList() {
 
   const DeleteRow = async (id) => {
     try {
+      setLoading(true);
       const res = await axios.delete(
         `${baseURL}/${PRODUCTS}/${id}`
       );
       fetchData();
       Swal.fire("تم الحذف بنجاح");
-
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error deleting data:", error);
     }
   };

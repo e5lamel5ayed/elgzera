@@ -37,10 +37,13 @@ export default function PlacesList() {
 
   const DeleteRow = async (id) => {
     try {
+      setLoading(true);
       const res = await axios.delete(`${baseURL}/${SALES_CENTERS}/${id}`);
       fetchData();
+      setLoading(false);
       Swal.fire("تم الحذف بنجاح");
     } catch (error) {
+      setLoading(false);
       console.error("Error deleting data:", error);
     }
   };

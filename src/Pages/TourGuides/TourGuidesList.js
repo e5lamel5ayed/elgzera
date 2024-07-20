@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
 export default function TourGuidesList() {
   const [guides, setGuides] = useState([]);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchGuides = async () => {
     try {
@@ -40,11 +40,13 @@ export default function TourGuidesList() {
 
   const DeleteRow = async (id) => {
     try {
+      setLoading(true);
       await axios.delete(`${baseURL}/${TOURGUIDE}/${id}`);
       fetchGuides();
       Swal.fire("تم الحذف بنجاح");
-
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log("error", error);
     }
   };
