@@ -73,7 +73,6 @@ export default function PayingOff() {
         try {
             const response = await axios.get('${baseURL}/Payings');
             setNationalities(response.data);
-            console.log(setNationalities);
         } catch (error) {
             console.error("There was an error fetching the nationalities!", error);
         }

@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
 import { baseURL, CATEGORIES } from "../../Components/Api";
 import { Loading } from "../../Components/Loading";
+import Swal from "sweetalert2";
 
 export default function CategoryList() {
   const [categories, setCategories] = useState([]);
@@ -40,6 +41,8 @@ export default function CategoryList() {
   const DeleteRow = async (id) => {
     await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
     fetchCategories();
+    Swal.fire("تم الحذف بنجاح");
+
   };
   return (
     <div>
@@ -101,8 +104,9 @@ export default function CategoryList() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={1} align="center">
-                  لا توجد بيانات
+                <TableCell colSpan={7} align="center">
+                  <h5>لا توجد بيانات</h5>
+
                 </TableCell>
               </TableRow>
             )}

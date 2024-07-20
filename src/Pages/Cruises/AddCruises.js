@@ -26,10 +26,7 @@ export default function AddCruises() {
     try {
       const response = await axios.get(`${baseURL}/cruises`);
       const { name, status } = response.data.find((cruise) => cruise.id === id);
-      if (status == "Active") setFormData({ name: name, status: 1 });
-      else setFormData({ name: name, status: 2 });
-
-      console.log(formData);
+      setFormData({ name: name, status: status });
     } catch (error) {
       console.error("Error fetching cruise details:", error);
     }
@@ -54,7 +51,7 @@ export default function AddCruises() {
     try {
       const payload = {
         ...formData,
-        status: parseInt(formData.status, 10), // Convert status to integer
+        status: parseInt(formData.status, 10),
       };
 
       if (location.state && location.state.id) {
