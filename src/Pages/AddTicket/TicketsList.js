@@ -18,7 +18,6 @@ export default function BasicTable() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-
   async function fetchData() {
     try {
       setLoading(true);
@@ -42,7 +41,7 @@ export default function BasicTable() {
   }, []);
 
   const EditRow = (id) => {
-    navigate(`/addTicket`, { state: { id } });
+    navigate(`/EditTicket`, { state: { id } });
   };
 
   const DeleteRow = async (id) => {
@@ -61,9 +60,8 @@ export default function BasicTable() {
     3: "جنيه إسترليني",
     4: "ريال سعودي",
     5: "درهم إماراتي",
-    6: "دينار كويتي"
+    6: "دينار كويتي",
   };
-
 
   const dayNames = {
     Saturday: "السبت",
@@ -196,6 +194,5 @@ export default function BasicTable() {
         </Table>
       </TableContainer>
     </div>
-
   );
 }

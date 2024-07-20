@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
-import {
-  baseURL,
-  CATEGORIES,
-  TICKETS,
-  TICKETS_CREATE,
-} from "../../Components/Api";
+import { baseURL, CATEGORIES, TICKETS } from "../../Components/Api";
 import {
   Box,
   Checkbox,
@@ -17,8 +12,9 @@ import {
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-export default function AddTicket() {
+const EditTicket = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -32,8 +28,12 @@ export default function AddTicket() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    const { id } = location.state || {};
     fetchCategories();
-  }, []);
+    if (id) {
+      fetchTicketDetails(id);
+    }
+  }, [location.state]);
 
   const fetchCategories = async () => {
     try {
@@ -42,6 +42,26 @@ export default function AddTicket() {
       setCategories(categoriesData);
     } catch (error) {
       console.log("Error fetching categories:", error);
+    }
+  };
+
+  const fetchTicketDetails = async (id) => {
+    try {
+      const response = await axios.get(`${baseURL}/${TICKETS}`);
+      const ticket = response.data.find((ticket) => ticket.id == id);
+      const { name, price, tax, categoryId, currency, days } = ticket;
+
+      setFormData({
+        title: name,
+        price: price,
+        tax: tax,
+        categoryId: categoryId,
+        currency: currency,
+        days: days.map((day) => day.id) || [],
+      });
+      console.log(formData);
+    } catch (error) {
+      console.log("Error fetching ticket details:", error);
     }
   };
 
@@ -89,19 +109,16 @@ export default function AddTicket() {
         tax: parseFloat(formData.tax),
         currency: parseInt(formData.currency, 10),
         days: formData.days.map((day) => parseInt(day, 10)),
+        categoryId: parseInt(formData.categoryId),
       };
-      const response = await axios.post(
-        `${baseURL}/${TICKETS_CREATE}`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.data) {
-        localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
-      }
+      console.log("payload", payload);
+      await axios.put(`${baseURL}/${TICKETS}/${location.state.id}`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
+
       navigate("/AllTickets");
     } catch (error) {
       console.error("There was an error submitting the ticket!", error);
@@ -123,14 +140,14 @@ export default function AddTicket() {
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>
-          <h2 className="add-head">اضف التذاكر</h2>
+          <h2 className="add-head"> تعديل التذكره</h2>
           <Link to="/AllTickets">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>
         </div>
         <div className="card table-style mb-5" style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-style">
-            <h4>اضف البيانات</h4>
+            <h4>تعديل البيانات</h4>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit}>
@@ -362,4 +379,6 @@ export default function AddTicket() {
       </Box>
     </div>
   );
-}
+};
+
+export default EditTicket;

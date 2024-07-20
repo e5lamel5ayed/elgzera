@@ -35,7 +35,7 @@ export default function AddPlaces() {
     const res = await axios.get(
       `http://org-bay.runasp.net/api/sales-centers/${id}`
     );
-    //console.log(res.data);
+    console.log(res.data);
     setFormData(res.data);
   };
   const handleSubmit = async (e) => {
