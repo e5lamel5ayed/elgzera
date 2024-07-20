@@ -1,6 +1,6 @@
-export const baseURL = "http://org-bay.runasp.net/api";
+export const baseURL = "https://helloabood123-001-site1.dtempurl.com/api";
 
-export const IMG_URL = "http://org-bay.runasp.net";
+export const IMG_URL = "https://helloabood123-001-site1.dtempurl.com";
 
 export const SALES_CENTERS = "sales-centers";
 export const SALES_CENTERS_CREATE = "sales-centers/create";
@@ -21,3 +21,5 @@ export const NATIONALITY = "nationalities";
 
 export const TOURGUIDE = "tour-guides";
 export const TOURGUIDE_CREATE = "tour-guides/create";
+
+

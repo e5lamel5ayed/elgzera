@@ -63,7 +63,7 @@ export default function AddProducts() {
         price: product.price,
         image: null,
         imageUrl: completeImageUrl,
-        salesCenterId: product.salesCenterId, 
+        salesCenterId: product.salesCenterId,
       });
       setLoading(false);
     } catch (error) {
@@ -91,11 +91,14 @@ export default function AddProducts() {
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
 
     const price = parseFloat(formData.price);
-    if (isNaN(price)) {
+    if (!formData.price) {
       newErrors.price = "من فضلك ادخل السعر";
     }
-    if (price <= 0) {
-      newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
+    else if (isNaN(price)) {
+      newErrors.price = "يجب ان يكون السعر رقما";
+    }
+    else if (price <= 0) {
+      newErrors.price = "يجب ان يكون السعر رقما اكبر من صفر";
     }
 
     if (!formData.image && !formData.imageUrl)
@@ -220,7 +223,7 @@ export default function AddProducts() {
                       id="salesCenterId"
                       select
                       name="salesCenterId"
-                      value={formData.salesCenterId} 
+                      value={formData.salesCenterId}
                       onChange={handleChange}
                       size="small"
                       fullWidth
