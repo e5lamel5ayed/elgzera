@@ -12,6 +12,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { baseURL, TICKETS } from "../../Components/Api";
 import { Loading } from "../../Components/Loading";
+import Swal from "sweetalert2";
 
 export default function BasicTable() {
   const [data, setData] = useState([]);
@@ -49,6 +50,8 @@ export default function BasicTable() {
     try {
       await axios.delete(`${baseURL}/${TICKETS}/${id}`);
       fetchData();
+      Swal.fire("تم الحذف بنجاح");
+
     } catch (error) {
       console.error("Error deleting data:", error);
     }
@@ -188,7 +191,7 @@ export default function BasicTable() {
             ) : (
               <TableRow>
                 <TableCell colSpan={7} align="center">
-                  لا توجد بيانات
+                  <h5>لا توجد بيانات</h5>
                 </TableCell>
               </TableRow>
             )}

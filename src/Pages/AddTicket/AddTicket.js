@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
@@ -17,6 +17,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Loading } from "../../Components/Loading";
 
 export default function AddTicket() {
   const navigate = useNavigate();
@@ -31,29 +32,37 @@ export default function AddTicket() {
     days: [],
   });
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     const { id } = location.state || {};
-    if (id) {
+    if (id && !loading) {
       fetchTicketDetails(id);
     }
-    fetchCategories();
-  }, [location.state]);
+  }, [location.state, loading]);
 
   const fetchTicketDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
       const ticket = response.data.find((ticket) => ticket.id === id);
-      const { name, price, tax, categoryId, currency, days } = ticket;
-      setFormData({
-        title: name,
-        price: price,
-        tax: tax,
-        categoryId: categoryId,
-        currency: currency,
-        days: days.map((day) => day.id) || [],
-      });
+      if (ticket) {
+        const { name, price, tax, title, currency, days } = ticket;
+        const category = categories.find((cat) => cat.name === title);
+
+        setFormData({
+          title: name,
+          price: price,
+          tax: tax,
+          categoryId: category ? category.id : '',
+          currency: currency,
+          days: days.map((day) => day.id) || [],
+        });
+      }
     } catch (error) {
       console.log("Error fetching data of ticket:", error);
     }
@@ -63,8 +72,10 @@ export default function AddTicket() {
     try {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       setCategories(response.data);
+      setLoading(false);
     } catch {
-      console.log("error fetching categories");
+      console.log("Error fetching categories");
+      setLoading(false);
     }
   };
 
@@ -94,10 +105,26 @@ export default function AddTicket() {
     e.preventDefault();
     const newErrors = {};
     if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
-    if (!formData.price) newErrors.price = " من فضلك ادخل السعر";
-    if (!formData.tax) newErrors.tax = "من فضلك ادخل الضرائب";
+
+
+    const price = parseFloat(formData.price);
+    if (isNaN(price)) {
+      newErrors.price = "من فضلك ادخل السعر";
+    }
+    if (price <= 0) {
+      newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
+    }
+
+    const tax = parseFloat(formData.tax);
+    if (isNaN(tax)) {
+      newErrors.tax = "من فضلك ادخل الضرائب";
+    }
+    if (tax <= 0) {
+      newErrors.tax = "يجب أن تكون رقمًا أكبر من صفر";
+    }
+
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
-    if (!formData.currency) newErrors.currency = "من فضلك اختر العملة";
+    if (!formData.currency && !location.state) newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
 
     if (Object.keys(newErrors).length > 0) {
@@ -110,7 +137,7 @@ export default function AddTicket() {
         ...formData,
         price: parseFloat(formData.price),
         tax: parseFloat(formData.tax),
-        currency: parseInt(formData.currency, 10),
+        currency: formData.currency ? parseInt(formData.currency, 10) : undefined,
         days: formData.days.map((day) => parseInt(day, 10)),
       };
 
@@ -135,7 +162,6 @@ export default function AddTicket() {
             },
           }
         );
-        console.log(response);
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
         }
@@ -145,6 +171,7 @@ export default function AddTicket() {
       console.error("There was an error adding the ticket!", error);
     }
   };
+
 
   const currencyNames = {
     0: "دولار أمريكي",
@@ -156,8 +183,11 @@ export default function AddTicket() {
     6: "دينار كويتي",
   };
 
+
+
   return (
     <div>
+      {loading && <Loading />}
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>

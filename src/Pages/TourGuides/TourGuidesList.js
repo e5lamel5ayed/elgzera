@@ -8,8 +8,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
-import { baseURL } from "../../Components/Api";
+import { baseURL, TOURGUIDE } from "../../Components/Api";
 import { Loading } from "../../Components/Loading";
+import Swal from "sweetalert2";
 
 
 export default function TourGuidesList() {
@@ -20,7 +21,7 @@ export default function TourGuidesList() {
   const fetchGuides = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/TourGuides`);
+      const response = await axios.get(`${baseURL}/${TOURGUIDE}`);
       setGuides(response.data);
       setLoading(false);
     } catch (error) {
@@ -28,20 +29,31 @@ export default function TourGuidesList() {
       console.error("Error fetching tour guides", error);
     }
   };
+
   useEffect(() => {
     fetchGuides();
   }, []);
+
   const EditRow = (id) => {
-    navigate(`/ AddTourGuides`, { state: { id } });
+    navigate(`/AddTourGuides`, { state: { id } });
   };
+
   const DeleteRow = async (id) => {
     try {
-      await axios.delete(`${baseURL} / TourGuides / ${id}`);
+      await axios.delete(`${baseURL}/${TOURGUIDE}/${id}`);
       fetchGuides();
+      Swal.fire("تم الحذف بنجاح");
+
     } catch (error) {
       console.log("error", error);
     }
   };
+
+  const status = {
+    "Active": "نشط",
+    "InActive": "غير نشط",
+  }
+
   return (
     <div>
       {loading && <Loading />}
@@ -114,16 +126,16 @@ export default function TourGuidesList() {
                     {guide.name}
                   </TableCell>
                   <TableCell sx={{ fontSize: "18px" }} align="right">
-                    {guide.statusId === 1 ? "نشط" : "غير نشط"}
+                    {status[guide.status]}
                   </TableCell>
                   <TableCell sx={{ fontSize: "18px" }} align="right">
                     {guide.email}
                   </TableCell>
                   <TableCell sx={{ fontSize: "18px" }} align="right">
-                    {guide.phone}
+                    {guide.phoneNumber}
                   </TableCell>
                   <TableCell sx={{ fontSize: "18px" }} align="right">
-                    %{guide.profitRatio}
+                    %{guide.profitRate}
                   </TableCell>
                   <TableCell sx={{ fontSize: "18px" }} align="center">
                     <button
@@ -143,8 +155,8 @@ export default function TourGuidesList() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} align="center">
-                  لا توجد بيانات
+                <TableCell colSpan={7} align="center">
+                  <h5>لا توجد بيانات</h5>
                 </TableCell>
               </TableRow>
             )}

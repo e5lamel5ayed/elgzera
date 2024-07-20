@@ -24,7 +24,6 @@ export default function AddCategory() {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
       const category = response.data.find((cat) => cat.id === id);
       setCategoryName(category.title);
-      console.log(setCategoryName);
     } catch {
       console.log("error fetching data of category ");
     }
@@ -52,7 +51,7 @@ export default function AddCategory() {
         // Editing existing Category
         const response = await axios.put(
           `${baseURL}/${CATEGORIES}/${location.state.id}`,
-          { name: categoryName }
+          { title: categoryName }
         );
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {

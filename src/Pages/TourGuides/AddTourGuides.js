@@ -4,7 +4,7 @@ import axios from "axios";
 import Drawer from "../../Components/Drawer";
 import { Box, FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { baseURL } from "../../Components/Api";
+import { baseURL, TOURGUIDE, TOURGUIDE_CREATE } from "../../Components/Api";
 
 export default function AddTourGuides() {
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ export default function AddTourGuides() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    statusId: "",
-    phone: "",
-    profitRatio: "",
+    status: "",
+    phoneNumber: "",
+    profitRate: "",
   });
   const location = useLocation();
 
@@ -24,15 +24,16 @@ export default function AddTourGuides() {
       fetchTourGuideDetails(id);
     }
   }, [location.state]);
+
   const fetchTourGuideDetails = async (id) => {
     try {
-      const response = await axios.get(`${baseURL}/TourGuides`);
-      const tour = response.data.find((tour) => tour.id === id);
-      setFormData(tour);
-    } catch {
-      console.log("error");
+      const response = await axios.get(`${baseURL}/${TOURGUIDE}/${id}`);
+      setFormData(response.data);
+    } catch (error) {
+      console.error("There was an error fetching the tour guide details!", error);
     }
   };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -44,28 +45,58 @@ export default function AddTourGuides() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
+    const phoneNumberPattern = /^(012|010|011|015)\d{8}$/;
+
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
     if (!formData.email) newErrors.email = " من فضلك ادخل البريد الالكتروني";
-    if (!formData.statusId) newErrors.statusId = "من فضلك اختر الحالة ";
-    if (!formData.phone) newErrors.phone = "من فضلك ادخل رقم الهاتف  ";
-    if (!formData.profitRatio)
-      newErrors.profitRatio = "من فضلك ادخل نسبة الربح ";
+    if (!formData.status) newErrors.status = "من فضلك اختر الحالة ";
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "من فضلك ادخل رقم الهاتف";
+    } else if (!phoneNumberPattern.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "رقم الهاتف يجب أن يبدأ بـ 012 أو 010 أو 011 أو 015 ويكون 11 رقم";
+    }
+    const profitRate = parseFloat(formData.profitRate);
+    if (!formData.profitRate ) {
+      newErrors.profitRate = "من فضلك ادخل نسبة الربح";
+    }
+    if (profitRate > 100) {
+      newErrors.profitRate = "يجب أن تكون رقمًا أقل من أو تساوي 100";
+    }
+    if (profitRate <= 0) {
+      newErrors.profitRate = "يجب أن تكون رقمًا أكبر من صفر";
+    }
+    if ( isNaN(profitRate)) {
+      newErrors.profitRate = "يجب أن تكون رقمًا";
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
     try {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        profitRate: formData.profitRate,
+        status: formData.status === "Active" ? 1 : 2,
+      };
+
       if (location.state && location.state.id) {
-        // Editing existing Category
-        const response = await axios.put(
-          `${baseURL}/TourGuides/${location.state.id}`,
-          formData
-        );
+        // Editing existing tour guide
+        await axios.put(`${baseURL}/tour-guides/${location.state.id}`, payload, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
-        const response = await axios.post(`${baseURL}/TourGuides`, formData);
-
+        const response = await axios.post(`${baseURL}/tour-guides/create`, payload, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة المرشد بنجاح");
         }
@@ -75,6 +106,8 @@ export default function AddTourGuides() {
       console.error("There was an error adding the tour guide!", error);
     }
   };
+
+
 
   return (
     <div>
@@ -96,9 +129,7 @@ export default function AddTourGuides() {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label htmlFor="name" className="d-flex">
-                        الاسم
-                      </label>
+                      <label htmlFor="name" className="d-flex">الاسم</label>
                       <input
                         type="text"
                         className="form-control"
@@ -108,16 +139,12 @@ export default function AddTourGuides() {
                         onChange={handleInputChange}
                       />
                     </div>
-                    {errors.name && (
-                      <h6 className="error-log">{errors.name}</h6>
-                    )}
+                    {errors.name && <h6 className="error-log">{errors.name}</h6>}
                   </div>
 
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label htmlFor="email" className="d-flex">
-                        البريد الالكتروني
-                      </label>
+                      <label htmlFor="email" className="d-flex">البريد الالكتروني</label>
                       <input
                         type="text"
                         className="form-control"
@@ -127,78 +154,56 @@ export default function AddTourGuides() {
                         onChange={handleInputChange}
                       />
                     </div>
-                    {errors.email && (
-                      <h6 className="error-log">{errors.email}</h6>
-                    )}
+                    {errors.email && <h6 className="error-log">{errors.email}</h6>}
                   </div>
 
                   <div className="col-md-6">
-                    <label htmlFor="statusId" className="d-flex">
-                      الحاله
-                    </label>
+                    <label htmlFor="status" className="d-flex">الحاله</label>
                     <select
                       className="form-control"
-                      id="statusId"
-                      name="statusId"
-                      value={formData.statusId}
+                      id="status"
+                      name="status"
+                      value={formData.status}
                       onChange={handleInputChange}
                     >
                       <option value="">اختر الحالة</option>
-                      <option value="1">نشط</option>
-                      <option value="2">غير نشط</option>
+                      <option value="Active">نشط</option>
+                      <option value="Inactive">غير نشط</option>
                     </select>
-                    {errors.statusId && (
-                      <h6 className="error-log">{errors.statusId}</h6>
-                    )}
+                    {errors.status && <h6 className="error-log">{errors.status}</h6>}
                   </div>
 
                   <div className="col-md-6">
-                    <label htmlFor="phone" className="d-flex">
-                      رقم الهاتف
-                    </label>
+                    <label htmlFor="phoneNumber" className="d-flex">رقم الهاتف</label>
                     <FormControl fullWidth>
                       <OutlinedInput
                         size="small"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
                         onChange={handleInputChange}
                       />
                     </FormControl>
-                    {errors.phone && (
-                      <h6 className="error-log">{errors.phone}</h6>
-                    )}
+                    {errors.phoneNumber && <h6 className="error-log">{errors.phoneNumber}</h6>}
                   </div>
 
                   <div className="col-md-3">
-                    <label htmlFor="profitRatio" className="d-flex">
-                      نسبة الربح
-                    </label>
+                    <label htmlFor="profitRate" className="d-flex">نسبة الربح</label>
                     <FormControl fullWidth>
                       <OutlinedInput
                         size="small"
-                        id="profitRatio"
-                        name="profitRatio"
-                        value={formData.profitRatio}
+                        id="profitRate"
+                        name="profitRate"
+                        value={formData.profitRate}
                         onChange={handleInputChange}
-                        startAdornment={
-                          <InputAdornment position="start">%</InputAdornment>
-                        }
+                        startAdornment={<InputAdornment position="start">%</InputAdornment>}
                       />
                     </FormControl>
-                    {errors.profitRatio && (
-                      <h6 className="error-log">{errors.profitRatio}</h6>
-                    )}
+                    {errors.profitRate && <h6 className="error-log">{errors.profitRate}</h6>}
                   </div>
                 </div>
               </div>
-              <button
-                style={{ fontSize: "20px" }}
-                type="submit"
-                className="btn btn-primary mt-4"
-              >
-                حفظ
-              </button>
+              <button style={{ fontSize: "20px" }} type="submit" className="btn btn-primary mt-4">حفظ</button>
             </form>
           </div>
         </div>

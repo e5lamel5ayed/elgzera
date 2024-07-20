@@ -16,6 +16,7 @@ import AddProducts from './Pages/Products/AddProducts';
 import AllReservation from './Pages/Reservation/AllReservation';
 import PayingOff from './Pages/PayingOff/PayingOff';
 import Login from './Pages/Login';
+// import EditTicket from './Pages/AddTicket/EditTicket';
 
 
 export default function App() {
@@ -42,6 +43,8 @@ export default function App() {
           {/* <Route path="/Reservation" exact element={<Reservation/>}></Route>   */}
           <Route path="/AllReservation" exact element={<AllReservation />}></Route>
           <Route path="/PayingOff" exact element={<PayingOff />}></Route>
+
+          {/* <Route path="/EditTicket" element={<EditTicket />} /> */}
 
 
         </Route>

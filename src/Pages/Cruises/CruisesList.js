@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
 import { baseURL, CRUISES } from "../../Components/Api";
 import { Loading } from "../../Components/Loading";
+import Swal from "sweetalert2";
 
 export default function CruisesList() {
   const [cruises, setCruises] = useState([]);
@@ -44,10 +45,17 @@ export default function CruisesList() {
         `${baseURL}/${CRUISES}/${id}`
       );
       fetchData();
+      Swal.fire("تم الحذف بنجاح");
+
     } catch (error) {
       console.error("Error deleting data:", error);
     }
   };
+
+  const status = {
+    "Active": "نشط",
+    "InActive": "غير نشط",
+  }
 
   return (
     <div>
@@ -75,20 +83,7 @@ export default function CruisesList() {
               >
                 الحالة
               </TableCell>
-              {/* <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="center"
-            >
-              الوصف
-            </TableCell>
-            <TableCell
-              style={{ color: "#fff" }}
-              sx={{ fontSize: "18px" }}
-              align="center"
-            >
-              صورة
-            </TableCell> */}
+
               <TableCell
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
@@ -114,20 +109,10 @@ export default function CruisesList() {
                     {cruise.name}
                   </TableCell>
                   <TableCell sx={{ fontSize: "18px" }} align="right">
-                    {cruise.statusId === 1 ? "نشط" : "غير نشط"}
+                    {status[cruise.status]}
+
                   </TableCell>
-                  {/* <TableCell align="center">{cruise.caption}</TableCell> */}
-                  {/* <TableCell align="center">
-                  {cruise.image ? (
-                    <img
-                      src={cruise.image}
-                      alt={cruise.name}
-                      style={{ width: "100px", height: "auto" }}
-                    />
-                  ) : (
-                    "لا توجد صورة"
-                  )}
-                </TableCell> */}
+
                   <TableCell sx={{ fontSize: "18px" }} align="center">
                     <button
                       className="btn btn-primary ml-2"
@@ -147,7 +132,8 @@ export default function CruisesList() {
             ) : (
               <TableRow>
                 <TableCell colSpan={4} align="center">
-                  لا توجد بيانات
+                  <h5>لا توجد بيانات</h5>
+
                 </TableCell>
               </TableRow>
             )}

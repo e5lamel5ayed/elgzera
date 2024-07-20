@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import Drawer from "../../Components/Drawer";
@@ -6,6 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import {
   baseURL,
+  IMG_URL,
   SALES_CENTERS,
   SALES_CENTERS_CREATE,
 } from "../../Components/Api";
@@ -18,7 +20,9 @@ export default function AddPlaces() {
     name: "",
     location: "",
     image: null,
+    imageUrl: "",
   });
+
   useEffect(() => {
     const { id } = location.state || {};
     if (id) {
@@ -27,23 +31,39 @@ export default function AddPlaces() {
   }, [location.state]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData({ ...formData, image: files[0], imageUrl: URL.createObjectURL(files[0]) });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const fetchPlace = async (id) => {
-    const res = await axios.get(
-      `http://org-bay.runasp.net/api/sales-centers/${id}`
-    );
-    //console.log(res.data);
-    setFormData(res.data);
+    try {
+      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
+      const center = response.data.find((center) => center.id === id);
+      const completeImageUrl = `${IMG_URL}${center.imgUrl}`;
+
+      setFormData({
+        ...formData,
+        name: center.name,
+        location: center.location,
+        image: null,
+        imageUrl: completeImageUrl,
+      });
+    } catch (error) {
+      console.error("Error fetching place:", error);
+    }
   };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
     if (!formData.location) newErrors.location = "من فضلك ادخل الموقع";
-    if (!formData.image) newErrors.image = "من فضلك ادخل الصورة";
+    if (!formData.image && !formData.imageUrl) newErrors.image = "من فضلك ادخل الصورة";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -54,12 +74,13 @@ export default function AddPlaces() {
       const formDataToSend = new FormData();
       formDataToSend.append("Name", formData.name);
       formDataToSend.append("Location", formData.location);
-      formDataToSend.append("Image", formData.image);
+      if (formData.image) {
+        formDataToSend.append("Image", formData.image);
+      }
 
       if (location.state && location.state.id) {
-        // Editing existing place
         const response = await axios.put(
-          ` http://org-bay.runasp.net/api/sales-centers/${location.state.id}`,
+          `${baseURL}/${SALES_CENTERS}/${location.state.id}`,
           formDataToSend,
           {
             headers: {
@@ -70,7 +91,7 @@ export default function AddPlaces() {
         localStorage.setItem("alertMessage", "تم تعديل مركز البيع بنجاح");
       } else {
         const response = await axios.post(
-          `http://org-bay.runasp.net/api/sales-centers/create`,
+          `${baseURL}/${SALES_CENTERS_CREATE}`,
           formDataToSend,
           {
             headers: {
@@ -158,16 +179,18 @@ export default function AddPlaces() {
                         className="form-control"
                         id="image"
                         name="image"
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            image: e.target.files[0],
-                          })
-                        }
+                        onChange={handleChange}
                         aria-describedby="imageHelp"
                       />
                       {errors.image && (
                         <h6 className="error-log">{errors.image}</h6>
+                      )}
+                      {formData.imageUrl && (
+                        <img
+                          src={formData.imageUrl}
+                          alt="sales-center"
+                          style={{ marginTop: "10px", width: "100px", height: "100px" }}
+                        />
                       )}
                     </div>
                   </div>

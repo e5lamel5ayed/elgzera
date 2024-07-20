@@ -9,7 +9,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
 import PersonIcon from '@mui/icons-material/Person';
-import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, PRODUCTS, PRODUCTS_CREATE, TICKETS } from "../../Components/Api";
+import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, TICKETS, TOURGUIDE, TOURGUIDE_CREATE } from "../../Components/Api";
 import Swal from 'sweetalert2';
 import utf8 from 'utf8';
 
@@ -28,7 +28,7 @@ function PayingOff() {
 
     useEffect(() => {
         axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
-        axios.get(`${baseURL}/${PRODUCTS}`).then(response => setGuides(response.data));
+        axios.get(`${baseURL}/${TOURGUIDE}`).then(response => setGuides(response.data));
         axios.get(`${baseURL}/${CRUISES}`).then(response => setBoats(response.data));
         axios.get(`${baseURL}/${TICKETS}`).then(response => setTicketCategories(response.data));
         fetchGuides();
@@ -46,7 +46,6 @@ function PayingOff() {
             boatName: selectedBoatName,
 
         }]);
-        console.log(ticket.name);
         setSelectedTicketCategories({ ...selectedTicketCategories, [ticket.name]: true });
     };
 
@@ -91,7 +90,7 @@ function PayingOff() {
 
     const fetchGuides = async () => {
         try {
-            const response = await axios.get(`${baseURL}/${PRODUCTS}`);
+            const response = await axios.get(`${baseURL}/${TOURGUIDE}`);
             setGuides(response.data);
         } catch (error) {
             console.error("There was an error fetching the guides!", error);
@@ -132,24 +131,27 @@ function PayingOff() {
             return;
         }
 
+
         try {
             const payload = {
-                ...formData,
-                status: parseInt(formData.status, 10), // Convert status to integer
+                name: formData.name,
+                status: formData.status === "Active" ? 1 : 2,
             };
 
 
-            const response = await axios.post(`${baseURL}/${CRUISES_CREATE}`, payload, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
+            const response = await axios.post(
+                `${baseURL}/${CRUISES_CREATE}`,
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             fetchBoats();
             setAddBoat(false);
             Swal.fire("تم إضافة المركب بنجاح");
-
         } catch (error) {
             console.log("Error adding cruise:", error, error.message);
         }
@@ -160,10 +162,10 @@ function PayingOff() {
     const [addGuide, setAddGuide] = useState(false);
     const [formDataguide, setFormDataguide] = useState({
         name: "",
-        status: "",
         email: "",
-        phone: "",
-        profitRatio: "",
+        phoneNumber: "",
+        profitRate: "",
+        status: ''
     });
     const [guideErrors, setGuideErrors] = useState({});
 
@@ -174,30 +176,67 @@ function PayingOff() {
 
     const handleSubmitguide = async (e) => {
         e.preventDefault();
-
         const newErrors = {};
+        const phoneNumberPattern = /^(012|010|011|015)\d{8}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (!formDataguide.name) newErrors.name = "من فضلك ادخل الاسم";
-        if (!formDataguide.email) newErrors.email = "من فضلك ادخل البريد الالكتروني";
-        if (!formDataguide.phone) newErrors.phone = "من فضلك ادخل الهاتف";
-        if (!formDataguide.profitRatio) newErrors.profitRatio = "من فضلك ادخل نسبة الربح";
-        if (!formDataguide.status) newErrors.status = "من فضلك اختر الحالة";
+
+        if (!formDataguide.email) {
+            newErrors.email = "من فضلك ادخل البريد الإلكتروني";
+        } else if (!emailRegex.test(formDataguide.email)) {
+            newErrors.email = "من فضلك ادخل بريد إلكتروني صحيح";
+
+        } if (!formDataguide.status) newErrors.status = "من فضلك اختر الحالة ";
+        if (!formDataguide.phoneNumber) {
+            newErrors.phoneNumber = "من فضلك ادخل رقم الهاتف";
+        } else if (!phoneNumberPattern.test(formDataguide.phoneNumber)) {
+            newErrors.phoneNumber = "رقم الهاتف يجب أن يبدأ بـ 012 أو 010 أو 011 أو 015 ويكون 11 رقم";
+        }
+        const profitRate = parseFloat(formDataguide.profitRate);
+        if (!formDataguide.profitRate) {
+            newErrors.profitRate = "من فضلك ادخل نسبة الربح";
+        }
+        if (profitRate > 100) {
+            newErrors.profitRate = "يجب أن تكون رقمًا أقل من أو تساوي 100";
+        }
+        if (profitRate <= 0) {
+            newErrors.profitRate = "يجب أن تكون رقمًا أكبر من صفر";
+        }
+        if (isNaN(profitRate)) {
+            newErrors.profitRate = "يجب أن تكون رقمًا";
+        }
 
         if (Object.keys(newErrors).length > 0) {
             setGuideErrors(newErrors);
             return;
         }
 
-        await axios.post(`${baseURL}/${PRODUCTS_CREATE}`, formDataguide, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        try {
+            const payload = {
+                name: formDataguide.name,
+                email: formDataguide.email,
+                phoneNumber: formDataguide.phoneNumber,
+                profitRate: formDataguide.profitRate,
+                status: formDataguide.status === "Active" ? 1 : 2,
+            };
 
-        fetchGuides();
-        setAddGuide(false);
-        Swal.fire("تم إضافة المرشد بنجاح");
 
+            await axios.post(`${baseURL}/tour-guides/create`, payload, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            fetchGuides();
+            setAddGuide(false);
+            Swal.fire("تم إضافة المرشد بنجاح");
+
+        }
+        catch (error) {
+            console.error("There was an error adding the tour guide!", error);
+        }
     };
+
 
     const nationalityTranslations = {
         "Egyptian": "مصري",
@@ -357,8 +396,7 @@ function PayingOff() {
             </Box >
 
             {/* add boats dialog  */}
-            <Dialog Dialog open={addBoat} onClose={() => setAddBoat(false)
-            } fullWidth style={{ direction: "rtl" }}>
+            <Dialog open={addBoat} onClose={() => setAddBoat(false)} fullWidth style={{ direction: "rtl" }}>
                 <DialogTitle>
                     <Typography style={{ display: "flex", justifyContent: "start", fontSize: "20px" }}>
                         إضافة مركب جديد
@@ -367,7 +405,6 @@ function PayingOff() {
                 <DialogContent>
                     <div className='container'>
                         <div className='row'>
-
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="name" className="d-flex">
@@ -387,7 +424,6 @@ function PayingOff() {
                                     )}
                                 </div>
                             </div>
-
                             <div className="col-md-6">
                                 <label htmlFor="status" className="d-flex">
                                     الحالة
@@ -405,14 +441,13 @@ function PayingOff() {
                                     }}
                                 >
                                     <option value="">اختر الحالة</option>
-                                    <option value="1">نشط</option>
-                                    <option value="2">غير نشط</option>
+                                    <option value="Active">نشط</option>
+                                    <option value="InActive">غير نشط</option>
                                 </TextField>
                                 {errors.status && (
                                     <h6 className="error-log">{errors.status}</h6>
                                 )}
                             </div>
-
                         </div>
                     </div>
                 </DialogContent>
@@ -422,7 +457,8 @@ function PayingOff() {
                         إضافة
                     </Button>
                 </DialogActions>
-            </Dialog >
+            </Dialog>
+
 
             {/* add guides dialog  */}
             < Dialog open={addGuide} onClose={() => setAddGuide(false)} fullWidth style={{ direction: "rtl" }}>
@@ -463,11 +499,11 @@ function PayingOff() {
                                         displayEmpty
                                         fullWidth
                                     >
-                                        <MenuItem value="" disabled>
+                                        <MenuItem value="">
                                             اختر حالة المرشد
                                         </MenuItem>
-                                        <MenuItem value="1">نشط</MenuItem>
-                                        <MenuItem value="2">غير نشط</MenuItem>
+                                        <MenuItem value="Active">نشط</MenuItem>
+                                        <MenuItem value="InActive">غير نشط</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <div className='error-log'>
@@ -476,21 +512,21 @@ function PayingOff() {
                             </div>
 
                             <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.profitRatio}>
+                                <FormControl fullWidth error={!!guideErrors.profitRate}>
                                     <OutlinedInput
                                         size='small'
                                         margin="dense"
-                                        id="guideProfitRatioInput"
-                                        name="profitRatio"
+                                        id="guideProfitRateInput"
+                                        name="profitRate"
                                         placeholder="نسبة الربح"
-                                        value={formDataguide.profitRatio}
+                                        value={formDataguide.profitRate}
                                         onChange={handleChangeGuide}
                                         endAdornment={
                                             <InputAdornment position="end">%</InputAdornment>
                                         }
                                     />
                                     <div className='error-log'>
-                                        {guideErrors.profitRatio}
+                                        {guideErrors.profitRate}
                                     </div>
                                 </FormControl>
                             </div>
@@ -513,18 +549,18 @@ function PayingOff() {
                             </div>
 
                             <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.phone}>
+                                <FormControl fullWidth error={!!guideErrors.phoneNumber}>
                                     <OutlinedInput
                                         size='small'
                                         margin="dense"
-                                        id="guidePhoneInput"
-                                        name="phone"
+                                        id="guidePhoneNumberInput"
+                                        name="phoneNumber"
                                         placeholder="الهاتف"
-                                        value={formDataguide.phone}
+                                        value={formDataguide.phoneNumber}
                                         onChange={handleChangeGuide}
                                     />
                                     <div className='error-log'>
-                                        {guideErrors.phone}
+                                        {guideErrors.phoneNumber}
                                     </div>
                                 </FormControl>
                             </div>

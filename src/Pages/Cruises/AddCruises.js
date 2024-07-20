@@ -25,8 +25,13 @@ export default function AddCruises() {
   const fetchCruiseDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/cruises`);
-      const { name, status } = response.data.find((cruise) => cruise.id === id);
-      setFormData({ name: name, status: status });
+      const cruise = response.data.find((cruise) => cruise.id === id);
+      if (cruise) {
+        setFormData({
+          name: cruise.name,
+          status: cruise.status === 'Active' ? '1' : '2'
+        });
+      }
     } catch (error) {
       console.error("Error fetching cruise details:", error);
     }
@@ -51,7 +56,7 @@ export default function AddCruises() {
     try {
       const payload = {
         ...formData,
-        status: parseInt(formData.status, 10), // Convert status to integer
+        status: parseInt(formData.status, 10),
       };
 
       if (location.state && location.state.id) {

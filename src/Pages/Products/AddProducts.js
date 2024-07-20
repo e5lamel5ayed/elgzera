@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
@@ -9,6 +8,7 @@ import {
   PRODUCTS_CREATE,
   SALES_CENTERS,
   PRODUCTS,
+  IMG_URL,
 } from "../../Components/Api";
 
 export default function AddProducts() {
@@ -16,6 +16,7 @@ export default function AddProducts() {
     name: "",
     price: "",
     image: null,
+    imageUrl: "",
     salesCenterId: "",
   });
 
@@ -48,16 +49,24 @@ export default function AddProducts() {
     try {
       const response = await axios.get(`${baseURL}/${PRODUCTS}`);
       const product = response.data.find((product) => product.id === id);
-      setFormData(product);
+      const completeImageUrl = `${IMG_URL}${product.imgUrl}`;
+      setFormData({
+        name: product.name,
+        price: product.price,
+        image: null,
+        imageUrl: completeImageUrl,
+        salesCenterId: product.salesCenterId || "",
+      });
     } catch (error) {
-      console.error("Error fetching sales centers:", error);
+      console.error("Error fetching product:", error);
     }
   };
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
+      setFormData({ ...formData, image: files[0], imageUrl: URL.createObjectURL(files[0]) });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -67,10 +76,17 @@ export default function AddProducts() {
     e.preventDefault();
     const newErrors = {};
     if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
-    if (!formData.price) newErrors.price = "من فضلك ادخل السعر";
-    if (!formData.salesCenterId)
-      newErrors.salesCenterId = "من فضلك اختر المكان";
-    if (!formData.image) newErrors.image = "من فضلك ادخل الصورة";
+
+    const price = parseFloat(formData.price);
+    if (isNaN(price)) {
+      newErrors.price = "من فضلك ادخل السعر";
+    }
+    if (price <= 0) {
+      newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
+    }
+
+    if (!formData.image && !formData.imageUrl) newErrors.image = "من فضلك ادخل الصورة";
+    if (!formData.salesCenterId) newErrors.salesCenterId = "من فضلك اختر المكان";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -82,11 +98,16 @@ export default function AddProducts() {
       formDataToSend.append("Name", formData.name);
       formDataToSend.append("Price", formData.price);
       formDataToSend.append("SalesCenterId", formData.salesCenterId);
-      formDataToSend.append("Image", formData.image);
+
+      if (formData.image) {
+        formDataToSend.append("Image", formData.image);
+      }
+
+      let response;
       if (location.state && location.state.id) {
-        // Editing existing place
-        const response = await axios.put(
-          ` http://org-bay.runasp.net/api/products/${location.state.id}`,
+        // Editing existing product
+        response = await axios.put(
+          `${baseURL}/${PRODUCTS}/${location.state.id}`,
           formDataToSend,
           {
             headers: {
@@ -94,16 +115,12 @@ export default function AddProducts() {
             },
           }
         );
-        localStorage.setItem("alertMessage", "تم تعديل مركز البيع بنجاح");
+        localStorage.setItem("alertMessage", "تم تعديل المنتج بنجاح");
       } else {
-        const formDataToPost = new FormData();
-        formDataToPost.append("Title", formData.name);
-        formDataToPost.append("Price", formData.price);
-        formDataToPost.append("SalesCenterId", formData.salesCenterId);
-        formDataToPost.append("Image", formData.image);
-        const response = await axios.post(
+        // Adding new product
+        response = await axios.post(
           `${baseURL}/${PRODUCTS_CREATE}`,
-          formDataToPost,
+          formDataToSend,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -116,7 +133,6 @@ export default function AddProducts() {
       }
 
       navigate("/AllProducts");
-      //console.log("Product added:");
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -224,8 +240,16 @@ export default function AddProducts() {
                       {errors.image && (
                         <h6 className="error-log">{errors.image}</h6>
                       )}
+                      {formData.imageUrl && (
+                        <img
+                          src={formData.imageUrl}
+                          alt="Product"
+                          style={{ marginTop: "10px", width: "100px", height: "100px" }}
+                        />
+                      )}
                     </div>
                   </div>
+
                 </div>
               </div>
 

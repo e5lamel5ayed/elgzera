@@ -18,3 +18,6 @@ export const PRODUCTS = "products";
 export const PRODUCTS_CREATE = "products/create";
 
 export const NATIONALITY = "nationalities";
+
+export const TOURGUIDE = "tour-guides";
+export const TOURGUIDE_CREATE = "tour-guides/create";
