@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -51,8 +52,8 @@ export default function AddTicket() {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
       const ticket = response.data.find((ticket) => ticket.id === id);
       if (ticket) {
-        const { name, price, tax, title, currency, days } = ticket;
-        const category = categories.find((cat) => cat.name === title);
+        const { name, price, tax, categoryName, currency, days } = ticket;
+        const category = categories.find((cat) => cat.title === categoryName);
 
         setFormData({
           title: name,
@@ -104,8 +105,8 @@ export default function AddTicket() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
 
+    if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
 
     const price = parseFloat(formData.price);
     if (isNaN(price)) {
@@ -133,6 +134,8 @@ export default function AddTicket() {
     }
 
     try {
+      setLoading(true);
+
       const payload = {
         ...formData,
         price: parseFloat(formData.price),
@@ -166,12 +169,14 @@ export default function AddTicket() {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
         }
       }
+
+      setLoading(false);
       navigate("/AllTickets");
     } catch (error) {
+      setLoading(false);
       console.error("There was an error adding the ticket!", error);
     }
   };
-
 
   const currencyNames = {
     0: "دولار أمريكي",
@@ -182,8 +187,6 @@ export default function AddTicket() {
     5: "درهم إماراتي",
     6: "دينار كويتي",
   };
-
-
 
   return (
     <div>
