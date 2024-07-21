@@ -19,6 +19,7 @@ export default function BasicTable() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
+  // fech tickets 
   async function fetchData() {
     try {
       setLoading(true);
@@ -41,24 +42,46 @@ export default function BasicTable() {
     fetchData();
   }, []);
 
+  // edit 
   const EditRow = (id) => {
     navigate(`/AddTicket`, { state: { id } });
   };
 
+  // delete function 
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`${baseURL}/${TICKETS}/${id}`);
-      fetchData();
-      setLoading(false);
-
-      Swal.fire("تم الحذف بنجاح");
-
-    } catch (error) {
-      console.error("Error deleting data:", error);
-    }
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${TICKETS}/${id}`);
+          fetchData();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
 
+  // change currency from numbers to arabic 
   const currencyNames = {
     0: "دولار أمريكي",
     1: "يورو",
@@ -69,6 +92,7 @@ export default function BasicTable() {
     6: "دينار كويتي",
   };
 
+  // change days from English to arabic 
   const dayNames = {
     Saturday: "السبت",
     Sunday: "الأحد",
@@ -82,7 +106,6 @@ export default function BasicTable() {
   return (
     <div>
       {loading && <Loading />}
-
       <TableContainer
         className="table-style table table-hover"
         sx={{ direction: "rtl" }}

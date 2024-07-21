@@ -18,42 +18,63 @@ export default function CruisesList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
+  // fetch cruises 
   const fetchData = async () => {
     try {
       setLoading(true);
-
       const response = await axios.get(`${baseURL}/${CRUISES}`);
       setCruises(response.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
-
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
 
+  // edit cruises
   const EditRow = (id) => {
     navigate(`/AddCruises`, { state: { id } });
   };
 
+  // delete cruises function 
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true)
-      const res = await axios.delete(
-        `${baseURL}/${CRUISES}/${id}`
-      );
-      fetchData();
-      setLoading(false)
-      Swal.fire("تم الحذف بنجاح");
-    } catch (error) {
-      setLoading(false);
-      console.error("Error deleting data:", error);
-    }
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${CRUISES}/${id}`);
+          fetchData();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
 
+  // change status from English to arabic 
   const status = {
     "Active": "نشط",
     "InActive": "غير نشط",
@@ -62,7 +83,6 @@ export default function CruisesList() {
   return (
     <div>
       {loading && <Loading />}
-
       <TableContainer
         className="table-style table table-hover"
         sx={{ direction: "rtl" }}

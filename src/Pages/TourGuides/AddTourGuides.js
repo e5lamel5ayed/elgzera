@@ -30,6 +30,7 @@ export default function AddTourGuides() {
     }
   }, [location.state]);
 
+  // for update tour guide 
   const fetchTourGuideDetails = async (id) => {
     try {
       setLoading(true);
@@ -93,7 +94,7 @@ export default function AddTourGuides() {
       };
 
       if (location.state && location.state.id) {
-        // Editing existing tour guide
+        // Edit tour guide
         await axios.put(`${baseURL}/tour-guides/${location.state.id}`, payload, {
           headers: {
             "Content-Type": "application/json"
@@ -101,6 +102,7 @@ export default function AddTourGuides() {
         });
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
+        // add tour guide
         const response = await axios.post(`${baseURL}/tour-guides/create`, payload, {
           headers: {
             "Content-Type": "application/json"

@@ -23,6 +23,8 @@ export default function AddCategory() {
       setLoading(false);
     }
   }, [location.state]);
+
+  // for update category 
   const fetchCategoryDetails = async (id) => {
     try {
       setLoading(true);
@@ -35,6 +37,7 @@ export default function AddCategory() {
       console.log("error fetching data of category ");
     }
   };
+
   const handleInputChange = (e) => {
     setCategoryName(e.target.value);
   };
@@ -42,9 +45,9 @@ export default function AddCategory() {
   const validateForm = () => {
     const newErrors = {};
     if (!categoryName) newErrors.categoryName = "من فضلك ادخل فئة التذكرة";
-
     return newErrors;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -56,18 +59,17 @@ export default function AddCategory() {
     try {
       setLoading(true);
       if (location.state && location.state.id) {
-        // Editing existing Category
+        // Edit Category
         const response = await axios.put(
           `${baseURL}/${CATEGORIES}/${location.state.id}`,
           { title: categoryName }
         );
         localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
       } else {
+        // add category 
         const response = await axios.post(`${baseURL}/${CATEGORIES_CREATE}`, {
           title: categoryName,
         });
-
-        // تحقق من الاستجابة
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة فئة التذكرة بنجاح");
         }

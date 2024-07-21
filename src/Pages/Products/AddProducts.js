@@ -36,6 +36,7 @@ export default function AddProducts() {
     }
   }, [location.state]);
 
+  // fetch SALES_CENTERS 
   useEffect(() => {
     const fetchSalesCenters = async () => {
       try {
@@ -52,6 +53,7 @@ export default function AddProducts() {
     fetchSalesCenters();
   }, []);
 
+  // for product Update 
   const fetchProduct = async (id) => {
     try {
       setLoading(true);
@@ -124,6 +126,7 @@ export default function AddProducts() {
 
       let response;
       if (location.state && location.state.id) {
+        // edit product 
         response = await axios.put(
           `${baseURL}/${PRODUCTS}/${location.state.id}`,
           formDataToSend,
@@ -136,6 +139,7 @@ export default function AddProducts() {
         localStorage.setItem("alertMessage", "تم تعديل المنتج بنجاح");
       } else {
         response = await axios.post(
+          // add product 
           `${baseURL}/${PRODUCTS_CREATE}`,
           formDataToSend,
           {

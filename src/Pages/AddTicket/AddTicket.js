@@ -47,6 +47,7 @@ export default function AddTicket() {
     }
   }, [location.state, loading]);
 
+  // for update 
   const fetchTicketDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
@@ -54,7 +55,6 @@ export default function AddTicket() {
       if (ticket) {
         const { name, price, tax, categoryName, currency, days } = ticket;
         const category = categories.find((cat) => cat.title === categoryName);
-
         setFormData({
           title: name,
           price: price,
@@ -69,6 +69,7 @@ export default function AddTicket() {
     }
   };
 
+  // fetch categories 
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`${baseURL}/${CATEGORIES}`);
@@ -143,7 +144,7 @@ export default function AddTicket() {
         currency: formData.currency ? parseInt(formData.currency, 10) : undefined,
         days: formData.days.map((day) => parseInt(day, 10)),
       };
-
+      // update ticket
       if (location.state && location.state.id) {
         const response = await axios.put(
           `${baseURL}/${TICKETS}/${location.state.id}`,
@@ -156,6 +157,7 @@ export default function AddTicket() {
         );
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       } else {
+        // add ticket 
         const response = await axios.post(
           `${baseURL}/${TICKETS_CREATE}`,
           payload,
@@ -178,6 +180,7 @@ export default function AddTicket() {
     }
   };
 
+  // change currency from numbers to arabic 
   const currencyNames = {
     0: "دولار أمريكي",
     1: "يورو",

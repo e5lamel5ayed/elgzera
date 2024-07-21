@@ -17,6 +17,7 @@ export default function CategoryList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
+  // fetch categories 
   const fetchCategories = async () => {
     setLoading(true);
     try {
@@ -26,31 +27,53 @@ export default function CategoryList() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-
       console.error("Error fetching categories", error);
     }
   };
+
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // edit categories 
   const EditRow = (id) => {
     navigate(`/AddCategory`, { state: { id } });
   };
+
+  // edit categories function
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
-      fetchCategories();
-      Swal.fire("تم الحذف بنجاح");
-      setLoading(false);
-
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
+          fetchCategories();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
+  
   return (
     <div>
       {loading && <Loading />}

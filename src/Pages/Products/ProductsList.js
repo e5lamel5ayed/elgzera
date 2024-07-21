@@ -15,6 +15,7 @@ export default function ProductList() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // fetch products 
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -28,43 +29,48 @@ export default function ProductList() {
     }
   };
 
-  // const fetchSalesCenters = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
-  //     setCenter(response.data);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error("Error fetching data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
     fetchData();
-    // fetchSalesCenters();
   }, []);
 
+  // edit products 
   const EditRow = (id) => {
     navigate(`/AddProducts`, { state: { id } });
   };
 
+  // delete products function 
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      const res = await axios.delete(
-        `${baseURL}/${PRODUCTS}/${id}`
-      );
-      fetchData();
-      Swal.fire("تم الحذف بنجاح");
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error deleting data:", error);
-    }
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${PRODUCTS}/${id}`);
+          fetchData();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
-
 
   return (
     <div className="container">

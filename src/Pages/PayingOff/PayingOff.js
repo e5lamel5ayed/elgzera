@@ -9,7 +9,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
 import PersonIcon from '@mui/icons-material/Person';
-import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, TICKETS, TOURGUIDE, TOURGUIDE_CREATE } from "../../Components/Api";
+import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, TICKETS, TOURGUIDE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
 import Swal from 'sweetalert2';
 import utf8 from 'utf8';
 
@@ -28,7 +28,7 @@ function PayingOff() {
 
     useEffect(() => {
         axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
-        axios.get(`${baseURL}/${TOURGUIDE}`).then(response => setGuides(response.data));
+        axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`).then(response => setGuides(response.data));
         axios.get(`${baseURL}/${CRUISES}`).then(response => setBoats(response.data));
         axios.get(`${baseURL}/${TICKETS}`).then(response => setTicketCategories(response.data));
         fetchGuides();
@@ -87,19 +87,22 @@ function PayingOff() {
         window.print();
     };
 
+    // fetch active tour guide 
     const fetchGuides = async () => {
         try {
-            const response = await axios.get(`${baseURL}/${TOURGUIDE}`);
+            const response = await axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`);
             setGuides(response.data);
         } catch (error) {
             console.error("There was an error fetching the guides!", error);
         }
     };
 
+    // fecth boats 
     const fetchBoats = async () => {
         try {
             const response = await axios.get(`${baseURL}/${CRUISES}`);
-            setBoats(response.data);
+            const activeBoats = response.data.filter(boat => boat.status === "Active");
+            setBoats(activeBoats);
         } catch (error) {
             console.error("There was an error fetching the boats!", error);
         }
@@ -231,6 +234,7 @@ function PayingOff() {
         }
     };
 
+    // change nationality from english to arabic 
     const nationalityTranslations = {
         "Egyptian": "مصري",
         "Saudi": "سعودي",
@@ -248,6 +252,7 @@ function PayingOff() {
         "Australian": "أسترالي"
     };
 
+    // change currency from english to arabic 
     const currencyNames = {
         0: "دولار أمريكي",
         1: "يورو",
@@ -273,6 +278,8 @@ function PayingOff() {
                                 <div className="card-body">
                                     <div className="container">
                                         <div className='row'>
+
+                                            {/* fetch nationality  */}
                                             <div className='col-md-4 mt-2'>
                                                 <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
                                                 <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
@@ -281,6 +288,8 @@ function PayingOff() {
                                                     ))}
                                                 </Select>
                                             </div>
+
+                                            {/* fetch tour guide  */}
                                             <div className='col-md-4'>
                                                 <div className='d-flex justify-content-between align-items-center'>
                                                     <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
@@ -294,6 +303,8 @@ function PayingOff() {
                                                     ))}
                                                 </Select>
                                             </div>
+
+                                            {/* fetch boats  */}
                                             <div className='col-md-4'>
                                                 <div className='d-flex justify-content-between align-items-center'>
                                                     <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
@@ -308,6 +319,8 @@ function PayingOff() {
                                                 </Select>
                                             </div>
                                         </div>
+
+                                        {/* fetch tickets  */}
                                         <div className="row mt-4">
                                             {Array.isArray(ticketCategories) && ticketCategories.map((ticket) => (
                                                 <div className='my-1' key={ticket.id}>
@@ -320,6 +333,8 @@ function PayingOff() {
                                                 </div>
                                             ))}
                                         </div>
+
+                                        {/* table  */}
                                         <div className="row mt-4">
                                             <TableContainer component={Paper}>
                                                 <Table>
@@ -371,7 +386,6 @@ function PayingOff() {
                                                                     startIcon={<PaymentIcon className='ml-2' />}
                                                                     onClick={handlePayment}
                                                                 >
-
                                                                     دفع
                                                                 </Button>
                                                             </TableCell>
@@ -380,6 +394,7 @@ function PayingOff() {
                                                 </Table>
                                             </TableContainer>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -451,7 +466,6 @@ function PayingOff() {
                     </Button>
                 </DialogActions>
             </Dialog>
-
 
             {/* add guides dialog  */}
             < Dialog open={addGuide} onClose={() => setAddGuide(false)} fullWidth style={{ direction: "rtl" }}>

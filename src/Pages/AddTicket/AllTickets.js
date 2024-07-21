@@ -16,6 +16,7 @@ export default function All() {
             }, 2000);
         }
     }, []);
+    
     return (
         <div>
             <Drawer />

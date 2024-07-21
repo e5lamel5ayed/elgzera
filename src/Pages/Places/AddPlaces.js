@@ -31,7 +31,6 @@ export default function AddPlaces() {
       fetchPlace(id);
     } else {
       setLoading(false);
-
     }
   }, [location.state]);
 
@@ -48,10 +47,10 @@ export default function AddPlaces() {
     }
   };
 
+  // for update 
   const fetchPlace = async (id) => {
     try {
       setLoading(true);
-
       const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
       const center = response.data.find((center) => center.id === id);
       const completeImageUrl = `${IMG_URL}${center.imgUrl}`;
@@ -62,14 +61,11 @@ export default function AddPlaces() {
         imageUrl: completeImageUrl,
       });
       setLoading(false);
-
     } catch (error) {
       setLoading(false);
       console.error("Error fetching center:", error);
     }
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,7 +74,6 @@ export default function AddPlaces() {
     if (!formData.location) newErrors.location = "من فضلك ادخل الموقع";
     if (!formData.image && !formData.imageUrl)
       newErrors.image = "من فضلك ادخل الصورة";
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -94,6 +89,7 @@ export default function AddPlaces() {
       }
 
       if (location.state && location.state.id) {
+        // edit SALES_CENTERS 
         const response = await axios.put(
           `${baseURL}/${SALES_CENTERS}/${location.state.id}`,
           formDataToSend,
@@ -105,6 +101,7 @@ export default function AddPlaces() {
         );
         localStorage.setItem("alertMessage", "تم تعديل مركز البيع بنجاح");
       } else {
+        // add SALES_CENTERS 
         const response = await axios.post(
           `${baseURL}/${SALES_CENTERS_CREATE}`,
           formDataToSend,
@@ -120,11 +117,9 @@ export default function AddPlaces() {
         }
       }
       setLoading(false);
-
       navigate("/AllPlaces");
     } catch (error) {
       setLoading(false);
-
       console.error("Error adding or editing place:", error);
     }
   };

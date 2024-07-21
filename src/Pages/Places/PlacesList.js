@@ -15,6 +15,7 @@ export default function PlacesList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  // fetch SALES_CENTERS 
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -31,33 +32,52 @@ export default function PlacesList() {
     fetchData();
   }, []);
 
+  // edit SALES_CENTERS 
   const EditRow = (id) => {
     navigate(`/AddPlaces`, { state: { id } });
   };
 
+  // delete SALES_CENTERS function 
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      const res = await axios.delete(`${baseURL}/${SALES_CENTERS}/${id}`);
-      fetchData();
-      setLoading(false);
-      Swal.fire("تم الحذف بنجاح");
-    } catch (error) {
-      setLoading(false);
-      console.error("Error deleting data:", error);
-    }
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${SALES_CENTERS}/${id}`);
+          fetchData();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
 
   return (
     <div className="container">
       {loading && <Loading />}
-
       <div className="row product-edit ml-4">
-
         {salesCenters.length === 0 ? (
           <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد اماكن </h4>
         ) : (
-
           salesCenters.map((center) => (
             <div className="col-md-4" key={center.id}>
               <Card sx={{ maxWidth: 300 }} className="mb-5">

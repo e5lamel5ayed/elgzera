@@ -39,16 +39,36 @@ export default function TourGuidesList() {
   };
 
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`${baseURL}/${TOURGUIDE}/${id}`);
-      fetchGuides();
-      Swal.fire("تم الحذف بنجاح");
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log("error", error);
-    }
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${TOURGUIDE}/${id}`);
+          fetchGuides();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
 
   const status = {
