@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
@@ -56,7 +58,7 @@ const EditTicket = () => {
   const fetchTicketDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
-      const ticket = response.data.find((ticket) => ticket.id == id);
+      const ticket = response.data.find((ticket) => ticket.id === id);
       const { name, price, tax, categoryName, currency, days } = ticket;
       const categoryId = categoryNameToIdMap[categoryName];
       console.log(categoryName, categoryId);
