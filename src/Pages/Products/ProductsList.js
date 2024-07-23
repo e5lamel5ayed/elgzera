@@ -73,16 +73,16 @@ export default function ProductList() {
   };
 
   return (
-    <div className="">
+    <div className="container">
       {loading && <Loading />}
 
-      <div className="row product-edit ml-4">
+      <div className="row">
         {products.length === 0 ? (
           <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد منتجات</h4>
         ) : (
           products.map((product) => (
             <div className="col-md-4" key={product.id}>
-              <Card className="mb-2">
+              <Card className="mb-3">
                 <img
                   style={{ height: "250px", width: '100%', objectFit: "cover" }}
                   src={`${IMG_URL}${product.imgUrl}`}

@@ -74,15 +74,15 @@ export default function PlacesList() {
   return (
     <div className="container">
       {loading && <Loading />}
-      <div className="row product-edit ml-4">
+      <div className="row">
         {salesCenters.length === 0 ? (
           <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد اماكن </h4>
         ) : (
           salesCenters.map((center) => (
             <div className="col-md-4" key={center.id}>
-              <Card className="mb-5">
+              <Card className="mb-3">
                 <img
-                  style={{ width: "100%", height: "250px", objectFit: "cover"}}
+                  style={{ width: "100%", height: "250px", objectFit: "cover" }}
                   src={`${IMG_URL}${center.imgUrl}`}
                   alt={center.name}
                 />
