@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, MenuItem, OutlinedInput, Paper, Select, Snackbar, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -27,6 +27,7 @@ function PayingOff() {
     const [showQRCodes, setShowQRCodes] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [currentDay, setCurrentDay] = useState('');
+    const [showError, setShowError] = useState(false);
 
     useEffect(() => {
         axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
@@ -80,8 +81,23 @@ function PayingOff() {
         setShowQRCodes(false);
     };
 
+    // validate to payment btn 
+    const validateData = () => {
+        if (tickets.length === 0) {
+            setShowError(true);
+            return false;
+        }
+        return true;
+    };
+
+    const handleCloseError = () => {
+        setShowError(false);
+    };
+
     const handlePayment = () => {
-        setShowQRCodes(true);
+        if (validateData()) {
+            setShowQRCodes(true);
+        }
     };
 
     // print function 
@@ -412,6 +428,12 @@ function PayingOff() {
                                                     >
                                                         دفع
                                                     </Button>
+                                                    {/* عرض رسالة الخطأ إذا كانت الحالة showError صحيحة */}
+                                                    <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseError}>
+                                                        <Alert onClose={handleCloseError} severity="error">
+                                                            لا توجد بيانات للدفع!
+                                                        </Alert>
+                                                    </Snackbar>
                                                 </TableCell>
                                             </TableRow>
                                         </TableFooter>
