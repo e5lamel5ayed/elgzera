@@ -91,7 +91,7 @@ export default function PlacesList() {
                     {center.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {center.productCount} Products
+                    {center.productCount} منتج
                   </Typography>
                   <div className="d-flex justify-content-between mt-2">
                     <button

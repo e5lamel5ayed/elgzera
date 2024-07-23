@@ -191,7 +191,7 @@ export default function BasicTable() {
                     {currencyNames[ticket.currency]}
                   </TableCell> */}
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                    {ticket.tax}
+                    {ticket.tax} $
                   </TableCell>
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.days.map((day) => dayNames[day.name]).join(", ")}
