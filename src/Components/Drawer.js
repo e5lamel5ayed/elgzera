@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -28,7 +29,6 @@ import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import PaymentIcon from '@mui/icons-material/Payment';
 import { IconButton } from '@mui/material';
 
-
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -47,7 +47,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
             }),
             marginRight: 0,
         }),
-
         position: 'relative',
     }),
 );
@@ -79,9 +78,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function PersistentDrawerRight() {
     const navigate = useNavigate();
-
     const theme = useTheme();
-    const [open, setOpen] = React.useState(true);
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [open, setOpen] = React.useState(!isMobile); // Set initial state based on screen size
+
+    React.useEffect(() => {
+        setOpen(!isMobile);
+    }, [isMobile]);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -105,16 +108,12 @@ export default function PersistentDrawerRight() {
                         onClick={handleDrawerOpen}
                         sx={{ ...(open && { display: 'none' }), color: "#000" }}
                     >
-
                         <MenuIcon />
-
                     </IconButton>
-
                 </Toolbar>
             </AppBar>
             <Main open={open}>
                 <DrawerHeader />
-
             </Main>
             <Drawer
                 className='color'
@@ -124,7 +123,6 @@ export default function PersistentDrawerRight() {
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                     },
-
                 }}
                 variant="persistent"
                 anchor="right"
@@ -135,7 +133,6 @@ export default function PersistentDrawerRight() {
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
                     <img style={{ width: "64%" }} src='\imgs\orane.png' />
-
                 </DrawerHeader>
                 <Divider />
                 <List sx={{ backgroundColor: "#fcf7f7", height: "100%" }} >
@@ -161,7 +158,6 @@ export default function PersistentDrawerRight() {
                         <ListItemButton>
                             <ListItemIcon >
                                 <CategoryIcon className='icon-edit' />
-
                                 <span className='span-edit'>فئات التذاكر</span>
                             </ListItemIcon>
                             <ListItemText />
@@ -198,7 +194,6 @@ export default function PersistentDrawerRight() {
                         </ListItemButton>
                     </ListItem>
 
-
                     <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
                         <ListItemButton>
                             <ListItemIcon >
@@ -223,16 +218,12 @@ export default function PersistentDrawerRight() {
                     <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
                         <ListItemButton>
                             <ListItemIcon >
-
                                 <PaymentIcon className='icon-edit' />
                                 <span className='span-edit'>الدفع </span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
                     </ListItem>
-
-
-
                 </List>
                 {/* <Divider /> */}
             </Drawer>
