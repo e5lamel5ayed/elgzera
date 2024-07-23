@@ -20,15 +20,17 @@ export default function AllCruises() {
         <div>
             <Drawer />
             <ToastContainer />
-            <Box sx={{ width: "80%" }}>
-                <div>
-                    <h2 className='table-head' >المراكب </h2>
-                    <Link to='/AddCruises'>
-                        <button className='btn btn-primary add-button'>اضافه مركب</button>
-                    </Link>
-                </div>
-                <CruisesList />
-            </Box>
+            <div className='box-container'>
+                <Box>
+                    <div className='table-head'>
+                        <h2>المراكب </h2>
+                        <Link to='/AddCruises'>
+                            <button className='btn btn-primary add-button'>اضافة مركب</button>
+                        </Link>
+                    </div>
+                    <CruisesList />
+                </Box>
+            </div>
         </div>
     )
 }

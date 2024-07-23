@@ -164,13 +164,13 @@ export default function AddProducts() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box height={65} sx={{ direction: "rtl" }} />
-      <div>
+      <Box className='box-container'>
+      <div className="table-head">
+      <h2>اضافة منتج</h2>
         <Link to="/AllProducts">
           <button className="btn btn-primary add-button">رجوع</button>
         </Link>
       </div>
-      <Box sx={{ width: "80%", direction: "rtl" }}>
         <div className="card table-style" style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-style">
             اضف البيانات

@@ -73,23 +73,21 @@ export default function ProductList() {
   };
 
   return (
-    <div className="container">
+    <div className="">
       {loading && <Loading />}
 
       <div className="row product-edit ml-4">
         {products.length === 0 ? (
-          <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد منتجات </h4>
+          <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد منتجات</h4>
         ) : (
           products.map((product) => (
             <div className="col-md-4" key={product.id}>
-              <Card sx={{ maxWidth: 300 }} className="mb-5">
-                <div>
-                  <img
-                    style={{ width: "80%", height: "250px", marginLeft: "10%" }}
-                    src={`${IMG_URL}${product.imgUrl}`}
-                    alt={product.name}
-                  />
-                </div>
+              <Card className="mb-2">
+                <img
+                  style={{ height: "250px", width: '100%', objectFit: "cover" }}
+                  src={`${IMG_URL}${product.imgUrl}`}
+                  alt={product.name}
+                />
                 <CardContent>
 
                   <Typography gutterBottom variant="h5" component="div">
@@ -105,13 +103,13 @@ export default function ProductList() {
                   </Typography>
                   <div className="d-flex justify-content-between mt-2">
                     <button
-                      className="btn btn-primary ml-2"
+                      className="btn btn-primary mx-2 btn-sm"
                       onClick={() => EditRow(product.id)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(product.id)}
                     >
                       حذف

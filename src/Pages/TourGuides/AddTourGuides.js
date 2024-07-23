@@ -124,9 +124,9 @@ export default function AddTourGuides() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
-        <div>
-          <h2 className="add-head">المرشدين</h2>
+      <Box className='box-container'>
+        <div className="table-head">
+          <h2>المرشدين</h2>
           <Link to="/AllTourGuides">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>

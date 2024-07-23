@@ -92,9 +92,9 @@ export default function PersistentDrawerRight() {
     };
 
     return (
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar sx={{backgroundColor: "#fcf7f7"}} position="fixed" open={open}>
+            <AppBar sx={{ backgroundColor: "#fcf7f7" }} position="fixed" open={open}>
                 <Toolbar>
                     <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
                     </Typography>
@@ -107,43 +107,43 @@ export default function PersistentDrawerRight() {
                     >
 
                         <MenuIcon />
-                        
+
                     </IconButton>
-                    
+
                 </Toolbar>
             </AppBar>
             <Main open={open}>
                 <DrawerHeader />
-                
+
             </Main>
             <Drawer
-            className='color'
+                className='color'
                 sx={{
                     width: drawerWidth,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
                     },
-                    
+
                 }}
                 variant="persistent"
                 anchor="right"
                 open={open}
             >
-                <DrawerHeader sx={{backgroundColor:"#fcf7f7"}}>
-                    <IconButton sx={{ color: "#000"}} onClick={handleDrawerClose}>
+                <DrawerHeader sx={{ backgroundColor: "#fcf7f7" }}>
+                    <IconButton sx={{ color: "#000" }} onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
-                    <img style={{width:"64%"}} src='\imgs\orane.png'/>
+                    <img style={{ width: "64%" }} src='\imgs\orane.png' />
 
                 </DrawerHeader>
                 <Divider />
-                <List sx={{backgroundColor:"#fcf7f7",height:"100%"}} >
+                <List sx={{ backgroundColor: "#fcf7f7", height: "100%" }} >
                     <ListItem disablePadding onClick={() => navigate("/Home")}>
                         <ListItemButton>
                             <ListItemIcon  >
                                 <SpaceDashboardIcon className='icon-edit' />
-                                <span  className='span-edit'>الرئيسيه</span>
+                                <span className='span-edit'>الرئيسيه</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
@@ -152,7 +152,7 @@ export default function PersistentDrawerRight() {
                         <ListItemButton>
                             <ListItemIcon >
                                 <ConfirmationNumberIcon className='icon-edit' />
-                                <span className='span-edit'>اضافه تذكره</span>
+                                <span className='span-edit'>اضافه تذكرة</span>
                             </ListItemIcon>
                             <ListItemText />
                         </ListItemButton>
@@ -231,7 +231,7 @@ export default function PersistentDrawerRight() {
                         </ListItemButton>
                     </ListItem>
 
-                  
+
 
                 </List>
                 {/* <Divider /> */}

@@ -86,10 +86,9 @@ export default function AddCategory() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
-        <div>
-          <h2 className="add-head">فئة التذكرة</h2>
-
+      <Box className='box-container'>
+        <div className="table-head">
+          <h2>فئة التذكرة</h2>
           <Link to="/AllCategories">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>

@@ -111,38 +111,38 @@ export default function BasicTable() {
         sx={{ direction: "rtl" }}
         component={Paper}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} aria-label="simple table ">
           <TableHead className="table-head-style">
             <TableRow>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 الاسم
               </TableCell>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 نوع التذكرة
               </TableCell>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 السعر
               </TableCell>
-              <TableCell
+              {/* <TableCell  className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 العملة
-              </TableCell>
-              <TableCell
+              </TableCell> */}
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
@@ -150,14 +150,14 @@ export default function BasicTable() {
                 الضرائب
               </TableCell>
 
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 الأيام
               </TableCell>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
@@ -173,7 +173,7 @@ export default function BasicTable() {
                   key={ticket.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell
+                  <TableCell className="text-center"
                     sx={{ fontSize: "18px" }}
                     align="right"
                     component="th"
@@ -181,30 +181,30 @@ export default function BasicTable() {
                   >
                     {ticket.name}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.categoryName}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
-                    {ticket.price}
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                    {ticket.price} $
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                  {/* <TableCell  className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {currencyNames[ticket.currency]}
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                  </TableCell> */}
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.tax}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.days.map((day) => dayNames[day.name]).join(", ")}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                  <TableCell className="text-center d-flex" sx={{ fontSize: "18px" }} align="right">
                     <button
-                      className="btn btn-primary ml-2"
+                      className="btn btn-primary mx-2 btn-sm"
                       onClick={() => EditRow(ticket.id)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(ticket.id)}
                     >
                       حذف
@@ -214,7 +214,7 @@ export default function BasicTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} align="center">
+                <TableCell className="text-center" colSpan={7} align="center">
                   <h5>لا توجد بيانات</h5>
                 </TableCell>
               </TableRow>

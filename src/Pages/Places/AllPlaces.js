@@ -20,15 +20,17 @@ export default function AllPlaces() {
         <div>
             <Drawer />
             <ToastContainer />
-            <Box sx={{ width: "80%" }}>
-                <div>
-                    <h2 className='table-head' >الاماكن</h2>
-                    <Link to='/AddPlaces'>
-                        <button className='btn btn-primary add-button'>اضافه مكان</button>
-                    </Link>
-                </div>
-                <PlacesList/>
-            </Box>
+            <div className='box-container'>
+                <Box>
+                    <div className='table-head'>
+                        <h2>الاماكن</h2>
+                        <Link to='/AddPlaces'>
+                            <button className='btn btn-primary add-button'>اضافة مكان</button>
+                        </Link>
+                    </div>
+                    <PlacesList />
+                </Box>
+            </div>
         </div>
     )
 }

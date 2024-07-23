@@ -80,9 +80,9 @@ export default function PlacesList() {
         ) : (
           salesCenters.map((center) => (
             <div className="col-md-4" key={center.id}>
-              <Card sx={{ maxWidth: 300 }} className="mb-5">
+              <Card className="mb-5">
                 <img
-                  style={{ width: "80%", height: "250px", objectFit: "cover", marginLeft: "10%" }}
+                  style={{ width: "100%", height: "250px", objectFit: "cover"}}
                   src={`${IMG_URL}${center.imgUrl}`}
                   alt={center.name}
                 />
@@ -95,13 +95,13 @@ export default function PlacesList() {
                   </Typography>
                   <div className="d-flex justify-content-between mt-2">
                     <button
-                      className="btn btn-primary ml-2"
+                      className="btn btn-primary mx-2 btn-sm"
                       onClick={() => EditRow(center.id)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(center.id)}
                     >
                       حذف

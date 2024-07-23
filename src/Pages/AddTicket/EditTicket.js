@@ -173,7 +173,7 @@ const EditTicket = () => {
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>
-          <h2 className="add-head"> تعديل التذكره</h2>
+          <h2 className="add-head"> تعديل التذكرة</h2>
           <Link to="/AllTickets">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>

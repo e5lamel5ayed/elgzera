@@ -22,16 +22,17 @@ export default function AllProducts() {
         <div>
             <Drawer />
             <ToastContainer />
-            <Box sx={{ width: "80%" }}>
-                <div>
-                    <h2 className='table-head' >المنتجات</h2>
-                    <Link to='/AddProducts'>
-                        <button className='btn btn-primary add-button'>اضافه منتج</button>
-                    </Link>
-                </div>
-
-                <ProductsList/>
-            </Box>
+            <div className='box-container'>
+                <Box>
+                    <div className='table-head'>
+                        <h2>المنتجات</h2>
+                        <Link to='/AddProducts'>
+                            <button className='btn btn-primary add-button'>اضافة منتج</button>
+                        </Link>
+                    </div>
+                    <ProductsList />
+                </Box>
+            </div>
         </div>
     )
 }

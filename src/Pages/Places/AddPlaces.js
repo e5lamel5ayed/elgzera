@@ -128,9 +128,9 @@ export default function AddPlaces() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
-        <div>
-          <h2 className="add-head">مراكز البيع</h2>
+      <Box className='box-container'>
+        <div className="table-head">
+          <h2>مراكز البيع</h2>
           <Link to="/AllPlaces">
             <button className="btn btn-primary add-button">رجوع</button>
           </Link>

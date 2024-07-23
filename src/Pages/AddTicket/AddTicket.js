@@ -60,7 +60,7 @@ export default function AddTicket() {
           price: price,
           tax: tax,
           categoryId: category ? category.id : '',
-          currency: currency,
+          // currency: currency,
           days: days.map((day) => day.id) || [],
         });
       }
@@ -126,7 +126,7 @@ export default function AddTicket() {
     }
 
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
-    if (!formData.currency && !location.state) newErrors.currency = "من فضلك اختر العملة";
+    // if (!formData.currency && !location.state) newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
 
     if (Object.keys(newErrors).length > 0) {
@@ -139,7 +139,7 @@ export default function AddTicket() {
 
       const payload = {
         ...formData,
-        price: parseFloat(formData.price),
+        // price: parseFloat(formData.price),
         tax: parseFloat(formData.tax),
         currency: formData.currency ? parseInt(formData.currency, 10) : undefined,
         days: formData.days.map((day) => parseInt(day, 10)),
@@ -181,25 +181,25 @@ export default function AddTicket() {
   };
 
   // change currency from numbers to arabic 
-  const currencyNames = {
-    0: "دولار أمريكي",
-    1: "يورو",
-    2: "جنيه مصري",
-    3: "جنيه إسترليني",
-    4: "ريال سعودي",
-    5: "درهم إماراتي",
-    6: "دينار كويتي",
-  };
+  // const currencyNames = {
+  //   0: "دولار أمريكي",
+  //   1: "يورو",
+  //   2: "جنيه مصري",
+  //   3: "جنيه إسترليني",
+  //   4: "ريال سعودي",
+  //   5: "درهم إماراتي",
+  //   6: "دينار كويتي",
+  // };
 
   return (
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
-        <div>
-          <h2 className="add-head">اضف التذاكر</h2>
+      <Box className='box-container'>
+        <div className="table-head">
+          <h2 className="mb-0">اضف التذاكر</h2>
           <Link to="/AllTickets">
-            <button className="btn btn-primary add-button">رجوع </button>
+            <button className="btn btn-primary add-button mb-2">رجوع </button>
           </Link>
         </div>
         <div className="card table-style mb-5" style={{ direction: "rtl" }}>
@@ -269,7 +269,7 @@ export default function AddTicket() {
                     )}
                   </div>
 
-                  <div className="col-md-3">
+                  <div className="col-md-6">
                     <label htmlFor="tax" className="d-flex">
                       الضرائب
                     </label>
@@ -285,7 +285,7 @@ export default function AddTicket() {
                     {errors.tax && <h6 className="error-log">{errors.tax}</h6>}
                   </div>
 
-                  <div className="col-md-3">
+                  {/* <div className="col-md-3">
                     <label htmlFor="currency" className="d-flex">
                       العملة
                     </label>
@@ -305,117 +305,109 @@ export default function AddTicket() {
                     {errors.currency && (
                       <h6 className="error-log">{errors.currency}</h6>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="col-md-12">
-                    <label className="d-flex mt-3">اختر اليوم</label>
-                    <div className="col-md-12 d-flex">
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="1"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(1)}
-                              />
-                            }
-                            label="السبت"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="2"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(2)}
-                              />
-                            }
-                            label="الاحد"
-                          />
-                        </div>
-                      </FormGroup>
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="3"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(3)}
-                              />
-                            }
-                            label="الاثنين"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="4"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(4)}
-                              />
-                            }
-                            label="الثلاثاء"
-                          />
-                        </div>
-                      </FormGroup>
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="5"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(5)}
-                              />
-                            }
-                            label="الاربعاء"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="6"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(6)}
-                              />
-                            }
-                            label="الخميس"
-                          />
-                        </div>
-                      </FormGroup>
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="7"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(7)}
-                              />
-                            }
-                            label="الجمعه"
-                          />
-                        </div>
-                      </FormGroup>
+                    <label className="mt-3 d-flex">اختر اليوم</label>
+                    <div className="days">
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="1"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(1)}
+                            />
+                          }
+                          label="السبت"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="2"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(2)}
+                            />
+                          }
+                          label="الاحد"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="3"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(3)}
+                            />
+                          }
+                          label="الاثنين"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="4"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(4)}
+                            />
+                          }
+                          label="الثلاثاء"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="5"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(5)}
+                            />
+                          }
+                          label="الاربعاء"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="6"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(6)}
+                            />
+                          }
+                          label="الخميس"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="7"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(7)}
+                            />
+                          }
+                          label="الجمعه"
+                        />
+                      </div>
                     </div>
                     {errors.days && (
                       <h6 className="error-log">{errors.days}</h6>

@@ -16,17 +16,17 @@ export default function All() {
             }, 2000);
         }
     }, []);
-    
+
     return (
         <div>
             <Drawer />
             <ToastContainer />
-            <div style={{ widows: "100%" }}>
-                <Box sx={{ width: "80%" }}>
-                    <div>
-                        <h2 className='table-head' >قائمه التذاكر</h2>
+            <div className='box-container'>
+                <Box>
+                    <div className='table-head'>
+                        <h2>قائمة التذاكر</h2>
                         <Link to='/AddTicket'>
-                            <button className='btn btn-primary add-button '>اضافه تذكره</button>
+                            <button className='btn btn-primary add-button '>اضافة تذكرة</button>
                         </Link>
                     </div>
                     <TicketsList />

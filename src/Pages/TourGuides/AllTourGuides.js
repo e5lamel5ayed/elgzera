@@ -21,16 +21,18 @@ export default function AllTourGuides() {
     <div>
       <Drawer />
       <ToastContainer />
-      <Box sx={{ width: "80%" }}>
-        <div>
-          <h2 className="table-head">المرشدين</h2>
-          <Link to="/AddTOurGuides">
-            <button className="btn btn-primary add-button">اضافه مرشد</button>
-          </Link>
-        </div>
+      <div className='box-container'>
+        <Box>
+          <div className="table-head">
+            <h2>المرشدين</h2>
+            <Link to="/AddTOurGuides">
+              <button className="btn btn-primary add-button">اضافة مرشد</button>
+            </Link>
+          </div>
 
-        <TourGidesList />
-      </Box>
+          <TourGidesList />
+        </Box>
+      </div>
     </div>
   );
 }

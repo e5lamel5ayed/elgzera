@@ -21,15 +21,17 @@ export default function AllCategories() {
         <div>
             <Drawer />
             <ToastContainer />
-            <Box sx={{ width: "80%" }}>
-                <h2 className='table-head'>فئات التذاكر</h2>
-                <div>
-                    <Link to='/AddCategory'>
-                        <button className='btn btn-primary add-button'>أضافه فئة التذكرة</button>
-                    </Link>
-                </div>
-                <CategoryList />
-            </Box>
+            <div className='box-container'>
+                <Box>
+                    <div className='table-head'>
+                        <h2>فئات التذاكر</h2>
+                        <Link to='/AddCategory'>
+                            <button className='btn btn-primary add-button'>أضافه فئة التذكرة</button>
+                        </Link>
+                    </div>
+                    <CategoryList />
+                </Box>
+            </div>
         </div>
     );
 }

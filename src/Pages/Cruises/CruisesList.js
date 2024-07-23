@@ -91,14 +91,14 @@ export default function CruisesList() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead className="table-head-style">
             <TableRow>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 الاسم
               </TableCell>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
@@ -106,7 +106,7 @@ export default function CruisesList() {
                 الحالة
               </TableCell>
 
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="center"
@@ -122,7 +122,7 @@ export default function CruisesList() {
                   key={cruise.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell
+                  <TableCell className="text-center"
                     sx={{ fontSize: "18px" }}
                     align="right"
                     component="th"
@@ -130,20 +130,20 @@ export default function CruisesList() {
                   >
                     {cruise.name}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {status[cruise.status]}
 
                   </TableCell>
 
-                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="center">
                     <button
-                      className="btn btn-primary ml-2"
+                      className="btn btn-primary mx-2 btn-sm"
                       onClick={() => EditRow(cruise.id)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(cruise.id)}
                     >
                       حذف
@@ -153,7 +153,7 @@ export default function CruisesList() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} align="center">
+                <TableCell className="text-center" colSpan={4} align="center">
                   <h5>لا توجد بيانات</h5>
 
                 </TableCell>
