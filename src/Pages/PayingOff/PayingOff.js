@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,6 +12,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, TICKETS, TOURGUIDE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
 import Swal from 'sweetalert2';
 import utf8 from 'utf8';
+import PrintComponent from './PrintComponent'; // استيراد مكون الطباعة
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -83,6 +84,7 @@ function PayingOff() {
     const handlePayment = () => {
         setShowQRCodes(true);
     };
+    const printRef = useRef();
 
     // print function 
     const handlePrint = () => {
@@ -90,6 +92,12 @@ function PayingOff() {
         setTickets([]);
         setSelectedTicketCategories({});
         handleCloseDialog();
+        const printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write('<html><head><title>Print</title></head><body>');
+        printWindow.document.write(printRef.current.innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
     };
 
     // fetch active tour guide 
@@ -605,53 +613,42 @@ function PayingOff() {
             </Dialog >
 
             {/* QRCode dialog  */}
-            < Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
+            <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
                 <DialogTitle>الـQR Code</DialogTitle>
                 <DialogContent>
-                    {tickets.map((ticket, index) => {
-                        // عدد التذاكر: ${ticket.ticketCount}
-                        // المجموع الكلي: ${ticket.ticketPrice * ticket.ticketCount} ${currencyNames[ticket.ticketcurrency]}
-                        const qrValue = `
-                        نوع التذكرة: ${ticket.ticketType}
-                        اسم المركب: ${ticket.boatName}
-                        اسم المرشد: ${ticket.guideName}
-                        الجنسية: ${nationalityTranslations[ticket.nationality]}
-                        السعر: ${ticket.ticketPrice} $ 
-                        تاريخ الطباعة: ${formattedDate}
-                        `;
-                        const encodedQRValue = utf8.encode(qrValue);
+                    <div ref={printRef}>
+                        {tickets.map((ticket, index) => {
+                            const qrValue = `نوع التذكرة: ${ticket.ticketType} 
+                            اسم المركب: ${ticket.boatName}
+                            اسم المرشد: ${ticket.guideName} 
+                            الجنسية: ${nationalityTranslations[ticket.nationality]} 
+                            السعر: ${ticket.ticketPrice * ticket.ticketCount} ${currencyNames[ticket.ticketcurrency]}
+                            المجموع الكلي : ${total}
+                            تاريخ الطباعة: ${new Date().toLocaleString('ar-EG', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                            `;
+                            const encodedQRValue = utf8.encode(qrValue);
 
-                        return (
-                            <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
-                                {[...Array(ticket.ticketCount)].map((_, i) => (
-                                    <div key={i} style={{ marginBottom: '10px' }}>
-                                        <QRCode value={encodedQRValue} />
-                                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
-                                            <Typography variant="subtitle1">نوع التذكرة : {ticket.ticketType}</Typography>
-                                            <Typography variant="subtitle1">اسم المركب : {ticket.boatName}</Typography>
-                                            <Typography variant="subtitle1">اسم المرشد : {ticket.guideName}</Typography>
-                                            <Typography variant="subtitle1">الجنسية : {nationalityTranslations[ticket.nationality]}</Typography>
-                                            <Typography variant="subtitle1">السعر : {ticket.ticketPrice} $</Typography>
-                                            <Typography variant="subtitle1">تاريخ الطباعة: {formattedDate}</Typography>
-                                            {/* <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography> */}
-                                            {/* <Typography variant="subtitle1">المجموع الكلي: {ticket.ticketPrice * ticket.ticketCount} {currencyNames[ticket.ticketcurrency]}</Typography> */}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        );
-                    })}
-                    {/* عرض المجموع الكلي */}
-                    <div style={{ textAlign: "center", marginTop: '20px' }}>
-                        <Typography variant="h5">المجموع الكلي: {total} $</Typography>
+                            return (
+                                <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
+                                    <QRCode value={encodedQRValue} />
+                                    <Typography variant="subtitle1">نوع التذكرة: {ticket.ticketType}</Typography>
+                                    <Typography variant="subtitle1">اسم المركب: {ticket.boatName}</Typography>
+                                    <Typography variant="subtitle1">اسم المرشد: {ticket.guideName}</Typography>
+                                    <Typography variant="subtitle1">الجنسية: {nationalityTranslations[ticket.nationality]}</Typography>
+                                    <Typography variant="subtitle1">السعر: {ticket.ticketPrice * ticket.ticketCount} {currencyNames[ticket.ticketcurrency]}</Typography>
+                                </div>
+                            );
+                        })}
+                        <Typography variant="h6" style={{ textAlign: "center", marginTop: "20px" }}>
+                            المجموع الكلي: {total}
+                        </Typography>
                     </div>
                 </DialogContent>
-
                 <DialogActions>
                     <Button onClick={handlePrint}>طباعة</Button>
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
-            </Dialog >
+            </Dialog>
         </div >
     );
 }
