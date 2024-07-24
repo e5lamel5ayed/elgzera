@@ -12,6 +12,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, TICKETS, TOURGUIDE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
 import Swal from 'sweetalert2';
 import utf8 from 'utf8';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -81,24 +82,38 @@ function PayingOff() {
         setShowQRCodes(false);
     };
 
-    // validate to payment btn 
-    const validateData = () => {
-        if (tickets.length === 0) {
-            setShowError(true);
-            return false;
-        }
-        return true;
-    };
-
     const handleCloseError = () => {
         setShowError(false);
     };
+    const validateForm = () => {
+        let valid = true;
+        const newErrors = { nationality: '', guide: '', boat: '', tickets: '' };
 
-    const handlePayment = () => {
-        if (validateData()) {
-            setShowQRCodes(true);
+        if (!selectedNationality) {
+            newErrors.nationality = 'يجب اختيار الجنسية';
+            valid = false;
         }
+        if (!selectedGuideName) {
+            newErrors.guide = 'يجب اختيار المرشد';
+            valid = false;
+        }
+        if (!selectedBoatName) {
+            newErrors.boat = 'يجب اختيار المركب';
+            valid = false;
+        }
+        if (tickets.length === 0) {
+            newErrors.tickets = 'يجب إضافة تذكرة';
+            valid = false;
+        }
+
+        setErrors(newErrors);
+        return valid;
     };
+    const handlePayment = () => {
+        if (validateForm()) {
+            setShowQRCodes(true);
+        };
+    }
 
     // print function 
     const handlePrint = () => {
@@ -131,12 +146,11 @@ function PayingOff() {
 
     // add cruises 
     const [addBoat, setAddBoat] = useState(false);
+    const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: "",
         status: "",
     });
-
-    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -313,34 +327,35 @@ function PayingOff() {
     const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString('ar-EG', options);
     // , hour: '2-digit', minute: '2-digit', second: '2-digit'
+
     return (
         <div>
             <Drawer />
             <Box className='box-container'>
                 <div className='card table-style ' style={{ direction: "rtl" }}>
-                    {/* <div className="card-header table-head-style d-flex">
-                        <h4>دفع التذاكر</h4>
-                    </div> */}
                     <div className="card-body">
                         <div className="container">
                             <div className='row'>
                                 <div className="col-md-3 px-0 bg-light py-1 mb-3">
+
                                     <div className='col-12 text-right'>
                                         <h5>اليوم :</h5>
                                         <h4 className='text-info'>{formatDate(currentTime)}</h4>
                                     </div>
+
                                     {/* fetch nationality  */}
-                                    <div className='col-md-10 mt-2'>
+                                    <div className='col-md-11 mt-2'>
                                         <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
                                         <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
                                             {nationalities.map((nationality) => (
                                                 <MenuItem key={nationality.id} value={nationality.name}>{nationalityTranslations[nationality.name]}</MenuItem>
                                             ))}
                                         </Select>
+                                        {errors.nationality && <div className="error-log">{errors.nationality}</div>}
                                     </div>
 
                                     {/* fetch tour guide  */}
-                                    <div className='col-md-10'>
+                                    <div className='col-md-11'>
                                         <div className='d-flex justify-content-between align-items-center'>
                                             <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
                                             <IconButton onClick={() => setAddGuide(true)}>
@@ -352,10 +367,11 @@ function PayingOff() {
                                                 <MenuItem key={guide.id} value={guide.name}>{guide.name}</MenuItem>
                                             ))}
                                         </Select>
+                                        {errors.guide && <div className="error-log">{errors.guide}</div>}
                                     </div>
 
                                     {/* fetch boats  */}
-                                    <div className='col-md-10'>
+                                    <div className='col-md-11'>
                                         <div className='d-flex justify-content-between align-items-center'>
                                             <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
                                             <IconButton onClick={() => setAddBoat(true)}>
@@ -367,24 +383,30 @@ function PayingOff() {
                                                 <MenuItem key={boat.id} value={boat.name}>{boat.name}</MenuItem>
                                             ))}
                                         </Select>
+                                        {errors.boat && <div className="error-log">{errors.boat}</div>}
                                     </div>
+
                                 </div>
+
                                 <div className="col-md-9">
                                     <h5 className='text-right '>التذاكر المتاحة في اليوم الحالي :</h5>
+
                                     {/* fetch tickets */}
                                     <div className="row">
                                         {Array.isArray(filteredTickets) && filteredTickets.map((ticket) => (
                                             <div className='my-1' key={ticket.id}>
                                                 <div className="d-flex justify-content-center align-items-center ticket px-3 m-1">
                                                     <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
-                                                        <PersonIcon sx={{ color: "#000", fontSize: "55px" }} />
+                                                        <ConfirmationNumberIcon sx={{ color: "#1DA2DC", fontSize: "55px" }} />
                                                     </IconButton>
                                                     <span>{ticket.name}</span>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
+                                    {errors.tickets && <div className="error-log">{errors.tickets}</div>}
                                 </div>
+
                             </div>
 
                             {/* table  */}
@@ -432,7 +454,6 @@ function PayingOff() {
                                                     >
                                                         دفع
                                                     </Button>
-                                                    {/* عرض رسالة الخطأ إذا كانت الحالة showError صحيحة */}
                                                     <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseError}>
                                                         <Alert onClose={handleCloseError} severity="error">
                                                             لا توجد بيانات للدفع!
@@ -444,11 +465,9 @@ function PayingOff() {
                                     </Table>
                                 </TableContainer>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </Box >
 
             {/* add boats dialog  */}
@@ -631,17 +650,15 @@ function PayingOff() {
             </Dialog >
 
             {/* QRCode dialog  */}
-            < Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
-                <DialogTitle>الـQR Code</DialogTitle>
+            <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
+                <DialogTitle>الـ QR Code</DialogTitle>
                 <DialogContent>
                     {tickets.map((ticket, index) => {
-                        // عدد التذاكر: ${ticket.ticketCount}
-                        // المجموع الكلي: ${ticket.ticketPrice * ticket.ticketCount} ${currencyNames[ticket.ticketcurrency]}
                         const qrValue = `
                         نوع التذكرة: ${ticket.ticketType}
-                        اسم المركب: ${ticket.boatName}
-                        اسم المرشد: ${ticket.guideName}
-                        الجنسية: ${nationalityTranslations[ticket.nationality]}
+                        اسم المركب: ${selectedBoatName}
+                        اسم المرشد: ${selectedGuideName}
+                        الجنسية: ${nationalityTranslations[selectedNationality]}
                         السعر: ${ticket.ticketPrice} $ 
                         تاريخ الطباعة: ${formattedDate}
                         `;
@@ -654,9 +671,9 @@ function PayingOff() {
                                         <QRCode value={encodedQRValue} />
                                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
                                             <Typography variant="subtitle1">نوع التذكرة : {ticket.ticketType}</Typography>
-                                            <Typography variant="subtitle1">اسم المركب : {ticket.boatName}</Typography>
-                                            <Typography variant="subtitle1">اسم المرشد : {ticket.guideName}</Typography>
-                                            <Typography variant="subtitle1">الجنسية : {nationalityTranslations[ticket.nationality]}</Typography>
+                                            <Typography variant="subtitle1">اسم المركب : {selectedBoatName}</Typography>
+                                            <Typography variant="subtitle1">اسم المرشد : {selectedGuideName}</Typography>
+                                            <Typography variant="subtitle1">الجنسية : {nationalityTranslations[selectedNationality]}</Typography>
                                             <Typography variant="subtitle1">السعر : {ticket.ticketPrice} $</Typography>
                                             <Typography variant="subtitle1">تاريخ الطباعة: {formattedDate}</Typography>
                                             {/* <Typography variant="subtitle1">عدد التذاكر: {ticket.ticketCount}</Typography> */}
@@ -667,17 +684,14 @@ function PayingOff() {
                             </div>
                         );
                     })}
-                    {/* عرض المجموع الكلي */}
-                    <div style={{ textAlign: "center", marginTop: '20px' }}>
-                        <Typography variant="h5">المجموع الكلي: {total} $</Typography>
-                    </div>
                 </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handlePrint}>طباعة</Button>
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
-            </Dialog >
+            </Dialog>
+
         </div >
     );
 }
