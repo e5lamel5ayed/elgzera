@@ -318,69 +318,73 @@ function PayingOff() {
             <Drawer />
             <Box className='box-container'>
                 <div className='card table-style ' style={{ direction: "rtl" }}>
-                    <div className="card-header table-head-style d-flex">
+                    {/* <div className="card-header table-head-style d-flex">
                         <h4>دفع التذاكر</h4>
-                    </div>
+                    </div> */}
                     <div className="card-body">
                         <div className="container">
                             <div className='row'>
-                                <div className='col-12 text-center'>
-                                    <h5>اليوم :</h5>
-                                    <h4 className='text-info'>{formatDate(currentTime)}</h4>
-                                </div>
-                                {/* fetch nationality  */}
-                                <div className='col-md-4 mt-2'>
-                                    <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
-                                    <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
-                                        {nationalities.map((nationality) => (
-                                            <MenuItem key={nationality.id} value={nationality.name}>{nationalityTranslations[nationality.name]}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </div>
-
-                                {/* fetch tour guide  */}
-                                <div className='col-md-4'>
-                                    <div className='d-flex justify-content-between align-items-center'>
-                                        <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
-                                        <IconButton onClick={() => setAddGuide(true)}>
-                                            <AddIcon className='addIcon' />
-                                        </IconButton>
+                                <div className="col-md-3 px-0 bg-light py-1 mb-3">
+                                    <div className='col-12 text-right'>
+                                        <h5>اليوم :</h5>
+                                        <h4 className='text-info'>{formatDate(currentTime)}</h4>
                                     </div>
-                                    <Select id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control">
-                                        {guides.map((guide) => (
-                                            <MenuItem key={guide.id} value={guide.name}>{guide.name}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </div>
-
-                                {/* fetch boats  */}
-                                <div className='col-md-4'>
-                                    <div className='d-flex justify-content-between align-items-center'>
-                                        <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
-                                        <IconButton onClick={() => setAddBoat(true)}>
-                                            <AddIcon className='addIcon' />
-                                        </IconButton>
+                                    {/* fetch nationality  */}
+                                    <div className='col-md-10 mt-2'>
+                                        <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
+                                        <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
+                                            {nationalities.map((nationality) => (
+                                                <MenuItem key={nationality.id} value={nationality.name}>{nationalityTranslations[nationality.name]}</MenuItem>
+                                            ))}
+                                        </Select>
                                     </div>
-                                    <Select id="boatName" value={selectedBoatName} onChange={(e) => setSelectedBoatName(e.target.value)} className="form-control">
-                                        {boats.map((boat) => (
-                                            <MenuItem key={boat.id} value={boat.name}>{boat.name}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </div>
-                            </div>
 
-                            {/* fetch tickets */}
-                            <div className="row mt-4">
-                                {Array.isArray(filteredTickets) && filteredTickets.map((ticket) => (
-                                    <div className='my-1' key={ticket.id}>
-                                        <div className="d-flex flex-column align-items-center ticket px-3">
-                                            <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
-                                                <PersonIcon sx={{ color: "#000", fontSize: "55px" }} />
+                                    {/* fetch tour guide  */}
+                                    <div className='col-md-10'>
+                                        <div className='d-flex justify-content-between align-items-center'>
+                                            <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
+                                            <IconButton onClick={() => setAddGuide(true)}>
+                                                <AddIcon className='addIcon' />
                                             </IconButton>
-                                            <span>{ticket.name}</span>
                                         </div>
+                                        <Select id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control">
+                                            {guides.map((guide) => (
+                                                <MenuItem key={guide.id} value={guide.name}>{guide.name}</MenuItem>
+                                            ))}
+                                        </Select>
                                     </div>
-                                ))}
+
+                                    {/* fetch boats  */}
+                                    <div className='col-md-10'>
+                                        <div className='d-flex justify-content-between align-items-center'>
+                                            <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
+                                            <IconButton onClick={() => setAddBoat(true)}>
+                                                <AddIcon className='addIcon' />
+                                            </IconButton>
+                                        </div>
+                                        <Select id="boatName" value={selectedBoatName} onChange={(e) => setSelectedBoatName(e.target.value)} className="form-control">
+                                            {boats.map((boat) => (
+                                                <MenuItem key={boat.id} value={boat.name}>{boat.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="col-md-9">
+                                    <h5 className='text-right '>التذاكر المتاحة في اليوم الحالي :</h5>
+                                    {/* fetch tickets */}
+                                    <div className="row">
+                                        {Array.isArray(filteredTickets) && filteredTickets.map((ticket) => (
+                                            <div className='my-1' key={ticket.id}>
+                                                <div className="d-flex justify-content-center align-items-center ticket px-3 m-1">
+                                                    <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
+                                                        <PersonIcon sx={{ color: "#000", fontSize: "55px" }} />
+                                                    </IconButton>
+                                                    <span>{ticket.name}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* table  */}
