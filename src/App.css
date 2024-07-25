@@ -175,6 +175,13 @@ body {
 
   .ticket-box {
     flex-direction: column !important;
+    align-items:normal !important;
+  }
+  .select-box{
+    flex-direction: column !important;
     align-items: normal !important;
+  } 
+  .guide-box{
+    margin: 0 !important;
   }
 }

@@ -344,7 +344,7 @@ function PayingOff() {
                                     </div>
 
                                     {/* fetch nationality  */}
-                                    <div className='col-md-11 mt-2'>
+                                    <div className='px-3 mt-2'>
                                         <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
                                         <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
                                             {nationalities.map((nationality) => (
@@ -354,38 +354,40 @@ function PayingOff() {
                                         {errors.nationality && <div className="error-log">{errors.nationality}</div>}
                                     </div>
 
-                                    {/* fetch tour guide  */}
-                                    <div className='col-md-11'>
-                                        <div className='d-flex justify-content-between align-items-center'>
-                                            <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
-                                            <IconButton onClick={() => setAddGuide(true)}>
-                                                <AddIcon className='addIcon' />
-                                            </IconButton>
+                                    <div className="d-flex justify-content-center align-items-center select-box px-3">
+                                        {/* fetch tour guide  */}
+                                        <div className="guide-box m-1">
+                                            <div className='d-flex justify-content-between align-items-center'>
+                                                <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
+                                                <IconButton onClick={() => setAddGuide(true)}>
+                                                    <AddIcon className='addIcon' />
+                                                </IconButton>
+                                            </div>
+                                            <Select id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control">
+                                                {guides.map((guide) => (
+                                                    <MenuItem key={guide.id} value={guide.name}>{guide.name}</MenuItem>
+                                                ))}
+                                            </Select>
+                                            {errors.guide && <div className="error-log">{errors.guide}</div>}
                                         </div>
-                                        <Select id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control">
-                                            {guides.map((guide) => (
-                                                <MenuItem key={guide.id} value={guide.name}>{guide.name}</MenuItem>
-                                            ))}
-                                        </Select>
-                                        {errors.guide && <div className="error-log">{errors.guide}</div>}
-                                    </div>
 
-                                    {/* fetch boats  */}
-                                    <div className='col-md-11'>
-                                        <div className='d-flex justify-content-between align-items-center'>
-                                            <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
-                                            <IconButton onClick={() => setAddBoat(true)}>
-                                                <AddIcon className='addIcon' />
-                                            </IconButton>
+                                        {/* fetch boats  */}
+                                        <div className=''>
+                                            <div className='d-flex justify-content-between align-items-center'>
+                                                <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
+                                                <IconButton onClick={() => setAddBoat(true)}>
+                                                    <AddIcon className='addIcon' />
+                                                </IconButton>
+                                            </div>
+                                            <Select id="boatName" value={selectedBoatName} onChange={(e) => setSelectedBoatName(e.target.value)} className="form-control">
+                                                {boats.map((boat) => (
+                                                    <MenuItem key={boat.id} value={boat.name}>{boat.name}</MenuItem>
+                                                ))}
+                                            </Select>
+                                            {errors.boat && <div className="error-log">{errors.boat}</div>}
                                         </div>
-                                        <Select id="boatName" value={selectedBoatName} onChange={(e) => setSelectedBoatName(e.target.value)} className="form-control">
-                                            {boats.map((boat) => (
-                                                <MenuItem key={boat.id} value={boat.name}>{boat.name}</MenuItem>
-                                            ))}
-                                        </Select>
-                                        {errors.boat && <div className="error-log">{errors.boat}</div>}
-                                    </div>
 
+                                    </div>
                                 </div>
 
                                 <div className="col-md-9 pay-container mb-2 pt-3">
