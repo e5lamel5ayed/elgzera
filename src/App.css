@@ -167,7 +167,7 @@ body {
   padding: 10px !important;
 }
 
-@media(max-width:768px) {
+@media(max-width:992px) {
   .box-container {
     width: 100% !important;
     padding: 10px;

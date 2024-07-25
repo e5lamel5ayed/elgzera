@@ -339,12 +339,12 @@ function PayingOff() {
                                 <div className="col-md-3 px-0 pt-3 mb-2 pay-container">
 
                                     <div className='col-12 text-right d-flex'>
-                                        <p>اليوم : </p>
-                                        <p className='text-info mr-1' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
+                                        <p className='m-0'>اليوم : </p>
+                                        <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
                                     </div>
 
                                     {/* fetch nationality  */}
-                                    <div className='px-3 mt-2'>
+                                    <div className='px-3'>
                                         <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
                                         <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
                                             {nationalities.map((nationality) => (
@@ -354,7 +354,7 @@ function PayingOff() {
                                         {errors.nationality && <div className="error-log">{errors.nationality}</div>}
                                     </div>
 
-                                    <div className="d-flex justify-content-center align-items-center select-box px-3">
+                                    <div className="d-flex justify-content-center align-items-center select-box px-3 ">
                                         {/* fetch tour guide  */}
                                         <div className="guide-box m-1">
                                             <div className='d-flex justify-content-between align-items-center'>
@@ -394,7 +394,7 @@ function PayingOff() {
                                     <h5 className='text-right '>التذاكر المتاحة في اليوم الحالي :</h5>
 
                                     {/* fetch tickets */}
-                                    <div className="ticket-box d-flex justify-content-center align-items-center">
+                                    <div className="ticket-box d-flex justify-content-center align-items-center flex-wrap">
                                         {Array.isArray(filteredTickets) && filteredTickets.map((ticket) => (
                                             <div className='my-1' key={ticket.id}>
                                                 <div className="d-flex justify-content-center align-items-center ticket px-3 mx-1">
