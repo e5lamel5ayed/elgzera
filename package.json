@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@fullcalendar/core": "^6.1.11",
@@ -11,8 +12,9 @@
     "@fullcalendar/react": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
     "@mui/icons-material": "^5.15.16",
-    "@mui/material": "^5.16.4",
+    "@mui/material": "^5.16.5",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/utils": "^5.16.5",
     "@mui/x-charts": "^7.11.0",
     "@nivo/pie": "^0.86.0",
     "@testing-library/jest-dom": "^5.17.0",
