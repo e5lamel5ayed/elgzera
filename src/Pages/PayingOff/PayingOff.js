@@ -336,11 +336,11 @@ function PayingOff() {
                     <div className="card-body">
                         <div className="container">
                             <div className='row'>
-                                <div className="col-md-3 px-0 bg-light py-1 mb-3">
+                                <div className="col-md-3 px-0 pt-3 mb-2 pay-container">
 
-                                    <div className='col-12 text-right'>
-                                        <h5>اليوم :</h5>
-                                        <h4 className='text-info'>{formatDate(currentTime)}</h4>
+                                    <div className='col-12 text-right d-flex'>
+                                        <p>اليوم : </p>
+                                        <p className='text-info mr-1' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
                                     </div>
 
                                     {/* fetch nationality  */}
@@ -388,16 +388,23 @@ function PayingOff() {
 
                                 </div>
 
-                                <div className="col-md-9">
+                                <div className="col-md-9 pay-container mb-2 pt-3">
                                     <h5 className='text-right '>التذاكر المتاحة في اليوم الحالي :</h5>
 
                                     {/* fetch tickets */}
-                                    <div className="row">
+                                    <div className="ticket-box d-flex justify-content-center align-items-center">
                                         {Array.isArray(filteredTickets) && filteredTickets.map((ticket) => (
                                             <div className='my-1' key={ticket.id}>
-                                                <div className="d-flex justify-content-center align-items-center ticket px-3 m-1">
+                                                <div className="d-flex justify-content-center align-items-center ticket px-3 mx-1">
                                                     <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
-                                                        <ConfirmationNumberIcon sx={{ color: "#1DA2DC", fontSize: "55px" }} />
+                                                        <ConfirmationNumberIcon sx={{
+                                                            color: '#275a88',
+                                                            fontSize: '40px',
+                                                            transition: 'color 0.3s ease',
+                                                            '&:hover': {
+                                                                color: '#1DA2DC',
+                                                            }
+                                                        }} />
                                                     </IconButton>
                                                     <span>{ticket.name}</span>
                                                 </div>
@@ -407,63 +414,62 @@ function PayingOff() {
                                     {errors.tickets && <div className="error-log">{errors.tickets}</div>}
                                 </div>
 
-                            </div>
-
-                            {/* table  */}
-                            <div className="row mt-4">
-                                <TableContainer component={Paper}>
-                                    <Table>
-                                        <TableHead className='table-head-style text-white'>
-                                            <TableRow className=' text-white'>
-                                                <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>نوع التذكرة</TableCell>
-                                                <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>السعر</TableCell>
-                                                <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>عدد التذاكر</TableCell>
-                                                <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>الإجراءات</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {tickets.map((ticket, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell className="text-center" style={{ fontSize: "18px" }}>{ticket.ticketType}</TableCell>
-                                                    <TableCell className="text-center" style={{ fontSize: "18px" }}>{ticket.ticketPrice * ticket.ticketCount} $</TableCell>
+                                {/* table  */}
+                                <div className="col-md-12 p-0 mt-2">
+                                    <TableContainer sx={{ borderRadius: "10px" }} component={Paper}>
+                                        <Table>
+                                            <TableHead className='table-head-style text-white' style={{ backgroundColor: "#275a88" }}>
+                                                <TableRow className=' text-white'>
+                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>نوع التذكرة</TableCell>
+                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>السعر</TableCell>
+                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>عدد التذاكر</TableCell>
+                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>الإجراءات</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {tickets.map((ticket, index) => (
+                                                    <TableRow key={index}>
+                                                        <TableCell className="text-center" style={{ fontSize: "18px" }}>{ticket.ticketType}</TableCell>
+                                                        <TableCell className="text-center" style={{ fontSize: "18px" }}>{ticket.ticketPrice * ticket.ticketCount} $</TableCell>
+                                                        <TableCell className="text-center">
+                                                            <IconButton onClick={() => handleIncreaseTicketCount(index)}>
+                                                                <AddIcon sx={{ backgroundColor: "#199119", borderRadius: "3px", padding: "0px", marginRight: "5px", color: "#fff" }} />
+                                                            </IconButton>
+                                                            {ticket.ticketCount}
+                                                            <IconButton onClick={() => handleDecreaseTicketCount(index)}>
+                                                                <RemoveIcon sx={{ backgroundColor: "#c72c2c", borderRadius: "3px", padding: "0px", marginLeft: "5px", color: "#fff" }} />                                                                    </IconButton>
+                                                        </TableCell>
+                                                        <TableCell className="text-center">
+                                                            <IconButton onClick={() => handleDeleteTicket(index, ticket.ticketType)}>
+                                                                <DeleteIcon sx={{ color: "red" }} />
+                                                            </IconButton>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                            <TableFooter>
+                                                <TableRow>
+                                                    <TableCell className="text-center font-weight-bold text-dark" sx={{ fontSize: "25px" }}>المجموع الكلي</TableCell>
+                                                    <TableCell className="text-center font-weight-bold text-dark" sx={{ fontSize: "18px" }}>{total} $</TableCell>
                                                     <TableCell className="text-center">
-                                                        <IconButton onClick={() => handleIncreaseTicketCount(index)}>
-                                                            <AddIcon sx={{ backgroundColor: "#199119", borderRadius: "3px", padding: "0px", marginRight: "5px", color: "#fff" }} />
-                                                        </IconButton>
-                                                        {ticket.ticketCount}
-                                                        <IconButton onClick={() => handleDecreaseTicketCount(index)}>
-                                                            <RemoveIcon sx={{ backgroundColor: "#c72c2c", borderRadius: "3px", padding: "0px", marginLeft: "5px", color: "#fff" }} />                                                                    </IconButton>
-                                                    </TableCell>
-                                                    <TableCell className="text-center">
-                                                        <IconButton onClick={() => handleDeleteTicket(index, ticket.ticketType)}>
-                                                            <DeleteIcon sx={{ color: "red" }} />
-                                                        </IconButton>
+                                                        <Button variant="contained"
+                                                            sx={{ fontSize: "19px", backgroundColor: "#275a88" }}
+                                                            startIcon={<PaymentIcon className='ml-2' />}
+                                                            onClick={handlePayment}
+                                                        >
+                                                            دفع
+                                                        </Button>
+                                                        <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseError}>
+                                                            <Alert onClose={handleCloseError} severity="error">
+                                                                لا توجد بيانات للدفع!
+                                                            </Alert>
+                                                        </Snackbar>
                                                     </TableCell>
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                        <TableFooter>
-                                            <TableRow>
-                                                <TableCell className="text-center font-weight-bold text-dark" sx={{ fontSize: "25px" }}>المجموع الكلي</TableCell>
-                                                <TableCell className="text-center font-weight-bold text-dark" sx={{ fontSize: "18px" }}>{total} $</TableCell>
-                                                <TableCell className="text-center">
-                                                    <Button variant="contained"
-                                                        sx={{ fontSize: "19px" }}
-                                                        startIcon={<PaymentIcon className='ml-2' />}
-                                                        onClick={handlePayment}
-                                                    >
-                                                        دفع
-                                                    </Button>
-                                                    <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseError}>
-                                                        <Alert onClose={handleCloseError} severity="error">
-                                                            لا توجد بيانات للدفع!
-                                                        </Alert>
-                                                    </Snackbar>
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableFooter>
-                                    </Table>
-                                </TableContainer>
+                                            </TableFooter>
+                                        </Table>
+                                    </TableContainer>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -33,22 +33,44 @@ body {
 }
 
 .table-head-style {
-  background-color: #1da2dc;
+  background-color: #275a88;
   color: #fff;
 }
 
 .ticket {
   border-radius: 6px;
-  padding: 23px;
   background-color: #f2efef9e;
   cursor: pointer;
 }
 
+.pay-container {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00000010;
+  padding-bottom: 15px !important;
+}
+
 .addIcon {
-  background-color: #1976d2;
+  background-color: #275a88;
   color: #fff;
   border-radius: 4px;
   margin-right: 10px;
+}
+
+.text-info {
+  color: #275a88 !important;
+}
+
+.bg-info {
+  background-color: #275a88 !important;
+}
+
+.btn-primary {
+  background-color: #275a88 !important;
+  border: none !important;
 }
 
 .color {
@@ -139,5 +161,10 @@ body {
   .box-container {
     width: 100% !important;
     padding: 10px;
+  }
+
+  .ticket-box {
+    flex-direction: column !important;
+    align-items: normal !important;
   }
 }
