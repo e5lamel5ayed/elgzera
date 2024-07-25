@@ -27,6 +27,7 @@ export default function AddCruises() {
     }
   }, [location.state]);
 
+  // for update 
   const fetchCruiseDetails = async (id) => {
     try {
       setLoading(true);
@@ -67,7 +68,7 @@ export default function AddCruises() {
       };
 
       if (location.state && location.state.id) {
-        // Editing existing Cruise
+        // Edit Cruise
         await axios.put(
           `${baseURL}/${CRUISES}/${location.state.id}`,
           payload,
@@ -79,6 +80,7 @@ export default function AddCruises() {
         );
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
+        // add Cruise
         await axios.post(
           `${baseURL}/${CRUISES_CREATE}`,
           payload,
@@ -102,9 +104,9 @@ export default function AddCruises() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
-        <div>
-          <h2 className="add-head">المراكب</h2>
+      <Box className='box-container'>
+      <div className="table-head">
+      <h2>المراكب</h2>
           <Link to="/AllCruises">
             <button className="btn btn-primary add-button">رجوع</button>
           </Link>

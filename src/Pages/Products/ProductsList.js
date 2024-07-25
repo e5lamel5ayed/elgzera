@@ -15,6 +15,7 @@ export default function ProductList() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // fetch products 
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -28,62 +29,65 @@ export default function ProductList() {
     }
   };
 
-  // const fetchSalesCenters = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
-  //     setCenter(response.data);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error("Error fetching data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
     fetchData();
-    // fetchSalesCenters();
   }, []);
 
+  // edit products 
   const EditRow = (id) => {
     navigate(`/AddProducts`, { state: { id } });
   };
 
+  // delete products function 
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      const res = await axios.delete(
-        `${baseURL}/${PRODUCTS}/${id}`
-      );
-      fetchData();
-      Swal.fire("تم الحذف بنجاح");
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error deleting data:", error);
-    }
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${PRODUCTS}/${id}`);
+          fetchData();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
-
 
   return (
     <div className="container">
       {loading && <Loading />}
 
-      <div className="row product-edit ml-4">
+      <div className="row">
         {products.length === 0 ? (
-          <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد منتجات </h4>
+          <h4 className="text-center font-weight-bold bg-light px-5 py-3">لا توجد منتجات</h4>
         ) : (
           products.map((product) => (
             <div className="col-md-4" key={product.id}>
-              <Card sx={{ maxWidth: 300 }} className="mb-5">
-                <div>
-                  <img
-                    style={{ width: "80%", height: "250px", marginLeft: "10%" }}
-                    src={`${IMG_URL}${product.imgUrl}`}
-                    alt={product.name}
-                  />
-                </div>
+              <Card className="mb-3">
+                <img
+                  style={{ height: "250px", width: '100%', objectFit: "cover" }}
+                  src={`${IMG_URL}${product.imgUrl}`}
+                  alt={product.name}
+                />
                 <CardContent>
 
                   <Typography gutterBottom variant="h5" component="div">
@@ -99,13 +103,13 @@ export default function ProductList() {
                   </Typography>
                   <div className="d-flex justify-content-between mt-2">
                     <button
-                      className="btn btn-primary ml-2"
+                      className="btn btn-primary mx-2 btn-sm"
                       onClick={() => EditRow(product.id)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(product.id)}
                     >
                       حذف

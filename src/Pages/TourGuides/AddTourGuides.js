@@ -30,6 +30,7 @@ export default function AddTourGuides() {
     }
   }, [location.state]);
 
+  // for update tour guide 
   const fetchTourGuideDetails = async (id) => {
     try {
       setLoading(true);
@@ -93,7 +94,7 @@ export default function AddTourGuides() {
       };
 
       if (location.state && location.state.id) {
-        // Editing existing tour guide
+        // Edit tour guide
         await axios.put(`${baseURL}/tour-guides/${location.state.id}`, payload, {
           headers: {
             "Content-Type": "application/json"
@@ -101,6 +102,7 @@ export default function AddTourGuides() {
         });
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
+        // add tour guide
         const response = await axios.post(`${baseURL}/tour-guides/create`, payload, {
           headers: {
             "Content-Type": "application/json"
@@ -122,9 +124,9 @@ export default function AddTourGuides() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
-        <div>
-          <h2 className="add-head">المرشدين</h2>
+      <Box className='box-container'>
+        <div className="table-head">
+          <h2>المرشدين</h2>
           <Link to="/AllTourGuides">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>

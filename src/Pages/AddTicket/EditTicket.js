@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Drawer from "../../Components/Drawer";
@@ -56,7 +58,7 @@ const EditTicket = () => {
   const fetchTicketDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
-      const ticket = response.data.find((ticket) => ticket.id == id);
+      const ticket = response.data.find((ticket) => ticket.id === id);
       const { name, price, tax, categoryName, currency, days } = ticket;
       const categoryId = categoryNameToIdMap[categoryName];
       console.log(categoryName, categoryId);
@@ -173,7 +175,7 @@ const EditTicket = () => {
       <Drawer />
       <Box sx={{ width: "80%", direction: "rtl" }}>
         <div>
-          <h2 className="add-head"> تعديل التذكره</h2>
+          <h2 className="add-head"> تعديل التذكرة</h2>
           <Link to="/AllTickets">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>

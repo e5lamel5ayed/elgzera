@@ -17,6 +17,7 @@ export default function CategoryList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
+  // fetch categories 
   const fetchCategories = async () => {
     setLoading(true);
     try {
@@ -26,31 +27,53 @@ export default function CategoryList() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-
       console.error("Error fetching categories", error);
     }
   };
+
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // edit categories 
   const EditRow = (id) => {
     navigate(`/AddCategory`, { state: { id } });
   };
+
+  // edit categories function
   const DeleteRow = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
-      fetchCategories();
-      Swal.fire("تم الحذف بنجاح");
-      setLoading(false);
-
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
+          fetchCategories();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
   };
+
   return (
     <div>
       {loading && <Loading />}
@@ -62,14 +85,14 @@ export default function CategoryList() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead className="table-head-style">
             <TableRow>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="center"
               >
                 الاسم
               </TableCell>
-              <TableCell
+              <TableCell className="text-center"
                 style={{ color: "#fff", width: "40%" }}
                 sx={{ fontSize: "18px" }}
                 align="center"
@@ -85,7 +108,7 @@ export default function CategoryList() {
                   key={category.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell
+                  <TableCell className="text-center"
                     component="th"
                     scope="row"
                     sx={{ fontSize: "18px" }}
@@ -93,15 +116,15 @@ export default function CategoryList() {
                   >
                     {category.title}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="center">
                     <button
-                      className="btn btn-primary ml-2"
+                      className="btn btn-primary mx-2 btn-sm"
                       onClick={() => EditRow(category.id)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(category.id)}
                     >
                       حذف
@@ -111,7 +134,7 @@ export default function CategoryList() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} align="center">
+                <TableCell className="text-center" colSpan={7} align="center">
                   <h5>لا توجد بيانات</h5>
 
                 </TableCell>

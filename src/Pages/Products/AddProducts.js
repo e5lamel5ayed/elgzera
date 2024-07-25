@@ -36,6 +36,7 @@ export default function AddProducts() {
     }
   }, [location.state]);
 
+  // fetch SALES_CENTERS 
   useEffect(() => {
     const fetchSalesCenters = async () => {
       try {
@@ -52,6 +53,7 @@ export default function AddProducts() {
     fetchSalesCenters();
   }, []);
 
+  // for product Update 
   const fetchProduct = async (id) => {
     try {
       setLoading(true);
@@ -124,6 +126,7 @@ export default function AddProducts() {
 
       let response;
       if (location.state && location.state.id) {
+        // edit product 
         response = await axios.put(
           `${baseURL}/${PRODUCTS}/${location.state.id}`,
           formDataToSend,
@@ -136,6 +139,7 @@ export default function AddProducts() {
         localStorage.setItem("alertMessage", "تم تعديل المنتج بنجاح");
       } else {
         response = await axios.post(
+          // add product 
           `${baseURL}/${PRODUCTS_CREATE}`,
           formDataToSend,
           {
@@ -160,13 +164,13 @@ export default function AddProducts() {
     <div>
       {loading && <Loading />}
       <Drawer />
-      <Box height={65} sx={{ direction: "rtl" }} />
-      <div>
+      <Box className='box-container'>
+      <div className="table-head">
+      <h2>اضافة منتج</h2>
         <Link to="/AllProducts">
           <button className="btn btn-primary add-button">رجوع</button>
         </Link>
       </div>
-      <Box sx={{ width: "80%", direction: "rtl" }}>
         <div className="card table-style" style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-style">
             اضف البيانات
