@@ -130,9 +130,9 @@ export default function CruisesList() {
                   >
                     {cruise.name}
                   </TableCell>
+                  
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {status[cruise.status]}
-
                   </TableCell>
 
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="center">

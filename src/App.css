@@ -175,13 +175,59 @@ body {
 
   .ticket-box {
     flex-direction: column !important;
-    align-items:normal !important;
+    align-items: normal !important;
   }
-  .select-box{
+
+  .select-box {
     flex-direction: column !important;
     align-items: normal !important;
-  } 
-  .guide-box{
+  }
+
+  .guide-box {
     margin: 0 !important;
   }
+
+  .day-reports {
+    flex-direction: column !important;
+  }
+}
+
+.ticket-color-0 {
+  background-color: #FFCDD2;
+}
+
+.ticket-color-1 {
+  background-color: #C8E6C9;
+}
+
+.ticket-color-2 {
+  background-color: #E1BEE7;
+}
+
+.ticket-color-3 {
+  background-color: #D1C4E9;
+}
+
+.ticket-color-4 {
+  background-color: #C5CAE9;
+}
+
+.ticket-color-5 {
+  background-color: #BBDEFB;
+}
+
+.ticket-color-6 {
+  background-color: #B3E5FC;
+}
+
+.ticket-color-7 {
+  background-color: #B2EBF2;
+}
+
+.ticket-color-8 {
+  background-color: #B2DFDB;
+}
+
+.ticket-color-9 {
+  background-color: #F8BBD0;
 }

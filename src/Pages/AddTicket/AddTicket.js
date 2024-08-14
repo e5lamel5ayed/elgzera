@@ -16,6 +16,7 @@ import {
   FormControlLabel,
   FormGroup,
   OutlinedInput,
+  TextField,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Loading } from "../../Components/Loading";
@@ -108,6 +109,7 @@ export default function AddTicket() {
     const newErrors = {};
 
     if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
+    // if (!formData.status) newErrors.status = "من فضلك اختر الحالة";
 
     const price = parseFloat(formData.price);
     if (isNaN(price)) {
@@ -251,7 +253,7 @@ export default function AddTicket() {
                     )}
                   </div>
 
-                  <div className="col-md-6">
+                  <div className="col-md-3">
                     <label htmlFor="price" className="d-flex">
                       السعر
                     </label>
@@ -269,7 +271,7 @@ export default function AddTicket() {
                     )}
                   </div>
 
-                  <div className="col-md-6">
+                  <div className="col-md-3">
                     <label htmlFor="tax" className="d-flex">
                       الضرائب
                     </label>
@@ -284,6 +286,31 @@ export default function AddTicket() {
                     </FormControl>
                     {errors.tax && <h6 className="error-log">{errors.tax}</h6>}
                   </div>
+
+                  {/* <div className="col-md-6">
+                    <label htmlFor="status" className="d-flex">
+                      الحالة
+                    </label>
+                    <TextField
+                      id="status"
+                      name="status"
+                      select
+                      value={formData.status}
+                      onChange={handleChange}
+                      size="small"
+                      fullWidth
+                      SelectProps={{
+                        native: true,
+                      }}
+                    >
+                      <option value="">اختر الحالة</option>
+                      <option value="Active">نشط</option>
+                      <option value="InActive">غير نشط</option>
+                    </TextField>
+                    {errors.status && (
+                      <h6 className="error-log">{errors.status}</h6>
+                    )}
+                  </div> */}
 
                   {/* <div className="col-md-3">
                     <label htmlFor="currency" className="d-flex">

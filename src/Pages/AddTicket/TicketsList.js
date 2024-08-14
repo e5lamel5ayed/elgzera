@@ -48,38 +48,38 @@ export default function BasicTable() {
   };
 
   // delete function 
-  const DeleteRow = async (id) => {
-    Swal.fire({
-      title: "هل انت متاكد من الحذف؟",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      cancelButtonText: "إلغاء",
-      confirmButtonText: "نعم متاكد",
-      customClass: {
-        popup: 'small-swal'
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          setLoading(true);
-          await axios.delete(`${baseURL}/${TICKETS}/${id}`);
-          fetchData();
-          setLoading(false);
-          Swal.fire({
-            title: "تم الحذف",
-            customClass: {
-              popup: 'small-swal',
-              confirmButton: 'custom-confirm-button'
-            }
-          });
-        } catch (error) {
-          setLoading(false);
-          console.error("Error deleting data:", error);
-        }
-      }
-    });
-  };
+  // const DeleteRow = async (id) => {
+  //   Swal.fire({
+  //     title: "هل انت متاكد من الحذف؟",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     cancelButtonText: "إلغاء",
+  //     confirmButtonText: "نعم متاكد",
+  //     customClass: {
+  //       popup: 'small-swal'
+  //     }
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       try {
+  //         setLoading(true);
+  //         await axios.delete(`${baseURL}/${TICKETS}/${id}`);
+  //         fetchData();
+  //         setLoading(false);
+  //         Swal.fire({
+  //           title: "تم الحذف",
+  //           customClass: {
+  //             popup: 'small-swal',
+  //             confirmButton: 'custom-confirm-button'
+  //           }
+  //         });
+  //       } catch (error) {
+  //         setLoading(false);
+  //         console.error("Error deleting data:", error);
+  //       }
+  //     }
+  //   });
+  // };
 
   // change currency from numbers to arabic 
   const currencyNames = {
@@ -103,6 +103,11 @@ export default function BasicTable() {
     Friday: "الجمعة",
   };
 
+  // change status from English to arabic 
+  const status = {
+    "Active": "نشط",
+    "InActive": "غير نشط",
+  }
   return (
     <div>
       {loading && <Loading />}
@@ -149,6 +154,14 @@ export default function BasicTable() {
               >
                 الضرائب
               </TableCell>
+{/* 
+              <TableCell className="text-center"
+                style={{ color: "#fff" }}
+                sx={{ fontSize: "18px" }}
+                align="right"
+              >
+                الحالة
+              </TableCell> */}
 
               <TableCell className="text-center"
                 style={{ color: "#fff" }}
@@ -193,6 +206,10 @@ export default function BasicTable() {
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.tax} $
                   </TableCell>
+                  {/* <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                    {status[ticket.status]}
+                  </TableCell> */}
+
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.days.map((day) => dayNames[day.name]).join(", ")}
                   </TableCell>
@@ -203,12 +220,12 @@ export default function BasicTable() {
                     >
                       تعديل
                     </button>
-                    <button
+                    {/* <button
                       className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(ticket.id)}
                     >
                       حذف
-                    </button>
+                    </button> */}
                   </TableCell>
                 </TableRow>
               ))

@@ -27,7 +27,7 @@ import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantity
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import PaymentIcon from '@mui/icons-material/Payment';
 import { IconButton } from '@mui/material';
-
+import AssessmentIcon from '@mui/icons-material/Assessment';
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -205,12 +205,21 @@ export default function PersistentDrawerRight() {
                         </ListItemButton>
                     </ListItem>
 
+                    <ListItem disablePadding onClick={() => navigate("/Reports")}>
+                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <ListItemIcon>
+                                <AssessmentIcon className='icon-edit' />
+                            </ListItemIcon>
+                            <span className='span-edit'>التقارير</span>
+                        </ListItemButton>
+                    </ListItem>
+
                     <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
                         <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <ListItemIcon>
                                 <PaymentIcon className='icon-edit' />
                             </ListItemIcon>
-                            <span className='span-edit'>الدفع</span>
+                            <span className='span-edit'>حجز تذكرة</span>
                         </ListItemButton>
                     </ListItem>
                 </List>

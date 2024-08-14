@@ -17,6 +17,7 @@ import AllReservation from "./Pages/Reservation/AllReservation";
 import PayingOff from "./Pages/PayingOff/PayingOff";
 import Login from "./Pages/Login";
 import EditTicket from "./Pages/AddTicket/EditTicket";
+import Reports from "./Pages/Reports/Reports";
 
 export default function App() {
   return (
@@ -29,36 +30,19 @@ export default function App() {
           <Route path="/AddTicket" exact element={<AddTicket />}></Route>
           <Route path="/EditTicket" exact element={<EditTicket />}></Route>
           <Route path="/AddCategory" exact element={<AddCategory />}></Route>
-          <Route
-            path="/AllCategories"
-            exact
-            element={<AllCategories />}
-          ></Route>
-          <Route
-            path="/AddTourGuides"
-            exact
-            element={<AddTourGuides />}
-          ></Route>
-          <Route
-            path="/AllTourGuides"
-            exact
-            element={<AllTourGuides />}
-          ></Route>
+          <Route path="/AllCategories" exact element={<AllCategories />}></Route>
+          <Route path="/AddTourGuides" exact element={<AddTourGuides />} ></Route>
+          <Route path="/AllTourGuides" exact element={<AllTourGuides />} ></Route>
           <Route path="/AllCruises" exact element={<AllCruises />}></Route>
           <Route path="/AddCruises" exact element={<AddCruises />}></Route>
           <Route path="/AddPlaces" exact element={<AddPlaces />}></Route>
           <Route path="/AllPlaces" exact element={<AllPlaces />}></Route>
           <Route path="/AllProducts" exact element={<AllProducts />}></Route>
           <Route path="/AddProducts" exact element={<AddProducts />}></Route>
-          {/* <Route path="/ProductsList" exact element={<ProductsList/>}></Route> */}
           <Route path="/AddProducts" exact element={<AddProducts />}></Route>
-          {/* <Route path="/Reservation" exact element={<Reservation/>}></Route>   */}
-          <Route
-            path="/AllReservation"
-            exact
-            element={<AllReservation />}
-          ></Route>
+          <Route path="/AllReservation" exact element={<AllReservation />} ></Route>
           <Route path="/PayingOff" exact element={<PayingOff />}></Route>
+          <Route path="/Reports" exact element={<Reports />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
