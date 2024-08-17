@@ -4,13 +4,14 @@ import axios from 'axios';
 import { baseURL, DAILY_REPORTS } from '../../Components/Api';
 import { Loading } from '../../Components/Loading';
 import Swal from 'sweetalert2';
+import Drawer from '../../Components/Drawer';
 
 const DailyReport = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [dailyReports, setDailyReports] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(5);
+    const [pageSize] = useState(500);
     const [totalPages, setTotalPages] = useState(1);
 
     const formatDate = (date) => {
@@ -18,7 +19,7 @@ const DailyReport = () => {
         return date.toLocaleDateString('ar-EG', options);
     }
 
-    const fetchDailyReports = async (pageNumber = 1, pageSize = 5) => {
+    const fetchDailyReports = async (pageNumber = 1, pageSize = 500) => {
         setLoading(true);
         try {
             const response = await axios.get(`${baseURL}/${DAILY_REPORTS}/${pageNumber}/${pageSize}`);
@@ -83,97 +84,130 @@ const DailyReport = () => {
         "Australian": "أسترالي"
     };
 
+    const handlePrint = () => {
+        window.print();
+    }
     return (
         <div>
-            <div className='day-reports d-flex justify-content-center align-items-center'>
-                <div className='table-head'>
-                    <p className='text-dark mr-1 m-0' style={{ fontSize: "20px" }}>التقرير اليومي التفصيلي : </p>
-                </div>
-                <div className=''>
-                    <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
-                </div>
-            </div>
+            <Drawer />
+            <div className="box-container">
+                <Box>
+                    <div className='d-flex justify-content-around align-items-center mb-3 print-box'>
+                        <div className='day-reports d-flex justify-content-center align-items-center'>
+                            <div className='table-head'>
+                                <p className='text-dark mr-1 m-0' style={{ fontSize: "20px" }}>التقرير اليومي التفصيلي : </p>
+                            </div>
+                            <div className=''>
+                                <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
+                            </div>
+                        </div>
+                        {/* Print Button */}
+                        <Box >
+                            <Button
+                                variant="contained"
+                                onClick={handlePrint}
+                                className="print-button"
+                            >
+                                طباعة
+                            </Button>
+                        </Box>
+                    </div>
 
-            <TableContainer className="table-style table table-hover" sx={{ direction: "rtl" }} component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead className="table-head-style">
-                        <TableRow>
-                            <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
-                                فئة التذكرة
-                            </TableCell>
-                            <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
-                                اسم المركب
-                            </TableCell>
-                            <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">
-                                اسم المرشد
-                            </TableCell>
-                            <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">
-                                الجنسية
-                            </TableCell>
-                            <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">
-                                عدد التذاكر
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                        {loading ? (
-                            <TableRow>
-                                <TableCell colSpan={5} align="center">
-                                    <Loading />
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            dailyReports.length > 0 ? (
-                                dailyReports.map((report, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                            {report.category}
-                                        </TableCell>
-                                        <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                            {report.cruise}
-                                        </TableCell>
-                                        <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                            {report.tourGuide}
-                                        </TableCell>
-                                        <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                            {nationalityTranslations[report.nationality] || report.nationality}
-                                        </TableCell>
-                                        <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                            {report.quantity}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
+                    <TableContainer className="table-style table table-hover" sx={{ direction: "rtl" }} component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead className="table-head-style">
                                 <TableRow>
-                                    <TableCell colSpan={5} align="center">
-                                        <h5>لا توجد بيانات</h5>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
+                                        فئة التذكرة
+                                    </TableCell>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
+                                        اسم المركب
+                                    </TableCell>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">
+                                        اسم المرشد
+                                    </TableCell>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">
+                                        الجنسية
+                                    </TableCell>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="center">
+                                        عدد التذاكر
                                     </TableCell>
                                 </TableRow>
-                            )
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                            </TableHead>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-                <Button
-                    variant="contained"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className='ml-2'
-                >
-                    السابق
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    sx={{ marginLeft: '8px' }}
-                    disabled={currentPage >= totalPages}
-                >
-                    التالي
-                </Button>
-            </Box>
+                            <TableBody>
+                                {loading ? (
+                                    <TableRow>
+                                        <TableCell colSpan={5} align="center">
+                                            <Loading />
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    dailyReports.length > 0 ? (
+                                        dailyReports.map((report, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {report.category}
+                                                </TableCell>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {report.cruise}
+                                                </TableCell>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {report.tourGuide}
+                                                </TableCell>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {nationalityTranslations[report.nationality] || report.nationality}
+                                                </TableCell>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {report.quantity}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} align="center">
+                                                <h5>لا توجد بيانات</h5>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                    {/* <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                        <Button
+                            variant="contained"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className='ml-2'
+                        >
+                            السابق
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            sx={{ marginLeft: '8px' }}
+                            disabled={currentPage >= totalPages}
+                        >
+                            التالي
+                        </Button>
+                    </Box> */}
+                </Box>
+            </div>
+
+            <style>
+                {`
+                    @media print {
+                        .print-button {
+                            display: none;
+                        }
+                        .MuiDrawer-root {
+                            display: none;
+                        }
+                    }
+                `}
+            </style>
         </div>
     );
 }

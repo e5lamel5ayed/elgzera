@@ -13,11 +13,12 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import CategoryIcon from '@mui/icons-material/Category';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import MenuIcon from '@mui/icons-material/Menu';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import CategoryIcon from '@mui/icons-material/Category';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import SailingIcon from '@mui/icons-material/Sailing';
@@ -25,7 +26,8 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { IconButton } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
 
 const drawerWidth = 240;
 
@@ -79,6 +81,7 @@ export default function PersistentDrawerRight() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [open, setOpen] = React.useState(!isMobile);
+    const [openReports, setOpenReports] = React.useState(false);
     const role = localStorage.getItem('role'); // Get the role from localStorage
 
     React.useEffect(() => {
@@ -93,6 +96,28 @@ export default function PersistentDrawerRight() {
         setOpen(false);
     };
 
+    const handleReportsClick = () => {
+        setOpenReports(!openReports);
+    };
+
+    const handleReportClick = (path) => {
+        navigate(path);
+        setOpenReports(false); // Collapse the reports menu after navigation
+    };
+    const customStyles = {
+        collapse: {
+            backgroundColor: '#f0f0f0',
+        },
+        listItem: {
+            padding: '0px',
+            '&:hover': {
+                backgroundColor: '#e0e0e0',
+            },
+        },
+        listItemText: {
+            color: '#333',
+        },
+    };
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -138,7 +163,7 @@ export default function PersistentDrawerRight() {
                     {role === 'admin' && (
                         <>
                             <ListItem disablePadding onClick={() => navigate("/Home")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <SpaceDashboardIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -146,7 +171,7 @@ export default function PersistentDrawerRight() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding onClick={() => navigate("/AllTickets")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <CategoryIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -154,7 +179,7 @@ export default function PersistentDrawerRight() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <ConfirmationNumberIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -162,7 +187,7 @@ export default function PersistentDrawerRight() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <EmojiPeopleIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -170,7 +195,7 @@ export default function PersistentDrawerRight() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding onClick={() => navigate("/AllCruises")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <SailingIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -178,7 +203,7 @@ export default function PersistentDrawerRight() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding onClick={() => navigate("/AllPlaces")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <ApartmentIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -186,24 +211,38 @@ export default function PersistentDrawerRight() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <ProductionQuantityLimitsIcon className='icon-edit' />
                                     </ListItemIcon>
                                     <span className='span-edit'>المنتجات</span>
                                 </ListItemButton>
                             </ListItem>
-                            <ListItem disablePadding onClick={() => navigate("/Reports")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <ListItem disablePadding onClick={handleReportsClick}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <AssessmentIcon className='icon-edit' />
                                     </ListItemIcon>
                                     <span className='span-edit'>التقارير</span>
+                                    <ExpandMoreIcon />
                                 </ListItemButton>
                             </ListItem>
-
+                            <Collapse in={openReports} sx={customStyles.collapse}>
+                                <List component="div" disablePadding>
+                                    <ListItem button sx={customStyles.listItem} onClick={() => handleReportClick("/daily-report")}>
+                                        <ListItemButton sx={{ pl: 4 }}>
+                                            <span className='span-edit-collapse' style={customStyles.listItemText}>تقرير يومي تفصيلي</span>
+                                        </ListItemButton>
+                                    </ListItem>
+                                    <ListItem button sx={customStyles.listItem} onClick={() => handleReportClick("/total-daily-report")}>
+                                        <ListItemButton sx={{ pl: 4 }}>
+                                            <span className='span-edit-collapse' style={customStyles.listItemText}>تقرير يومي اجمالي</span>
+                                        </ListItemButton>
+                                    </ListItem>
+                                </List>
+                            </Collapse>
                             <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
-                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                     <ListItemIcon>
                                         <PaymentIcon className='icon-edit' />
                                     </ListItemIcon>
@@ -214,7 +253,7 @@ export default function PersistentDrawerRight() {
                     )}
                     {role === 'user' && (
                         <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
-                            <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 <ListItemIcon>
                                     <PaymentIcon className='icon-edit' />
                                 </ListItemIcon>

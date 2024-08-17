@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SalesBarChart from "./SaleBarChart";
 import Drawer from "../../Components/Drawer";
 import Paper from "@mui/material/Paper";
@@ -9,13 +9,32 @@ import PeopleIcon from "@mui/icons-material/People";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import BasicPie from "./Chart1";
+import axios from "axios"; // Import Axios
+import { baseURL, CATEGORIES } from "../../Components/Api";
+
 const Home = () => {
   const [startDate, setStartDate] = useState("2023-05-01");
   const [endDate, setEndDate] = useState("2024-07-21");
+  const [categories, setCategories] = useState([]); // State to store the API data
 
   const theme = useTheme();
   const isMobileOrMedium = useMediaQuery(theme.breakpoints.down("md"));
 
+  // Function to get the appropriate icon based on index
+  const getCategoryIcon = (index) => {
+    switch (index % 4) {
+      case 0:
+        return <FamilyRestroomIcon />;
+      case 1:
+        return <PeopleIcon />;
+      case 2:
+        return <ConfirmationNumberIcon />;
+      case 3:
+        return <AccessibilityIcon />;
+      default:
+        return <PeopleIcon />;
+    }
+  };
   const data = {
     labels: [
       "01-05-2023",
@@ -56,17 +75,31 @@ const Home = () => {
       },
     ],
   };
+  // Fetch data from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/${CATEGORIES}`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Assuming the API returns data in this format (adjust based on actual API response)
+  const paperData = categories.map((category, index) => ({
+    label: category.title,
+    count: category.count,
+    icon: getCategoryIcon(index),
+  }));
 
   const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleEndDateChange = (e) => setEndDate(e.target.value);
 
   const pastelColors = ["#FFD1DC", "#FFDEAD", "#E0BBE4", "#C6E2FF"];
-  const paperData = [
-    { label: "عائليه", count: 26, icon: <FamilyRestroomIcon /> },
-    { label: "ضيافه", count: 49, icon: <PeopleIcon /> },
-    { label: "تذكره الجمعه", count: 49, icon: <ConfirmationNumberIcon /> },
-    { label: "كبير", count: 41, icon: <AccessibilityIcon /> },
-  ];
 
   return (
     <>
@@ -82,8 +115,10 @@ const Home = () => {
           position: "relative",
         }}
       >
-        <h3>Today's Sales</h3>
+          <div className="card-header d-flex table-head-style">
 
+          <h3>مبيعات اليوم</h3>
+        </div>
         <div
           style={{
             display: "flex",
@@ -107,24 +142,25 @@ const Home = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-around",
+                margin: '5px'
               }}
               elevation={2}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = "#FFE4E1")
               }
               onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  pastelColors[index % pastelColors.length])
+              (e.currentTarget.style.backgroundColor =
+                pastelColors[index % pastelColors.length])
               }
             >
               <>{item.icon}</>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <h2>{item.label}</h2>
-                <p>{item.count}</p>
               </div>
             </Paper>
           ))}
         </div>
+
         <div
           style={{
             display: "flex",
@@ -183,6 +219,7 @@ const Home = () => {
           <BasicPie />
         </div>
       </div>
+
     </>
   );
 };

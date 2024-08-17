@@ -17,7 +17,8 @@ import AllReservation from "./Pages/Reservation/AllReservation";
 import PayingOff from "./Pages/PayingOff/PayingOff";
 import Login from "./Pages/Login";
 import EditTicket from "./Pages/AddTicket/EditTicket";
-import ReportList from "./Pages/Reports/ReportList";
+import DailyReport from "./Pages/Reports/DailyReport";
+import TotalDailyReport from "./Pages/Reports/TotalDailyReport";
 
 export default function App() {
   return (
@@ -42,7 +43,8 @@ export default function App() {
           <Route path="/AddProducts" exact element={<AddProducts />}></Route>
           <Route path="/AllReservation" exact element={<AllReservation />} ></Route>
           <Route path="/PayingOff" exact element={<PayingOff />}></Route>
-          <Route path="/Reports" exact element={<ReportList />}></Route>
+          <Route path="/daily-report" exact element={<DailyReport />}></Route>
+          <Route path="/total-daily-report" exact element={<TotalDailyReport />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

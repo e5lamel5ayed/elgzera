@@ -16,6 +16,10 @@ body {
   font-weight: 500 !important;
 }
 
+.span-edit-collapse {
+  font-size: 18px !important;
+}
+
 .icon-edit {
   font-size: 32px !important;
 }
@@ -187,7 +191,8 @@ body {
     margin: 0 !important;
   }
 
-  .day-reports {
+  .day-reports,
+  .print-box {
     flex-direction: column !important;
   }
 }
