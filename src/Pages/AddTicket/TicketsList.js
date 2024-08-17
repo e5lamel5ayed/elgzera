@@ -29,14 +29,23 @@ export default function BasicTable() {
           "Content-Type": "application/json",
         },
       });
-      setLoading(false);
       setData(response.data);
     } catch (error) {
-      setLoading(false);
-
+      Swal.fire({
+        text: "حدث خطأ أثناء جلب البيانات. يرجى المحاولة مرة أخرى لاحقًا.",
+        icon: "error",
+        confirmButtonText: "حسنًا",
+        customClass: {
+          popup: 'small-swal',
+          confirmButton: 'custom-confirm-button'
+        }
+      });
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   }
+
 
   useEffect(() => {
     fetchData();
@@ -44,42 +53,42 @@ export default function BasicTable() {
 
   // edit 
   const EditRow = (id) => {
-    navigate(`/AddTicket`, { state: { id } });
+    navigate(`/EditTicket`, { state: { id } });
   };
 
   // delete function 
-  // const DeleteRow = async (id) => {
-  //   Swal.fire({
-  //     title: "هل انت متاكد من الحذف؟",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     cancelButtonText: "إلغاء",
-  //     confirmButtonText: "نعم متاكد",
-  //     customClass: {
-  //       popup: 'small-swal'
-  //     }
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       try {
-  //         setLoading(true);
-  //         await axios.delete(`${baseURL}/${TICKETS}/${id}`);
-  //         fetchData();
-  //         setLoading(false);
-  //         Swal.fire({
-  //           title: "تم الحذف",
-  //           customClass: {
-  //             popup: 'small-swal',
-  //             confirmButton: 'custom-confirm-button'
-  //           }
-  //         });
-  //       } catch (error) {
-  //         setLoading(false);
-  //         console.error("Error deleting data:", error);
-  //       }
-  //     }
-  //   });
-  // };
+  const DeleteRow = async (id) => {
+    Swal.fire({
+      title: "هل انت متاكد من الحذف؟",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "إلغاء",
+      confirmButtonText: "نعم متاكد",
+      customClass: {
+        popup: 'small-swal'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          await axios.delete(`${baseURL}/${TICKETS}/${id}`);
+          fetchData();
+          setLoading(false);
+          Swal.fire({
+            title: "تم الحذف",
+            customClass: {
+              popup: 'small-swal',
+              confirmButton: 'custom-confirm-button'
+            }
+          });
+        } catch (error) {
+          setLoading(false);
+          console.error("Error deleting data:", error);
+        }
+      }
+    });
+  };
 
   // change currency from numbers to arabic 
   const currencyNames = {
@@ -154,7 +163,7 @@ export default function BasicTable() {
               >
                 الضرائب
               </TableCell>
-{/* 
+              {/* 
               <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
@@ -220,12 +229,12 @@ export default function BasicTable() {
                     >
                       تعديل
                     </button>
-                    {/* <button
+                    <button
                       className="btn btn-danger btn-sm"
                       onClick={() => DeleteRow(ticket.id)}
                     >
                       حذف
-                    </button> */}
+                    </button>
                   </TableCell>
                 </TableRow>
               ))

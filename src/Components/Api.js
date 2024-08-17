@@ -8,6 +8,10 @@ export const IMG_URL = "https://org-bay.runasp.net/";
 export const SALES_CENTERS = "sales-centers";
 export const SALES_CENTERS_CREATE = "sales-centers/create";
 
+// DAILY_REPORTS
+export const DAILY_REPORTS = "reports/detailed-daily-report";
+export const TOTAL_DAILY_REPORTS = "reports/total-daily-report";
+
 // Boats
 export const CRUISES = "cruises";
 export const CRUISES_CREATE = "cruises/create";
@@ -27,10 +31,8 @@ export const PRODUCTS_CREATE = "products/create";
 // NATIONALITY
 export const NATIONALITY = "nationalities";
 
-// NATIONALITY
-// export const ORDER = "Order";
+// ORDERS
 export const ORDER_CREATE = "orders";
-
 
 // TOURGUIDE
 export const TOURGUIDE = "tour-guides";

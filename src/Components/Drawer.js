@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
@@ -24,10 +23,10 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import SailingIcon from '@mui/icons-material/Sailing';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import PaymentIcon from '@mui/icons-material/Payment';
-import { IconButton } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import { IconButton } from '@mui/material';
+
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -79,7 +78,8 @@ export default function PersistentDrawerRight() {
     const navigate = useNavigate();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [open, setOpen] = React.useState(!isMobile); // Set initial state based on screen size
+    const [open, setOpen] = React.useState(!isMobile);
+    const role = localStorage.getItem('role'); // Get the role from localStorage
 
     React.useEffect(() => {
         setOpen(!isMobile);
@@ -131,97 +131,97 @@ export default function PersistentDrawerRight() {
                     <IconButton sx={{ color: "#000" }} onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
-                    <img style={{ width: "64%" }} src='\imgs\orane.png' />
+                    <img style={{ width: "64%" }} src='\imgs\orane.png' alt='orange' />
                 </DrawerHeader>
                 <Divider />
-                <List sx={{ backgroundColor: "#fcf7f7", height: "100%" }} >
-                    <ListItem disablePadding onClick={() => navigate("/Home")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <SpaceDashboardIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>الرئيسية</span>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => navigate("/AllTickets")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <ConfirmationNumberIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>اضافة تذكرة</span>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <CategoryIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>فئات التذاكر</span>
-                        </ListItemButton>
-                    </ListItem>
+                <List sx={{ backgroundColor: "#fcf7f7", height: "100%" }}>
+                    {role === 'admin' && (
+                        <>
+                            <ListItem disablePadding onClick={() => navigate("/Home")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <SpaceDashboardIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>الرئيسية</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/AllTickets")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <CategoryIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>اضافة تذكرة</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <ConfirmationNumberIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>فئات التذاكر</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <EmojiPeopleIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>المرشدين</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/AllCruises")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <SailingIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>المراكب</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/AllPlaces")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <ApartmentIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>مراكز البيع</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <ProductionQuantityLimitsIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>المنتجات</span>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/Reports")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <AssessmentIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>التقارير</span>
+                                </ListItemButton>
+                            </ListItem>
 
-                    <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <EmojiPeopleIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>المرشدين</span>
-                        </ListItemButton>
-                    </ListItem>
-
-                    <ListItem disablePadding onClick={() => navigate("/AllCruises")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <SailingIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>المراكب</span>
-                        </ListItemButton>
-                    </ListItem>
-
-                    <ListItem disablePadding onClick={() => navigate("/AllPlaces")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <ApartmentIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>مراكز البيع</span>
-                        </ListItemButton>
-                    </ListItem>
-
-                    <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <ProductionQuantityLimitsIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>المنتجات</span>
-                        </ListItemButton>
-                    </ListItem>
-
-                    <ListItem disablePadding onClick={() => navigate("/AllReservation")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <BookOnlineIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>مواعيد الحجز</span>
-                        </ListItemButton>
-                    </ListItem>
-
-                    <ListItem disablePadding onClick={() => navigate("/Reports")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <AssessmentIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>التقارير</span>
-                        </ListItemButton>
-                    </ListItem>
-
-                    <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
-                        <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <ListItemIcon>
-                                <PaymentIcon className='icon-edit' />
-                            </ListItemIcon>
-                            <span className='span-edit'>حجز تذكرة</span>
-                        </ListItemButton>
-                    </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <ListItemIcon>
+                                        <PaymentIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>حجز تذكرة</span>
+                                </ListItemButton>
+                            </ListItem>
+                        </>
+                    )}
+                    {role === 'user' && (
+                        <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
+                            <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <ListItemIcon>
+                                    <PaymentIcon className='icon-edit' />
+                                </ListItemIcon>
+                                <span className='span-edit'>حجز تذكرة</span>
+                            </ListItemButton>
+                        </ListItem>
+                    )}
                 </List>
             </Drawer>
         </Box>

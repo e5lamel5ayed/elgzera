@@ -61,7 +61,6 @@ export default function AddTicket() {
           price: price,
           tax: tax,
           categoryId: category ? category.id : '',
-          // currency: currency,
           days: days.map((day) => day.id) || [],
         });
       }

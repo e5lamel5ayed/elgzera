@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import utf8 from 'utf8';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { format } from 'date-fns';
+import { Loading } from '../../Components/Loading';
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -30,6 +31,10 @@ function PayingOff() {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [currentDay, setCurrentDay] = useState('');
     const [showError, setShowError] = useState(false);
+    const [selectedNationalityId, setSelectedNationalityId] = useState(null);
+    const [selectedBoatId, setSelectedBoatId] = useState(null);
+    const [selectedGuideId, setSelectedGuideId] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
@@ -92,6 +97,7 @@ function PayingOff() {
     const handleCloseError = () => {
         setShowError(false);
     };
+
     const validateForm = () => {
         let valid = true;
         const newErrors = { nationality: '', guide: '', boat: '', tickets: '' };
@@ -142,14 +148,24 @@ function PayingOff() {
             .then(response => {
                 const id = response.data.match(/\d+/)[0];
                 console.log(`Order created with ID: ${id}`);
-                return axios.get(`https://org-bay.runasp.net/api/orders/${id}`);
+                return axios.get(`${baseURL}/${ORDER_CREATE}/${id}`);
             })
             .then(response => {
                 const qrData = response.data;
                 qrData.forEach(ticket => {
-                    ticket.createdAt = format(new Date(ticket.createdAt), 'dd/MM/yyyy HH:mm:ss');
+                    ticket.serialNumbers.forEach(serialInfo => {
+                        if (serialInfo.createdAt) {
+                            const dateObject = new Date(serialInfo.createdAt);
+                            if (!isNaN(dateObject)) {
+                                serialInfo.createdAt = format(dateObject, 'dd/MM/yyyy HH:mm:ss');
+                            } else {
+                                console.error('Invalid date:', serialInfo.createdAt);
+                            }
+                        }
+                    });
                 });
                 setQrCodeData(qrData);
+
                 setShowQRCodes(true);
             })
             .catch(error => {
@@ -178,10 +194,6 @@ function PayingOff() {
     };
 
     // print function 
-    const [selectedNationalityId, setSelectedNationalityId] = useState(null);
-    const [selectedBoatId, setSelectedBoatId] = useState(null);
-    const [selectedGuideId, setSelectedGuideId] = useState(null);
-
     const handlePrint = async () => {
         window.print();
         setTickets([]);
@@ -321,7 +333,7 @@ function PayingOff() {
                 status: formDataguide.status === "Active" ? 1 : 2,
             };
 
-            await axios.post(`${baseURL}/tour-guides/create`, payload, {
+            await axios.post(`${baseURL}/${TOURGUIDE_CREATE}`, payload, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -366,7 +378,28 @@ function PayingOff() {
 
     // filter tickets to the day tickets
     useEffect(() => {
-        axios.get(`${baseURL}/${TICKETS}`).then(response => setTicketCategories(response.data));
+        const fetchTickets = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`${baseURL}/${TICKETS}`);
+                setTicketCategories(response.data);
+            } catch (error) {
+                Swal.fire({
+                    text: "حدث خطأ أثناء جلب التذاكر. يرجى المحاولة مرة أخرى لاحقًا.",
+                    icon: "error",
+                    confirmButtonText: "حسنًا",
+                    customClass: {
+                        popup: 'small-swal',
+                        confirmButton: 'custom-confirm-button'
+                    }
+                });
+                console.error("Error fetching daily reports:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTickets();
     }, []);
 
     // get day function 
@@ -402,7 +435,6 @@ function PayingOff() {
                         <div className="container">
                             <div className='row'>
                                 <div className="col-md-4 px-0 pt-3 mb-2 pay-container">
-
                                     <div className='col-12 text-right d-flex'>
                                         <p className='m-0'>اليوم : </p>
                                         <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
@@ -494,58 +526,34 @@ function PayingOff() {
                                 <div className="col-md-8 pay-container mb-2 pt-3">
                                     <h5 className='text-right'>التذاكر المتاحة في اليوم الحالي :</h5>
 
-                                    {/* fetch tickets */}
                                     <div className="ticket-box d-flex justify-content-center align-items-center flex-wrap">
-                                        {Array.isArray(filteredTickets) && filteredTickets.length > 0 ? (
-                                            filteredTickets.map((ticket, index) => (
-                                                <div className='my-1' key={ticket.id}>
-                                                    <div className={`d-flex justify-content-center align-items-center ticket px-3 mx-1 ticket-color-${index % 10}`}>
-                                                        <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
-                                                            <ConfirmationNumberIcon sx={{
-                                                                color: '#275a88',
-                                                                fontSize: '40px',
-                                                                transition: 'color 0.3s ease',
-                                                                '&:hover': {
-                                                                    color: '#1DA2DC',
-                                                                }
-                                                            }} />
-                                                        </IconButton>
-                                                        <span>{ticket.name}</span>
-                                                    </div>
-                                                </div>
-                                            ))
+                                        {loading ? (
+                                            <Loading />
                                         ) : (
-                                            <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>لا يوجد تذاكر اليوم</p>
-
+                                            Array.isArray(filteredTickets) && filteredTickets.length > 0 ? (
+                                                filteredTickets.map((ticket, index) => (
+                                                    <div className='my-1' key={ticket.id}>
+                                                        <div className={`d-flex justify-content-center align-items-center ticket px-3 mx-1 ticket-color-${index % 10}`}>
+                                                            <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
+                                                                <ConfirmationNumberIcon sx={{
+                                                                    color: '#275a88',
+                                                                    fontSize: '40px',
+                                                                    transition: 'color 0.3s ease',
+                                                                    '&:hover': {
+                                                                        color: '#1DA2DC',
+                                                                    }
+                                                                }} />
+                                                            </IconButton>
+                                                            <span>{ticket.name}</span>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                '')
                                         )}
                                     </div>
                                     {errors.tickets && <div className="error-log">{errors.tickets}</div>}
                                 </div>
-
-                                {/* <div className="col-md-9 pay-container mb-2 pt-3">
-                                    <h5 className='text-right '>التذاكر المتاحة في اليوم الحالي :</h5>
-
-                                    <div className="ticket-box d-flex justify-content-center align-items-center flex-wrap">
-                                        {Array.isArray(filteredTickets) && filteredTickets.map((ticket) => (
-                                            <div className='my-1' key={ticket.id}>
-                                                <div className="d-flex justify-content-center align-items-center ticket px-3 mx-1">
-                                                    <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
-                                                        <ConfirmationNumberIcon sx={{
-                                                            color: '#275a88',
-                                                            fontSize: '40px',
-                                                            transition: 'color 0.3s ease',
-                                                            '&:hover': {
-                                                                color: '#1DA2DC',
-                                                            }
-                                                        }} />
-                                                    </IconButton>
-                                                    <span>{ticket.name}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {errors.tickets && <div className="error-log">{errors.tickets}</div>}
-                                </div> */}
 
                                 {/* table  */}
                                 <div className="col-md-12 p-0 mt-2">
@@ -802,37 +810,37 @@ function PayingOff() {
             <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
                 <DialogTitle>الـ QR Code</DialogTitle>
                 <DialogContent>
-                    {qrCodeData && qrCodeData.map((ticket, index) => {
-                        const qrValue = `
-                            رقم التسلسل: ${ticket.serialNumber}
-                            نوع التذكرة: ${ticket.ticketTitle}
-                            اسم المركب: ${selectedBoatName} 
-                            اسم المرشد: ${ticket.tourGuide}
-                            الجنسية: ${nationalityTranslations[ticket.nationality]}
-                            السعر: ${ticket.price} $
-                            تاريخ الطباعة: ${ticket.createdAt}
-                            `;
-                        const encodedQRValue = utf8.encode(qrValue);
+                    {qrCodeData && qrCodeData.map((ticket, index) => (
+                        <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
+                            {ticket.serialNumbers.map((serialInfo, i) => {
+                                const qrValue = `
+                        رقم التسلسل: ${serialInfo.serialNumber}
+                        نوع التذكرة: ${serialInfo.ticketTitle}
+                        اسم المركب: ${selectedBoatName} 
+                        اسم المرشد: ${serialInfo.tourGuide}
+                        الجنسية: ${nationalityTranslations[serialInfo.nationality]}
+                        السعر: ${serialInfo.price} $
+                        تاريخ الطباعة: ${serialInfo.createdAt}
+                    `;
+                                const encodedQRValue = utf8.encode(qrValue);
 
-                        return (
-                            <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
-                                {[...Array(ticket.quantity)].map((_, i) => (
+                                return (
                                     <div key={i} style={{ marginBottom: '10px' }}>
                                         <QRCode value={encodedQRValue} />
                                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
-                                            <Typography variant="subtitle1">رقم التسلسل : {ticket.serialNumber}</Typography>
-                                            <Typography variant="subtitle1">نوع التذكرة : {ticket.ticketTitle}</Typography>
+                                            <Typography variant="subtitle1">رقم التسلسل : {serialInfo.serialNumber}</Typography>
+                                            <Typography variant="subtitle1">نوع التذكرة : {serialInfo.ticketTitle}</Typography>
                                             <Typography variant="subtitle1">اسم المركب : {selectedBoatName}</Typography>
-                                            <Typography variant="subtitle1">اسم المرشد : {ticket.tourGuide}</Typography>
-                                            <Typography variant="subtitle1">الجنسية : {nationalityTranslations[ticket.nationality]}</Typography>
-                                            <Typography variant="subtitle1">السعر : {ticket.price} $</Typography>
-                                            <Typography variant="subtitle1">تاريخ الطباعة: {ticket.createdAt}</Typography>
+                                            <Typography variant="subtitle1">اسم المرشد : {serialInfo.tourGuide}</Typography>
+                                            <Typography variant="subtitle1">الجنسية : {nationalityTranslations[serialInfo.nationality]}</Typography>
+                                            <Typography variant="subtitle1">السعر : {serialInfo.price} $</Typography>
+                                            <Typography variant="subtitle1">تاريخ الطباعة: {serialInfo.createdAt}</Typography> {/* التاريخ المنسق */}
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        );
-                    })}
+                                );
+                            })}
+                        </div>
+                    ))}
                 </DialogContent>
 
                 <DialogActions>

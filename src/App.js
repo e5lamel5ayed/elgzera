@@ -17,7 +17,7 @@ import AllReservation from "./Pages/Reservation/AllReservation";
 import PayingOff from "./Pages/PayingOff/PayingOff";
 import Login from "./Pages/Login";
 import EditTicket from "./Pages/AddTicket/EditTicket";
-import Reports from "./Pages/Reports/Reports";
+import ReportList from "./Pages/Reports/ReportList";
 
 export default function App() {
   return (
@@ -42,7 +42,7 @@ export default function App() {
           <Route path="/AddProducts" exact element={<AddProducts />}></Route>
           <Route path="/AllReservation" exact element={<AllReservation />} ></Route>
           <Route path="/PayingOff" exact element={<PayingOff />}></Route>
-          <Route path="/Reports" exact element={<Reports />}></Route>
+          <Route path="/Reports" exact element={<ReportList />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

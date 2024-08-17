@@ -26,8 +26,18 @@ export default function CruisesList() {
       setCruises(response.data);
       setLoading(false);
     } catch (error) {
-      setLoading(false);
+      Swal.fire({
+        text: "حدث خطأ أثناء جلب البيانات. يرجى المحاولة مرة أخرى لاحقًا.",
+        icon: "error",
+        confirmButtonText: "حسنًا",
+        customClass: {
+          popup: 'small-swal',
+          confirmButton: 'custom-confirm-button'
+        }
+      });
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,7 +140,7 @@ export default function CruisesList() {
                   >
                     {cruise.name}
                   </TableCell>
-                  
+
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {status[cruise.status]}
                   </TableCell>

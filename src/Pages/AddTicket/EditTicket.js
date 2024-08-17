@@ -7,17 +7,16 @@ import { baseURL, CATEGORIES, TICKETS } from "../../Components/Api";
 import {
   Box,
   Checkbox,
-  FormControl,
   FormControlLabel,
-  FormGroup,
-  OutlinedInput,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const EditTicket = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [categoryNameToIdMap, setCategoryNameToIdMap] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -27,54 +26,48 @@ const EditTicket = () => {
     currency: "",
     days: [],
   });
-  const [categories, setCategories] = useState([]);
-  const [errors, setErrors] = useState({});
-  const [currentCat, setCurrentCat] = useState();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const { id } = location.state || {};
-    fetchCategories();
-    if (id) {
+    if (id && !loading) {
       fetchTicketDetails(id);
     }
-  }, [location.state]);
+  }, [location.state, loading]);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
-      const categoriesData = response.data;
-      setCategories(categoriesData);
-      const nameToIdMap = categoriesData.reduce((map, category) => {
-        map[category.title] = category.id;
-        return map;
-      }, {});
-      setCategoryNameToIdMap(nameToIdMap);
-      console.log(categoriesData);
-    } catch (error) {
-      console.log("Error fetching categories:", error);
-    }
-  };
-
+  // for update 
   const fetchTicketDetails = async (id) => {
     try {
       const response = await axios.get(`${baseURL}/${TICKETS}`);
       const ticket = response.data.find((ticket) => ticket.id === id);
-      const { name, price, tax, categoryName, currency, days } = ticket;
-      const categoryId = categoryNameToIdMap[categoryName];
-      console.log(categoryName, categoryId);
-      setFormData({
-        title: name,
-        price: price,
-        tax: tax,
-        categoryId: categoryId,
-        currency: currency,
-        days: days.map((day) => day.id) || [],
-      });
-      setCurrentCat(categoryName);
-
-      console.log(formData);
+      if (ticket) {
+        const { name, price, tax, categoryName, currency, days } = ticket;
+        const category = categories.find((cat) => cat.title === categoryName);
+        setFormData({
+          title: name,
+          price: price,
+          tax: tax,
+          categoryId: category ? category.id : '',
+          days: days.map((day) => day.id) || [],
+        });
+      }
     } catch (error) {
-      console.log("Error fetching ticket details:", error);
+      console.log("Error fetching data of ticket:", error);
+    }
+  };
+
+  // fetch categories 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
+      setCategories(response.data);
+      setLoading(false);
+    } catch {
+      console.log("Error fetching categories");
+      setLoading(false);
     }
   };
 
@@ -105,25 +98,25 @@ const EditTicket = () => {
     const newErrors = {};
     if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
 
-    const price = parseFloat(formData.price);
-    if (isNaN(price)) {
-      newErrors.price = "من فضلك ادخل السعر";
-    }
-    if (price <= 0) {
-      newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
-    }
+    // const price = parseFloat(formData.price);
+    // if (isNaN(price)) {
+    //   newErrors.price = "من فضلك ادخل السعر";
+    // }
+    // if (price <= 0) {
+    //   newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
+    // }
 
-    const tax = parseFloat(formData.tax);
-    if (isNaN(tax)) {
-      newErrors.tax = "من فضلك ادخل الضرائب";
-    }
-    if (tax <= 0) {
-      newErrors.tax = "يجب أن تكون رقمًا أكبر من صفر";
-    }
+    // const tax = parseFloat(formData.tax);
+    // if (isNaN(tax)) {
+    //   newErrors.tax = "من فضلك ادخل الضرائب";
+    // }
+    // if (tax <= 0) {
+    //   newErrors.tax = "يجب أن تكون رقمًا أكبر من صفر";
+    // }
 
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
-    if (!formData.currency && !location.state)
-      newErrors.currency = "من فضلك اختر العملة";
+    // if (!formData.currency && !location.state)
+    //   newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
 
     if (Object.keys(newErrors).length > 0) {
@@ -150,7 +143,6 @@ const EditTicket = () => {
           },
         }
       );
-      console.log(response);
       if (response.data) {
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       }
@@ -160,6 +152,7 @@ const EditTicket = () => {
       console.error("There was an error submitting the ticket!", error);
     }
   };
+
   const currencyNames = {
     0: "دولار أمريكي",
     1: "يورو",
@@ -173,9 +166,8 @@ const EditTicket = () => {
   return (
     <div>
       <Drawer />
-      <Box sx={{ width: "80%", direction: "rtl" }}>
+      <Box className='box-container'>
         <div>
-          <h2 className="add-head"> تعديل التذكرة</h2>
           <Link to="/AllTickets">
             <button className="btn btn-primary add-button">رجوع </button>
           </Link>
@@ -229,7 +221,7 @@ const EditTicket = () => {
                     )}
                   </div>
 
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <label htmlFor="price" className="d-flex">
                       السعر
                     </label>
@@ -245,9 +237,9 @@ const EditTicket = () => {
                     {errors.price && (
                       <h6 className="error-log">{errors.price}</h6>
                     )}
-                  </div>
+                  </div> */}
 
-                  <div className="col-md-3">
+                  {/* <div className="col-md-3">
                     <label htmlFor="tax" className="d-flex">
                       الضرائب
                     </label>
@@ -261,9 +253,9 @@ const EditTicket = () => {
                       />
                     </FormControl>
                     {errors.tax && <h6 className="error-log">{errors.tax}</h6>}
-                  </div>
+                  </div> */}
 
-                  <div className="col-md-3">
+                  {/* <div className="col-md-3">
                     <label htmlFor="currency" className="d-flex">
                       العملة
                     </label>
@@ -283,122 +275,115 @@ const EditTicket = () => {
                     {errors.currency && (
                       <h6 className="error-log">{errors.currency}</h6>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="col-md-12">
-                    <label className="d-flex mt-3">اختر اليوم</label>
-                    <div className="col-md-12 d-flex">
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="1"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(1)}
-                              />
-                            }
-                            label="السبت"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="2"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(2)}
-                              />
-                            }
-                            label="الاحد"
-                          />
-                        </div>
-                      </FormGroup>
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="3"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(3)}
-                              />
-                            }
-                            label="الاثنين"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="4"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(4)}
-                              />
-                            }
-                            label="الثلاثاء"
-                          />
-                        </div>
-                      </FormGroup>
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="5"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(5)}
-                              />
-                            }
-                            label="الاربعاء"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="6"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(6)}
-                              />
-                            }
-                            label="الخميس"
-                          />
-                        </div>
-                      </FormGroup>
-                      <FormGroup className="d-flex col-md-3">
-                        <div className="col-md-2">
-                          <FormControlLabel
-                            className="d-flex"
-                            name="days"
-                            value="7"
-                            control={
-                              <Checkbox
-                                onChange={handleChange}
-                                checked={formData.days.includes(7)}
-                              />
-                            }
-                            label="الجمعه"
-                          />
-                        </div>
-                      </FormGroup>
+                    <label className="mt-3 d-flex">اختر اليوم</label>
+                    <div className="days">
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="1"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(1)}
+                            />
+                          }
+                          label="السبت"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="2"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(2)}
+                            />
+                          }
+                          label="الاحد"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="3"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(3)}
+                            />
+                          }
+                          label="الاثنين"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="4"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(4)}
+                            />
+                          }
+                          label="الثلاثاء"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="5"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(5)}
+                            />
+                          }
+                          label="الاربعاء"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="6"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(6)}
+                            />
+                          }
+                          label="الخميس"
+                        />
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          className="d-flex"
+                          name="days"
+                          value="7"
+                          control={
+                            <Checkbox
+                              onChange={handleChange}
+                              checked={formData.days.includes(7)}
+                            />
+                          }
+                          label="الجمعه"
+                        />
+                      </div>
                     </div>
                     {errors.days && (
                       <h6 className="error-log">{errors.days}</h6>
                     )}
                   </div>
+
                 </div>
               </div>
               <button
