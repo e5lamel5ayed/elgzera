@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -11,28 +12,22 @@ const DailyReport = () => {
     const [dailyReports, setDailyReports] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(500);
-    const [totalPages, setTotalPages] = useState(1);
 
     const formatDate = (date) => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('ar-EG', options);
     }
 
-    const fetchDailyReports = async (pageNumber = 1, pageSize = 500) => {
+    const fetchDailyReports = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${baseURL}/${DAILY_REPORTS}/${pageNumber}/${pageSize}`);
+            const response = await axios.get(`${baseURL}/${DAILY_REPORTS}`);
             const data = response.data;
+            // console.log(data);
 
             setDailyReports(data);
 
-            if (data.length < pageSize) {
-                setTotalPages(pageNumber);
-            } else {
-                setTotalPages(pageNumber + 1);
-            }
-
+           
         } catch (error) {
             Swal.fire({
                 text: "حدث خطأ أثناء جلب التقارير اليومية. يرجى المحاولة مرة أخرى لاحقًا.",
@@ -55,16 +50,11 @@ const DailyReport = () => {
             setCurrentTime(new Date());
         }, 1000);
 
-        fetchDailyReports(currentPage, pageSize);
+        fetchDailyReports();
 
         return () => clearInterval(timer);
-    }, [currentPage, pageSize]);
+    }, []);
 
-    const handlePageChange = (newPage) => {
-        if (newPage > 0 && newPage <= totalPages) {
-            setCurrentPage(newPage);
-        }
-    }
 
     // nationalityTranslations
     const nationalityTranslations = {
@@ -118,6 +108,12 @@ const DailyReport = () => {
                             <TableHead className="table-head-style">
                                 <TableRow>
                                     <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
+                                        id
+                                    </TableCell>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
+                                        رقم التسلسل
+                                    </TableCell>
+                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
                                         فئة التذكرة
                                     </TableCell>
                                     <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
@@ -147,6 +143,12 @@ const DailyReport = () => {
                                         dailyReports.map((report, index) => (
                                             <TableRow key={index}>
                                                 <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {report.id}
+                                                </TableCell>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                    {report.serialNumbers}
+                                                </TableCell>
+                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                                                     {report.category}
                                                 </TableCell>
                                                 <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
@@ -175,24 +177,6 @@ const DailyReport = () => {
                         </Table>
                     </TableContainer>
 
-                    {/* <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-                        <Button
-                            variant="contained"
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className='ml-2'
-                        >
-                            السابق
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            sx={{ marginLeft: '8px' }}
-                            disabled={currentPage >= totalPages}
-                        >
-                            التالي
-                        </Button>
-                    </Box> */}
                 </Box>
             </div>
 

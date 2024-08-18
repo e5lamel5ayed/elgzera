@@ -10,12 +10,12 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import BasicPie from "./Chart1";
 import axios from "axios"; // Import Axios
-import { baseURL, CATEGORIES } from "../../Components/Api";
+import { baseURL, CATEGORIES, TOTAL_DAILY_REPORTS } from "../../Components/Api";
 
 const Home = () => {
   const [startDate, setStartDate] = useState("2023-05-01");
   const [endDate, setEndDate] = useState("2024-07-21");
-  const [categories, setCategories] = useState([]); // State to store the API data
+  const [categories, setCategories] = useState([]); 
 
   const theme = useTheme();
   const isMobileOrMedium = useMediaQuery(theme.breakpoints.down("md"));
@@ -79,7 +79,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseURL}/${CATEGORIES}`);
+        const response = await axios.get(`${baseURL}/${TOTAL_DAILY_REPORTS}`);
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -89,10 +89,9 @@ const Home = () => {
     fetchData();
   }, []);
 
-  // Assuming the API returns data in this format (adjust based on actual API response)
   const paperData = categories.map((category, index) => ({
-    label: category.title,
-    count: category.count,
+    label: category.category,
+    count: category.quantity,
     icon: getCategoryIcon(index),
   }));
 
@@ -115,8 +114,7 @@ const Home = () => {
           position: "relative",
         }}
       >
-          <div className="card-header d-flex table-head-style">
-
+          <div className="card-header d-flex table-head-style justify-content-end">
           <h3>مبيعات اليوم</h3>
         </div>
         <div
@@ -156,6 +154,7 @@ const Home = () => {
               <>{item.icon}</>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <h2>{item.label}</h2>
+                <h2>{item.count}</h2>
               </div>
             </Paper>
           ))}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { baseURL, TOTAL_DAILY_REPORTS } from '../../Components/Api';
@@ -10,19 +11,16 @@ const TotalDailyReport = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [totalDailyReports, setTotalDailyReports] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(500);
-    const [paginatedReports, setPaginatedReports] = useState([]);
 
     const formatDate = (date) => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('ar-EG', options);
     }
 
-    const fetchTotalDailyReports = async (pageNumber = 1, pageSize = 500) => {
+    const fetchTotalDailyReports = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${baseURL}/${TOTAL_DAILY_REPORTS}/${pageNumber}/${pageSize}`);
+            const response = await axios.get(`${baseURL}/${TOTAL_DAILY_REPORTS}`);
             setTotalDailyReports(response.data);
         } catch (error) {
             Swal.fire({
@@ -49,19 +47,6 @@ const TotalDailyReport = () => {
 
         return () => clearInterval(timer);
     }, []);
-
-    useEffect(() => {
-        // Paginate the reports based on currentPage and pageSize
-        const startIndex = (currentPage - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        setPaginatedReports(totalDailyReports.slice(startIndex, endIndex));
-    }, [totalDailyReports, currentPage, pageSize]);
-
-    const handlePageChange = (newPage) => {
-        if (newPage > 0 && newPage <= Math.ceil(totalDailyReports.length / pageSize)) {
-            setCurrentPage(newPage);
-        }
-    }
 
     const handlePrint = () => {
         window.print();
@@ -120,8 +105,8 @@ const TotalDailyReport = () => {
                                             <Loading />
                                         </TableCell>
                                     </TableRow>
-                                ) : paginatedReports.length > 0 ? (
-                                    paginatedReports.map((report, index) => (
+                                ) : totalDailyReports.length > 0 ? (
+                                    totalDailyReports.map((report, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                                                 {report.category}
