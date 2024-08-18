@@ -532,9 +532,9 @@ function PayingOff() {
                                         ) : (
                                             Array.isArray(filteredTickets) && filteredTickets.length > 0 ? (
                                                 filteredTickets.map((ticket, index) => (
-                                                    <div className='my-1' key={ticket.id}>
+                                                    <div className='my-1' key={ticket.id} onClick={() => handleAddTicket(ticket)}>
                                                         <div className={`d-flex justify-content-center align-items-center ticket px-3 mx-1 ticket-color-${index % 10}`}>
-                                                            <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]} onClick={() => handleAddTicket(ticket)}>
+                                                            <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]}>
                                                                 <ConfirmationNumberIcon sx={{
                                                                     color: '#275a88',
                                                                     fontSize: '40px',
@@ -549,11 +549,13 @@ function PayingOff() {
                                                     </div>
                                                 ))
                                             ) : (
-                                                '')
+                                                ''
+                                            )
                                         )}
                                     </div>
                                     {errors.tickets && <div className="error-log">{errors.tickets}</div>}
                                 </div>
+
 
                                 {/* table  */}
                                 <div className="col-md-12 p-0 mt-2">
@@ -808,7 +810,6 @@ function PayingOff() {
 
             {/* QRCode dialog  */}
             <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
-                <DialogTitle>الـ QR Code</DialogTitle>
                 <DialogContent>
                     {qrCodeData && qrCodeData.map((ticket, index) => (
                         <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
@@ -825,7 +826,7 @@ function PayingOff() {
                                 const encodedQRValue = utf8.encode(qrValue);
 
                                 return (
-                                    <div key={i} style={{ marginBottom: '10px' }}>
+                                    <div key={i} style={{ pageBreakAfter: 'always', marginBottom: '10px' }}>
                                         <QRCode value={encodedQRValue} />
                                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
                                             <Typography variant="subtitle1">رقم التسلسل : {serialInfo.serialNumber}</Typography>
@@ -834,7 +835,7 @@ function PayingOff() {
                                             <Typography variant="subtitle1">اسم المرشد : {serialInfo.tourGuide}</Typography>
                                             <Typography variant="subtitle1">الجنسية : {nationalityTranslations[serialInfo.nationality]}</Typography>
                                             <Typography variant="subtitle1">السعر : {serialInfo.price} $</Typography>
-                                            <Typography variant="subtitle1">تاريخ الطباعة: {serialInfo.createdAt}</Typography> {/* التاريخ المنسق */}
+                                            <Typography variant="subtitle1">تاريخ الطباعة: {serialInfo.createdAt}</Typography>
                                         </div>
                                     </div>
                                 );
@@ -848,6 +849,20 @@ function PayingOff() {
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
             </Dialog>
+            <style>
+                {`
+                    @media print {
+                    .MuiDialogActions-root {
+                    display: none;
+                    }
+                    
+                    .MuiDialogContent-root {
+                    display: block;
+                    }
+                    
+                    }
+                `}
+            </style>
 
         </div >
     );

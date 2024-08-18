@@ -107,12 +107,12 @@ const DailyReport = () => {
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead className="table-head-style">
                                 <TableRow>
-                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
+                                    {/* <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
                                         id
                                     </TableCell>
                                     <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
                                         رقم التسلسل
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
                                         فئة التذكرة
                                     </TableCell>
@@ -142,12 +142,12 @@ const DailyReport = () => {
                                     dailyReports.length > 0 ? (
                                         dailyReports.map((report, index) => (
                                             <TableRow key={index}>
-                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                                                {/* <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                                                     {report.id}
                                                 </TableCell>
                                                 <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                                                     {report.serialNumbers}
-                                                </TableCell>
+                                                </TableCell> */}
                                                 <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                                                     {report.category}
                                                 </TableCell>
