@@ -171,40 +171,6 @@ body {
   padding: 10px !important;
 }
 
-@media(max-width:992px) {
-  .box-container {
-    width: 100% !important;
-    padding: 10px;
-  }
-
-  .ticket-box {
-    flex-direction: column !important;
-    align-items: normal !important;
-  }
-
-  .select-box {
-    flex-direction: column !important;
-    align-items: normal !important;
-  }
-
-  .guide-box {
-    margin: 0 !important;
-  }
-
-  .day-reports,
-  .print-box {
-    flex-direction: column !important;
-  }
-
-  .print-button {
-    margin-top: 10px !important;
-  }
-
-  .fotmat-date {
-    margin-top: 0 !important;
-  }
-}
-
 .ticket-color-0 {
   background-color: #FFCDD2;
 }
@@ -243,4 +209,72 @@ body {
 
 .ticket-color-9 {
   background-color: #F8BBD0;
+}
+
+.qr-line {
+  border: 1px solid black;
+  width: 1px;
+  background-color: black;
+  margin: 0 5px;
+}
+
+.qr-size {
+  width: 75%;
+}
+
+.qr-ticket-type {
+  top: 30px;
+  right: 10px;
+}
+
+.qr-orange-url {
+  font-size: 13px;
+}
+
+@media(max-width:992px) {
+  .box-container {
+    width: 100% !important;
+    padding: 10px;
+  }
+
+  .ticket-box {
+    flex-direction: column !important;
+    align-items: normal !important;
+  }
+
+  .select-box {
+    flex-direction: column !important;
+    align-items: normal !important;
+  }
+
+  .guide-box {
+    margin: 0 !important;
+  }
+
+  .day-reports,
+  .print-box {
+    flex-direction: column !important;
+  }
+
+  .print-button {
+    margin-top: 10px !important;
+  }
+
+  .fotmat-date {
+    margin-top: 0 !important;
+  }
+
+}
+
+@media (max-width:576px) {
+
+  .qr-value-box,
+  .qr-ticket-type {
+    position: static !important;
+    margin-bottom: 5px;
+  }
+
+  .qr-box {
+    flex-direction: column !important;
+  }
 }

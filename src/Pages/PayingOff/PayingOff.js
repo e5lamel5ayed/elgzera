@@ -826,17 +826,29 @@ function PayingOff() {
                                 const encodedQRValue = utf8.encode(qrValue);
 
                                 return (
-                                    <div key={i} style={{ pageBreakAfter: 'always', marginBottom: '10px' }}>
-                                        <QRCode value={encodedQRValue} />
+                                    <div key={i} className='qr-box d-flex' style={{ pageBreakAfter: 'always', marginBottom: '10px', border: '1px solid black', padding: '10px' }}>
+
                                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
                                             <Typography variant="subtitle1">رقم التسلسل : {serialInfo.serialNumber}</Typography>
-                                            <Typography variant="subtitle1">نوع التذكرة : {serialInfo.ticketTitle}</Typography>
                                             <Typography variant="subtitle1">اسم المركب : {selectedBoatName}</Typography>
                                             <Typography variant="subtitle1">اسم المرشد : {serialInfo.tourGuide}</Typography>
                                             <Typography variant="subtitle1">الجنسية : {nationalityTranslations[serialInfo.nationality]}</Typography>
                                             <Typography variant="subtitle1">السعر : {serialInfo.price} $</Typography>
                                             <Typography variant="subtitle1">تاريخ الطباعة: {serialInfo.createdAt}</Typography>
                                         </div>
+
+                                        <div className='position-relative qr-value-box'>
+                                            <Typography className='position-absolute qr-ticket-type'>نوع التذكرة : {serialInfo.ticketTitle}</Typography>
+                                            <QRCode value={encodedQRValue} className='qr-size' />
+                                        </div>
+
+                                        <div className="qr-line"></div>
+
+                                        <div className='d-flex flex-column align-items-center justify-content-center'>
+                                            <img src="/imgs/orane.png" alt="Logo" className='w-50' />
+                                            <a className='qr-orange-url' href="https://www.orangebayhurghada.com">https://www.orangebayhurghada.com</a>
+                                        </div>
+
                                     </div>
                                 );
                             })}
@@ -849,6 +861,7 @@ function PayingOff() {
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
             </Dialog>
+
             <style>
                 {`
                     @media print {
@@ -859,6 +872,7 @@ function PayingOff() {
                     .MuiDialogContent-root {
                     display: block;
                     }
+            }
                     
                     }
                 `}
