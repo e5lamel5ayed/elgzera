@@ -4,107 +4,107 @@ import Drawer from "../../Components/Drawer";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
-import PeopleIcon from "@mui/icons-material/People";
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import AccessibilityIcon from "@mui/icons-material/Accessibility";
+// import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
+// import PeopleIcon from "@mui/icons-material/People";
+// import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+// import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import BasicPie from "./Chart1";
 import axios from "axios";
-import { baseURL, TOTAL_DAILY_REPORTS, DAILY_REPORTS } from "../../Components/Api";
+import { baseURL, TOTAL_DAILY_REPORTS } from "../../Components/Api";
 
 const Home = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [availableDates, setAvailableDates] = useState([]);
+  const parseDate = (formattedDate) => {
+    const [year, month, day] = formattedDate.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
+  // Helper function to format date
+  const formatDate = (date) => {
+    const [year, month, day] = date.split("-");
+    return `${year}-${month}-${day}`;
+  };
+
+  const defaultStartDate = formatDate("2024-08-13");
+  const defaultEndDate = formatDate(new Date().toISOString().split('T')[0]);
+
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
   const [categories, setCategories] = useState([]);
+  const [all, setAll] = useState([]);
 
   const theme = useTheme();
   const isMobileOrMedium = useMediaQuery(theme.breakpoints.down("md"));
 
+  // const getCategoryIcon = (index) => {
+  //   switch (index % 4) {
+  //     case 0:
+  //       return <FamilyRestroomIcon />;
+  //     case 1:
+  //       return <PeopleIcon />;
+  //     case 2:
+  //       return <ConfirmationNumberIcon />;
+  //     case 3:
+  //       return <AccessibilityIcon />;
+  //     default:
+  //       return <PeopleIcon />;
+  //   }
+  // };
+
+  // fetch data for today 
   useEffect(() => {
-    // Fetch available dates from the API
-    const fetchDates = async () => {
+    const fetchDataAll = async () => {
       try {
-        const response = await axios.get(`${baseURL}/${DAILY_REPORTS}`);
-        const dates = response.data.map(item => item.date);
-        setAvailableDates(dates); // Set available dates
+        const response = await axios.get(
+          `${baseURL}/${TOTAL_DAILY_REPORTS}`
+        );
+        setAll(response.data);
+
       } catch (error) {
-        console.error("Error fetching dates:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchDates();
+    fetchDataAll();
   }, []);
 
+  // fetch data by date from: and to:
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseURL}/${TOTAL_DAILY_REPORTS}`);
+        const response = await axios.get(
+          `${baseURL}/reports/duration-total-report?from=${formatDate(startDate)}&to=${formatDate(endDate)}`
+        );
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
-  }, []);
-
-  const [chartData, setChartData] = useState(null);
-
-  useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        const response = await axios.get('https://org-bay.runasp.net/api/reports/detailed-daily-report');
-        const apiData = response.data;
-
-        // Transform data to fit chart structure
-        const labels = apiData.map(item => item.category);
-        const dataValues = apiData.map(item => item.quantity);
-
-        const data = {
-          labels: labels,
-          datasets: [
-            {
-              label: "Tickets Sold",
-              data: dataValues,
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-            },
-          ],
-        };
-
-        setChartData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchChartData();
-  }, []);
-
-  const getCategoryIcon = (index) => {
-    switch (index % 4) {
-      case 0:
-        return <FamilyRestroomIcon />;
-      case 1:
-        return <PeopleIcon />;
-      case 2:
-        return <ConfirmationNumberIcon />;
-      case 3:
-        return <AccessibilityIcon />;
-      default:
-        return <PeopleIcon />;
+    if (startDate && endDate) {
+      fetchData();
     }
-  };
+  }, [startDate, endDate]);
 
-  const paperData = categories.map((category, index) => ({
-    label: category.category,
-    count: category.quantity,
-    icon: getCategoryIcon(index),
-  }));
+  const handleStartDateChange = (e) => setStartDate(formatDate(e.target.value));
+  const handleEndDateChange = (e) => setEndDate(formatDate(e.target.value));
 
   const pastelColors = ["#FFD1DC", "#FFDEAD", "#E0BBE4", "#C6E2FF"];
+
+  // Create the data object for the SalesBarChart
+  const chartData = {
+    labels: categories.map((category) =>
+      parseDate(category.orderDate.split("T")[0])
+    ),
+    datasets: [
+      {
+        label: "التذاكر المباعة",
+        data: categories.map((category) => category.ticketCount),
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div className="mb-5">
@@ -131,7 +131,7 @@ const Home = () => {
             marginTop: "10px",
           }}
         >
-          {paperData.map((item, index) => (
+          {all.map((item, index) => (
             <Paper
               key={index}
               style={{
@@ -159,8 +159,8 @@ const Home = () => {
             >
               <>{item.icon}</>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <h3>{item.label}</h3>
-                <h5>{item.count}</h5>
+                <h2>{item.category}</h2>
+                <h2>{item.quantity}</h2>
               </div>
             </Paper>
           ))}
@@ -173,11 +173,33 @@ const Home = () => {
             flexDirection: isMobileOrMedium ? "column" : "row",
           }}
         >
+          <label
+            style={{
+              width: isMobileOrMedium ? "100%" : "50%",
+              marginRight: isMobileOrMedium ? "0" : "10px",
+            }}
+          >
+            <label className="d-flex justify-content-end" htmlFor=""> : الي </label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              style={{
+                width: "100%",
+                height: "40px",
+                borderRadius: "15px",
+                border: "1px solid grey",
+                padding: "20px",
+              }}
+            />
+          </label>
+
           <label style={{ width: isMobileOrMedium ? "100%" : "50%" }}>
-            From:
-            <select
+            <label className="d-flex justify-content-end" htmlFor=""> : من </label>
+            <input
+              type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={handleStartDateChange}
               style={{
                 width: "100%",
                 height: "40px",
@@ -186,41 +208,9 @@ const Home = () => {
                 padding: "20px",
                 marginBottom: isMobileOrMedium ? "10px" : "0",
               }}
-            >
-              <option value="" disabled>Select Start Date</option>
-              {availableDates.map((date, index) => (
-                <option key={index} value={date}>
-                  {date}
-                </option>
-              ))}
-            </select>
+            />
           </label>
-          <label
-            style={{
-              width: isMobileOrMedium ? "100%" : "50%",
-              marginLeft: isMobileOrMedium ? "0" : "10px",
-            }}
-          >
-            To:
-            <select
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{
-                width: "100%",
-                height: "40px",
-                borderRadius: "15px",
-                border: "1px solid grey",
-                padding: "20px",
-              }}
-            >
-              <option value="" disabled>Select End Date</option>
-              {availableDates.map((date, index) => (
-                <option key={index} value={date}>
-                  {date}
-                </option>
-              ))}
-            </select>
-          </label>
+
         </div>
 
         <div
@@ -233,8 +223,9 @@ const Home = () => {
             height: "100%",
           }}
         >
-          {chartData && <SalesBarChart data={chartData} />}
-          <BasicPie />
+
+          <SalesBarChart data={chartData} />
+          <BasicPie startDate={startDate} endDate={endDate} />
         </div>
       </div>
     </div>

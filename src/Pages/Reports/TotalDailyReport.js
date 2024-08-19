@@ -8,20 +8,18 @@ import { Loading } from '../../Components/Loading';
 import Drawer from '../../Components/Drawer';
 
 const TotalDailyReport = () => {
-    const [currentTime, setCurrentTime] = useState(new Date());
     const [totalDailyReports, setTotalDailyReports] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [formattedDate, setFormattedDate] = useState('');
 
-    const formatDate = (date) => {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('ar-EG', options);
-    }
 
-    const fetchTotalDailyReports = async () => {
+    const fetchTotalDailyReports = async (date) => {
         setLoading(true);
         try {
-            const response = await axios.get(`${baseURL}/${TOTAL_DAILY_REPORTS}`);
-            setTotalDailyReports(response.data);
+            const response = await axios.get(`${baseURL}/reports/total-daily-report?date=${date}`);
+            const data = response.data;
+            setTotalDailyReports(data);
         } catch (error) {
             Swal.fire({
                 text: "حدث خطأ أثناء جلب التقارير اليومية. يرجى المحاولة مرة أخرى لاحقًا.",
@@ -38,15 +36,16 @@ const TotalDailyReport = () => {
         }
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('ar-EG', options);
+    };
+
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 1000);
-
-        fetchTotalDailyReports();
-
-        return () => clearInterval(timer);
-    }, []);
+        setFormattedDate(formatDate(selectedDate));
+        fetchTotalDailyReports(selectedDate);
+    }, [selectedDate]);
 
     const handlePrint = () => {
         window.print();
@@ -61,13 +60,27 @@ const TotalDailyReport = () => {
                     <div className='d-flex justify-content-around align-items-center mb-3 print-box'>
                         <div className='day-reports d-flex justify-content-center align-items-center'>
                             <div className='table-head'>
-                                <p className='text-dark mr-1 m-0' style={{ fontSize: "20px" }}>التقرير اليومي الاجمالي : </p>
+                                <p className='text-dark mt-1 ml-1 m-0' style={{ fontSize: "20px" }}>التقرير اليومي الاجمالي :</p>
                             </div>
+                            <p className='text-info fotmat-date mt-3 text-center' style={{ fontSize: "20px" }}>{formattedDate}</p>
+
                             <div className=''>
-                                <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
+                                <input
+                                    type="date"
+                                    value={selectedDate}
+                                    onChange={(e) => setSelectedDate(e.target.value)}
+                                    style={{
+                                        width: "100%",
+                                        height: "40px",
+                                        borderRadius: "15px",
+                                        border: "1px solid grey",
+                                        padding: "20px",
+                                        marginRight: '5px'
+
+                                    }} />
                             </div>
+
                         </div>
-                        {/* Print Button */}
                         <Box >
                             <Button
                                 variant="contained"
@@ -163,6 +176,9 @@ const TotalDailyReport = () => {
                             display: none;
                         }
                         .MuiDrawer-root {
+                            display: none;
+                        }
+                        input {
                             display: none;
                         }
                     }

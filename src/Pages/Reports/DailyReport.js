@@ -1,33 +1,23 @@
-/* eslint-disable no-unused-vars */
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { baseURL, DAILY_REPORTS } from '../../Components/Api';
+import { baseURL } from '../../Components/Api';
 import { Loading } from '../../Components/Loading';
 import Swal from 'sweetalert2';
 import Drawer from '../../Components/Drawer';
 
 const DailyReport = () => {
-    const [currentTime, setCurrentTime] = useState(new Date());
     const [dailyReports, setDailyReports] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [formattedDate, setFormattedDate] = useState('');
 
-    const formatDate = (date) => {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('ar-EG', options);
-    }
-
-    const fetchDailyReports = async () => {
+    const fetchDailyReports = async (date) => {
         setLoading(true);
         try {
-            const response = await axios.get(`${baseURL}/${DAILY_REPORTS}`);
+            const response = await axios.get(`${baseURL}/reports/detailed-daily-report?date=${date}`);
             const data = response.data;
-            // console.log(data);
-
             setDailyReports(data);
-
-           
         } catch (error) {
             Swal.fire({
                 text: "حدث خطأ أثناء جلب التقارير اليومية. يرجى المحاولة مرة أخرى لاحقًا.",
@@ -44,19 +34,17 @@ const DailyReport = () => {
         }
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('ar-EG', options);
+    };
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 1000);
+        setFormattedDate(formatDate(selectedDate));
+        fetchDailyReports(selectedDate);
+    }, [selectedDate]);
 
-        fetchDailyReports();
-
-        return () => clearInterval(timer);
-    }, []);
-
-
-    // nationalityTranslations
     const nationalityTranslations = {
         "Egyptian": "مصري",
         "Saudi": "سعودي",
@@ -77,21 +65,37 @@ const DailyReport = () => {
     const handlePrint = () => {
         window.print();
     }
+
     return (
         <div>
             <Drawer />
             <div className="box-container">
+
                 <Box>
                     <div className='d-flex justify-content-around align-items-center mb-3 print-box'>
                         <div className='day-reports d-flex justify-content-center align-items-center'>
                             <div className='table-head'>
-                                <p className='text-dark mr-1 m-0' style={{ fontSize: "20px" }}>التقرير اليومي التفصيلي : </p>
+                                <p className='text-dark mt-1 ml-1 m-0' style={{ fontSize: "20px" }}>التقرير اليومي التفصيلي :</p>
                             </div>
+                            <p className='text-info mt-3 fotmat-date text-center' style={{ fontSize: "20px" }}>{formattedDate}</p>
+
                             <div className=''>
-                                <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
+                                <input
+                                    type="date"
+                                    value={selectedDate}
+                                    onChange={(e) => setSelectedDate(e.target.value)}
+                                    style={{
+                                        width: "100%",
+                                        height: "40px",
+                                        borderRadius: "15px",
+                                        border: "1px solid grey",
+                                        padding: "20px",
+                                        marginRight: '5px'
+
+                                    }} />
                             </div>
+
                         </div>
-                        {/* Print Button */}
                         <Box >
                             <Button
                                 variant="contained"
@@ -107,12 +111,6 @@ const DailyReport = () => {
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead className="table-head-style">
                                 <TableRow>
-                                    {/* <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
-                                        id
-                                    </TableCell>
-                                    <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
-                                        رقم التسلسل
-                                    </TableCell> */}
                                     <TableCell className="text-center" style={{ color: "#fff" }} sx={{ fontSize: "18px" }} align="right">
                                         فئة التذكرة
                                     </TableCell>
@@ -142,12 +140,6 @@ const DailyReport = () => {
                                     dailyReports.length > 0 ? (
                                         dailyReports.map((report, index) => (
                                             <TableRow key={index}>
-                                                {/* <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                                    {report.id}
-                                                </TableCell>
-                                                <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
-                                                    {report.serialNumbers}
-                                                </TableCell> */}
                                                 <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                                                     {report.category}
                                                 </TableCell>
@@ -176,7 +168,6 @@ const DailyReport = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-
                 </Box>
             </div>
 
@@ -189,6 +180,9 @@ const DailyReport = () => {
                         .MuiDrawer-root {
                             display: none;
                         }
+                            input {
+                            display: none;
+                            }
                     }
                 `}
             </style>

@@ -29,7 +29,7 @@ const SalesBarChart = ({ data }) => {
       },
       title: {
         display: true,
-        text: "Sales States",
+        text: "المبيعات",
       },
     },
   };

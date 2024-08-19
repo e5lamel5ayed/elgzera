@@ -195,6 +195,14 @@ body {
   .print-box {
     flex-direction: column !important;
   }
+
+  .print-button {
+    margin-top: 10px !important;
+  }
+
+  .fotmat-date {
+    margin-top: 0 !important;
+  }
 }
 
 .ticket-color-0 {
