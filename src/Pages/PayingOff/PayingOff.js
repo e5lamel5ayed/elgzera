@@ -45,6 +45,10 @@ function PayingOff() {
     }, []);
 
     const handleAddTicket = (ticket) => {
+        if (selectedTicketCategories[ticket.name]) {
+            return;
+        }
+
         setTickets([...tickets, {
             ticketId: ticket.id,
             ticketType: ticket.name,
@@ -55,6 +59,7 @@ function PayingOff() {
             guideName: selectedGuideName,
             boatName: selectedBoatName,
         }]);
+
         setSelectedTicketCategories({ ...selectedTicketCategories, [ticket.name]: true });
     };
 
@@ -523,6 +528,7 @@ function PayingOff() {
                                     </div>
                                 </div>
 
+                                {/* fetch tickets  */}
                                 <div className="col-md-8 pay-container mb-2 pt-3">
                                     <h5 className='text-right'>التذاكر المتاحة في اليوم الحالي :</h5>
 
@@ -531,23 +537,32 @@ function PayingOff() {
                                             <Loading />
                                         ) : (
                                             Array.isArray(filteredTickets) && filteredTickets.length > 0 ? (
-                                                filteredTickets.map((ticket, index) => (
-                                                    <div className='my-1' key={ticket.id} onClick={() => handleAddTicket(ticket)}>
-                                                        <div className={`d-flex justify-content-center align-items-center ticket px-3 mx-1 ticket-color-${index % 10}`}>
-                                                            <IconButton variant="outlined" disabled={selectedTicketCategories[ticket.name]}>
-                                                                <ConfirmationNumberIcon sx={{
-                                                                    color: '#275a88',
-                                                                    fontSize: '40px',
-                                                                    transition: 'color 0.3s ease',
-                                                                    '&:hover': {
-                                                                        color: '#1DA2DC',
-                                                                    }
-                                                                }} />
-                                                            </IconButton>
-                                                            <span>{ticket.name}</span>
+                                                filteredTickets.map((ticket, index) => {
+                                                    const isAdded = selectedTicketCategories[ticket.name];
+                                                    return (
+                                                        <div
+                                                            className={`my-1 ${isAdded ? 'ticket-disabled' : 'ticket-hover'}`}
+                                                            key={ticket.id}
+                                                            onClick={() => !isAdded && handleAddTicket(ticket)}
+                                                        >
+                                                            <div className={`d-flex justify-content-center align-items-center ticket px-3 mx-1 ticket-color-${index % 10}`}>
+                                                                <IconButton
+                                                                    variant="outlined"
+                                                                    disabled={isAdded}
+                                                                >
+                                                                    <ConfirmationNumberIcon
+                                                                        sx={{
+                                                                            color: isAdded ? '#275b8898' : '#275a88',
+                                                                            fontSize: '40px',
+                                                                            transition: 'color 0.3s ease',
+                                                                        }}
+                                                                    />
+                                                                </IconButton>
+                                                                <span>{ticket.name}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ))
+                                                    );
+                                                })
                                             ) : (
                                                 ''
                                             )
@@ -555,7 +570,6 @@ function PayingOff() {
                                     </div>
                                     {errors.tickets && <div className="error-log">{errors.tickets}</div>}
                                 </div>
-
 
                                 {/* table  */}
                                 <div className="col-md-12 p-0 mt-2">
@@ -826,10 +840,11 @@ function PayingOff() {
                                 const encodedQRValue = utf8.encode(qrValue);
 
                                 return (
-                                    <div key={i} className='qr-box d-flex' style={{ pageBreakAfter: 'always', marginBottom: '10px', border: '1px solid black', padding: '10px' }}>
+                                    <div key={i} className='qr-box d-flex justify-content-center align-items-center' style={{ pageBreakAfter: 'always', marginBottom: '10px', border: '1px solid black', padding: '10px' }}>
 
                                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
                                             <Typography variant="subtitle1">رقم التسلسل : {serialInfo.serialNumber}</Typography>
+                                            <Typography variant="subtitle1">نوع التذكرة : {serialInfo.ticketTitle}</Typography>
                                             <Typography variant="subtitle1">اسم المركب : {selectedBoatName}</Typography>
                                             <Typography variant="subtitle1">اسم المرشد : {serialInfo.tourGuide}</Typography>
                                             <Typography variant="subtitle1">الجنسية : {nationalityTranslations[serialInfo.nationality]}</Typography>
@@ -837,16 +852,8 @@ function PayingOff() {
                                             <Typography variant="subtitle1">تاريخ الطباعة: {serialInfo.createdAt}</Typography>
                                         </div>
 
-                                        <div className='position-relative qr-value-box'>
-                                            <Typography className='position-absolute qr-ticket-type'>نوع التذكرة : {serialInfo.ticketTitle}</Typography>
+                                        <div>
                                             <QRCode value={encodedQRValue} className='qr-size' />
-                                        </div>
-
-                                        <div className="qr-line"></div>
-
-                                        <div className='d-flex flex-column align-items-center justify-content-center'>
-                                            <img src="/imgs/orane.png" alt="Logo" className='w-50' />
-                                            <a className='qr-orange-url' href="https://www.orangebayhurghada.com">https://www.orangebayhurghada.com</a>
                                         </div>
 
                                     </div>
@@ -866,15 +873,15 @@ function PayingOff() {
                 {`
                     @media print {
                     .MuiDialogActions-root {
-                    display: none;
+                        display: none;
                     }
-                    
+
                     .MuiDialogContent-root {
-                    display: block;
+                        display: block;
                     }
-            }
-                    
+
                     }
+            
                 `}
             </style>
 

@@ -211,24 +211,14 @@ body {
   background-color: #F8BBD0;
 }
 
-.qr-line {
-  border: 1px solid black;
-  width: 1px;
-  background-color: black;
-  margin: 0 5px;
-}
-
 .qr-size {
-  width: 75%;
+  width: 90%;
+  margin: auto !important;
 }
 
-.qr-ticket-type {
-  top: 30px;
-  right: 10px;
-}
-
-.qr-orange-url {
-  font-size: 13px;
+.ticket-disabled {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 @media(max-width:992px) {
@@ -267,12 +257,6 @@ body {
 }
 
 @media (max-width:576px) {
-
-  .qr-value-box,
-  .qr-ticket-type {
-    position: static !important;
-    margin-bottom: 5px;
-  }
 
   .qr-box {
     flex-direction: column !important;
