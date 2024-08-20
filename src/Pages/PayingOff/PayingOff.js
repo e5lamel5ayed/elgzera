@@ -759,8 +759,18 @@ Created At : ${serialInfo.createdAt}
                     .MuiDialogContent-root {
                         display: block;
                     }
-
+                    .qr-box {
+                        width: 100%;
+                        height: auto;
+                        margin: 0;
+                        padding: 0;
+                        border: none;
+                        box-sizing: border-box;
                     }
+
+                    @page {
+                        margin: 0;
+                    }  
             
                 `}
             </style>
