@@ -220,7 +220,7 @@ function PayingOff() {
             setTickets([]);
             setSelectedTicketCategories({});
             handleCloseDialog();
-        }, 3000); 
+        }, 2000); 
     };
 
     // fetch active tour guide 
