@@ -220,7 +220,7 @@ function PayingOff() {
             setTickets([]);
             setSelectedTicketCategories({});
             handleCloseDialog();
-        }, 2000); 
+        }, 7000);
     };
 
     // fetch active tour guide 
@@ -505,7 +505,7 @@ function PayingOff() {
                                     errors={errors}
                                 />
 
-                                {/* table  */}
+                                {/* TicketTable  */}
                                 <TicketTable
                                     tickets={tickets}
                                     handleIncreaseTicketCount={handleIncreaseTicketCount}
@@ -720,7 +720,7 @@ Created At : ${serialInfo.createdAt}
                                 const encodedQRValue = utf8.encode(qrValue);
 
                                 return (
-                                    <div key={i} className='qr-box d-flex justify-content-center align-items-center' style={{ pageBreakAfter: 'always', marginBottom: '10px', border: '1px solid black', padding: '10px' }}>
+                                    <div key={i} className='qr-box ' style={{ marginBottom: '20px', border: '1px solid black', padding: '20px' }}>
 
                                         <div>
                                             <QRCode value={encodedQRValue} className='qr-size' />
