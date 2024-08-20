@@ -14,6 +14,11 @@ import utf8 from 'utf8';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { format } from 'date-fns';
 import { Loading } from '../../Components/Loading';
+import GuideSelect from './GuideSelect';
+import BoatSelect from './BoatSelect';
+import NationalitySelect from './NationalitySelect ';
+import TicketTable from './TicketTable';
+import TicketList from './TicketList';
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -187,6 +192,7 @@ function PayingOff() {
             });
     };
 
+    // Payment Confirmation funcion
     const handlePaymentConfirmation = () => {
         if (validateForm()) {
             Swal.fire({
@@ -210,9 +216,11 @@ function PayingOff() {
     // print function 
     const handlePrint = async () => {
         window.print();
-        setTickets([]);
-        setSelectedTicketCategories({});
-        handleCloseDialog();
+        setTimeout(() => {
+            setTickets([]);
+            setSelectedTicketCategories({});
+            handleCloseDialog();
+        }, 5000); // 5000 milliseconds = 5 seconds
     };
 
     // fetch active tour guide 
@@ -364,22 +372,22 @@ function PayingOff() {
     };
 
     // change nationality from english to arabic 
-    const nationalityTranslations = {
-        "Egyptian": "مصري",
-        "Saudi": "سعودي",
-        "Kuwaiti": "كويتي",
-        "Emirati": "إماراتي",
-        "Qatari": "قطري",
-        "Bahraini": "بحريني",
-        "Omani": "عماني",
-        "Jordanian": "أردني",
-        "Lebanese": "لبناني",
-        "Syrian": "سوري",
-        "British": "بريطاني",
-        "American": "أمريكي",
-        "Canadian": "كندي",
-        "Australian": "أسترالي"
-    };
+    // const nationalityTranslations = {
+    //     "Egyptian": "مصري",
+    //     "Saudi": "سعودي",
+    //     "Kuwaiti": "كويتي",
+    //     "Emirati": "إماراتي",
+    //     "Qatari": "قطري",
+    //     "Bahraini": "بحريني",
+    //     "Omani": "عماني",
+    //     "Jordanian": "أردني",
+    //     "Lebanese": "لبناني",
+    //     "Syrian": "سوري",
+    //     "British": "بريطاني",
+    //     "American": "أمريكي",
+    //     "Canadian": "كندي",
+    //     "Australian": "أسترالي"
+    // };
 
     // change currency from english to arabic 
     const currencyNames = {
@@ -457,196 +465,57 @@ function PayingOff() {
                                     </div>
 
                                     {/* fetch nationality */}
-                                    <div className='px-3'>
-                                        <label htmlFor="nationality" className="d-flex font-weight-bold">الجنسية</label>
-                                        <Select
-                                            id="nationality"
-                                            value={selectedNationalityId || ''}
-                                            onChange={(e) => {
-                                                const selectedNationality = nationalities.find(nationality => nationality.id === e.target.value);
-                                                if (selectedNationality) {
-                                                    setSelectedNationalityId(selectedNationality.id);
-                                                    setSelectedNationality(selectedNationality.name);
-                                                }
-                                            }}
-                                            className="form-control"
-                                        >
-                                            {nationalities.map((nationality) => (
-                                                <MenuItem key={nationality.id} value={nationality.id}>
-                                                    {nationalityTranslations[nationality.name]}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        {errors.nationality && <div className="error-log">{errors.nationality}</div>}
-                                    </div>
+                                    <NationalitySelect
+                                        nationalities={nationalities}
+                                        selectedNationalityId={selectedNationalityId}
+                                        setSelectedNationalityId={setSelectedNationalityId}
+                                        setSelectedNationality={setSelectedNationality}
+                                        errors={errors}
+                                    />
 
                                     <div className="d-flex align-items-center select-box px-3 ">
                                         {/* fetch tour guide  */}
-                                        <div className="guide-box m-1 w-100">
-                                            <div className='d-flex justify-content-between align-items-center'>
-                                                <label htmlFor="guideName" className="d-flex font-weight-bold">اسم المرشد</label>
-                                                <IconButton onClick={() => setAddGuide(true)}>
-                                                    <AddIcon className='addIcon' />
-                                                </IconButton>
-                                            </div>
-                                            <Select
-                                                id="guideName"
-                                                value={selectedGuideId || ''}
-                                                onChange={(e) => {
-                                                    const selectedGuide = guides.find(guide => guide.id === e.target.value);
-                                                    if (selectedGuide) {
-                                                        setSelectedGuideId(selectedGuide.id);
-                                                        setSelectedGuideName(selectedGuide.name);
-                                                    }
-                                                }}
-                                                className="form-control"
-                                            >
-                                                {guides.map((guide) => (
-                                                    <MenuItem key={guide.id} value={guide.id}>{guide.name}</MenuItem>
-                                                ))}
-                                            </Select>
-                                            {errors.guide && <div className="error-log">{errors.guide}</div>}
-                                        </div>
+                                        <GuideSelect
+                                            guides={guides}
+                                            selectedGuideId={selectedGuideId}
+                                            setSelectedGuideId={setSelectedGuideId}
+                                            setSelectedGuideName={setSelectedGuideName}
+                                            setAddGuide={setAddGuide}
+                                            errors={errors}
+                                        />
 
                                         {/* fetch boats */}
-                                        <div className='w-100'>
-                                            <div className='d-flex justify-content-between align-items-center '>
-                                                <label htmlFor="boatName" className="d-flex font-weight-bold">اسم المركب</label>
-                                                <IconButton onClick={() => setAddBoat(true)}>
-                                                    <AddIcon className='addIcon' />
-                                                </IconButton>
-                                            </div>
-                                            <Select
-                                                id="boatName"
-                                                value={selectedBoatId || ''}
-                                                onChange={(e) => {
-                                                    const selectedBoat = boats.find(boat => boat.id === e.target.value);
-                                                    if (selectedBoat) {
-                                                        setSelectedBoatId(selectedBoat.id);
-                                                        setSelectedBoatName(selectedBoat.name);
-                                                    }
-                                                }}
-                                                className="form-control"
-                                            >
-                                                {boats.map((boat) => (
-                                                    <MenuItem key={boat.id} value={boat.id}>
-                                                        {boat.name}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                            {errors.boat && <div className="error-log">{errors.boat}</div>}
-                                        </div>
+                                        <BoatSelect
+                                            boats={boats}
+                                            selectedBoatId={selectedBoatId}
+                                            setSelectedBoatId={setSelectedBoatId}
+                                            setSelectedBoatName={setSelectedBoatName}
+                                            setAddBoat={setAddBoat}
+                                            errors={errors}
+                                        />
                                     </div>
                                 </div>
 
                                 {/* fetch tickets  */}
-                                <div className="col-md-8 pay-container mb-2 pt-3">
-                                    <h5 className='text-right'>التذاكر المتاحة في اليوم الحالي :</h5>
-
-                                    <div className="ticket-box d-flex justify-content-center align-items-center flex-wrap">
-                                        {loading ? (
-                                            <Loading />
-                                        ) : (
-                                            Array.isArray(filteredTickets) && filteredTickets.length > 0 ? (
-                                                filteredTickets.map((ticket, index) => {
-                                                    const isAdded = selectedTicketCategories[ticket.name];
-                                                    return (
-                                                        <div
-                                                            className={`my-1 ${isAdded ? 'ticket-disabled' : 'ticket-hover'}`}
-                                                            key={ticket.id}
-                                                            onClick={() => !isAdded && handleAddTicket(ticket)}
-                                                        >
-                                                            <div className={`d-flex justify-content-center align-items-center ticket px-3 mx-1 ticket-color-${index % 10}`}>
-                                                                <IconButton
-                                                                    variant="outlined"
-                                                                    disabled={isAdded}
-                                                                >
-                                                                    <ConfirmationNumberIcon
-                                                                        sx={{
-                                                                            color: isAdded ? '#275b8898' : '#275a88',
-                                                                            fontSize: '40px',
-                                                                            transition: 'color 0.3s ease',
-                                                                        }}
-                                                                    />
-                                                                </IconButton>
-                                                                <span>{ticket.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })
-                                            ) : (
-                                                ''
-                                            )
-                                        )}
-                                    </div>
-                                    {errors.tickets && <div className="error-log">{errors.tickets}</div>}
-                                </div>
+                                <TicketList
+                                    filteredTickets={filteredTickets}
+                                    loading={loading}
+                                    handleAddTicket={handleAddTicket}
+                                    selectedTicketCategories={selectedTicketCategories}
+                                    errors={errors}
+                                />
 
                                 {/* table  */}
-                                <div className="col-md-12 p-0 mt-2">
-                                    <TableContainer sx={{ borderRadius: "10px" }} component={Paper}>
-                                        <Table>
-                                            <TableHead className='table-head-style text-white' style={{ backgroundColor: "#275a88" }}>
-                                                <TableRow className=' text-white'>
-                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>نوع التذكرة</TableCell>
-                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>السعر</TableCell>
-                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>عدد التذاكر</TableCell>
-                                                    <TableCell className="text-center" style={{ color: "#fff", fontSize: "18px" }}>الإجراءات</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {tickets.map((ticket, index) => (
-                                                    <TableRow key={index}>
-                                                        <TableCell className="text-center" style={{ fontSize: "18px" }}>{ticket.ticketType}</TableCell>
-                                                        <TableCell className="text-center" style={{ fontSize: "18px" }}>{ticket.ticketPrice * ticket.ticketCount} $</TableCell>
-                                                        <TableCell className="text-center">
-                                                            <IconButton onClick={() => handleIncreaseTicketCount(index)}>
-                                                                <AddIcon sx={{ backgroundColor: "#199119", borderRadius: "3px", padding: "0px", marginRight: "5px", color: "#fff" }} />
-                                                            </IconButton>
-                                                            {ticket.ticketCount}
-                                                            <IconButton onClick={() => handleDecreaseTicketCount(index)}>
-                                                                <RemoveIcon sx={{ backgroundColor: "#c72c2c", borderRadius: "3px", padding: "0px", marginLeft: "5px", color: "#fff" }} />                                                                    </IconButton>
-                                                        </TableCell>
-                                                        <TableCell className="text-center">
-                                                            <IconButton onClick={() => handleDeleteTicket(index, ticket.ticketType)}>
-                                                                <DeleteIcon sx={{ color: "red" }} />
-                                                            </IconButton>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                            <TableFooter>
-                                                <TableRow>
-                                                    <TableCell className="text-center font-weight-bold text-dark" sx={{ fontSize: "25px" }}>
-                                                        المجموع الكلي
-                                                    </TableCell>
-                                                    <TableCell className="text-center font-weight-bold text-dark" sx={{ fontSize: "18px" }}>
-                                                        {total} $
-                                                    </TableCell>
-                                                    <TableCell className="text-center">
-                                                        <Button
-                                                            variant="contained"
-                                                            sx={{ fontSize: "19px", backgroundColor: "#275a88" }}
-                                                            startIcon={<PaymentIcon className='ml-2' />}
-                                                            onClick={handlePaymentConfirmation}
-                                                            aria-hidden={false}
-                                                        >
-                                                            دفع
-                                                        </Button>
-
-                                                        <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseError}>
-                                                            <Alert onClose={handleCloseError} severity="error">
-                                                                لا توجد بيانات للدفع!
-                                                            </Alert>
-                                                        </Snackbar>
-                                                    </TableCell>
-
-                                                </TableRow>
-
-                                            </TableFooter>
-                                        </Table>
-                                    </TableContainer>
-                                </div>
+                                <TicketTable
+                                    tickets={tickets}
+                                    handleIncreaseTicketCount={handleIncreaseTicketCount}
+                                    handleDecreaseTicketCount={handleDecreaseTicketCount}
+                                    handleDeleteTicket={handleDeleteTicket}
+                                    total={total}
+                                    handlePaymentConfirmation={handlePaymentConfirmation}
+                                    showError={showError}
+                                    handleCloseError={handleCloseError}
+                                />
 
                             </div>
                         </div>
@@ -840,31 +709,31 @@ function PayingOff() {
                         <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
                             {ticket.serialNumbers.map((serialInfo, i) => {
                                 const qrValue = `
-                        رقم التسلسل: ${serialInfo.serialNumber}
-                        نوع التذكرة: ${serialInfo.ticketTitle}
-                        اسم المركب: ${selectedBoatName} 
-                        اسم المرشد: ${serialInfo.tourGuide}
-                        الجنسية: ${nationalityTranslations[serialInfo.nationality]}
-                        السعر: ${serialInfo.price} $
-                        تاريخ الطباعة: ${serialInfo.createdAt}
-                    `;
+Serial Number : ${serialInfo.serialNumber}
+Ticket Title : ${serialInfo.ticketTitle}
+Boat Name : ${selectedBoatName} 
+TourGuide Name : ${serialInfo.tourGuide}
+Nationality : ${serialInfo.nationality}
+Price : ${serialInfo.price} $
+Created At : ${serialInfo.createdAt}
+`;
                                 const encodedQRValue = utf8.encode(qrValue);
 
                                 return (
                                     <div key={i} className='qr-box d-flex justify-content-center align-items-center' style={{ pageBreakAfter: 'always', marginBottom: '10px', border: '1px solid black', padding: '10px' }}>
 
-                                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
-                                            <Typography variant="subtitle1">رقم التسلسل : {serialInfo.serialNumber}</Typography>
-                                            <Typography variant="subtitle1">نوع التذكرة : {serialInfo.ticketTitle}</Typography>
-                                            <Typography variant="subtitle1">اسم المركب : {selectedBoatName}</Typography>
-                                            <Typography variant="subtitle1">اسم المرشد : {serialInfo.tourGuide}</Typography>
-                                            <Typography variant="subtitle1">الجنسية : {nationalityTranslations[serialInfo.nationality]}</Typography>
-                                            <Typography variant="subtitle1">السعر : {serialInfo.price} $</Typography>
-                                            <Typography variant="subtitle1">تاريخ الطباعة: {serialInfo.createdAt}</Typography>
-                                        </div>
-
                                         <div>
                                             <QRCode value={encodedQRValue} className='qr-size' />
+                                        </div>
+
+                                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
+                                            <Typography variant="subtitle1">Serial Number : {serialInfo.serialNumber}</Typography>
+                                            <Typography variant="subtitle1">Ticket Title : {serialInfo.ticketTitle}</Typography>
+                                            <Typography variant="subtitle1">Boat Name : {selectedBoatName}</Typography>
+                                            <Typography variant="subtitle1">Tourguide Name : {serialInfo.tourGuide}</Typography>
+                                            <Typography variant="subtitle1">Nationality : {serialInfo.nationality}</Typography>
+                                            <Typography variant="subtitle1">Price : {serialInfo.price} $</Typography>
+                                            <Typography variant="subtitle1">Created At : {serialInfo.createdAt}</Typography>
                                         </div>
 
                                     </div>
