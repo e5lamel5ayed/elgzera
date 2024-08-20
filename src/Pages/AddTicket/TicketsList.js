@@ -46,7 +46,6 @@ export default function BasicTable() {
     }
   }
 
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -72,7 +71,13 @@ export default function BasicTable() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          await axios.delete(`${baseURL}/${TICKETS}/${id}`);
+          const token = localStorage.getItem('token'); 
+
+          await axios.delete(`${baseURL}/${TICKETS}/${id} `, {
+            headers: {
+              'Authorization': `Bearer ${token}`, 
+            },
+          });
           fetchData();
           setLoading(false);
           Swal.fire({

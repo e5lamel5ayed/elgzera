@@ -50,12 +50,18 @@ const Home = () => {
     }
   };
 
-  // fetch data for today 
+  // Fetch data for today
   useEffect(() => {
     const fetchDataAll = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await axios.get(
-          `${baseURL}/${TOTAL_DAILY_REPORTS}`
+          `${baseURL}/${TOTAL_DAILY_REPORTS}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         );
         setAll(response.data);
 
@@ -67,12 +73,18 @@ const Home = () => {
     fetchDataAll();
   }, []);
 
-  // fetch data by date from: and to:
+  // Fetch data by date from: and to:
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await axios.get(
-          `${baseURL}/reports/duration-total-report?from=${formatDate(startDate)}&to=${formatDate(endDate)}`
+          `${baseURL}/reports/duration-total-report?from=${formatDate(startDate)}&to=${formatDate(endDate)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         );
         setCategories(response.data);
       } catch (error) {

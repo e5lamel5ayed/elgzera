@@ -63,7 +63,12 @@ export default function TourGuidesList() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          await axios.delete(`${baseURL}/${TOURGUIDE}/${id}`);
+          const token = localStorage.getItem('token');
+          await axios.delete(`${baseURL}/${TOURGUIDE}/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
           fetchGuides();
           setLoading(false);
           Swal.fire({

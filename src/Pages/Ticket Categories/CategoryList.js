@@ -25,7 +25,7 @@ export default function CategoryList() {
       let newData = response.data.filter((res) => res.name !== "");
       setCategories(newData);
       setLoading(false);
-    }catch (error) {
+    } catch (error) {
       Swal.fire({
         text: "حدث خطأ أثناء جلب البيانات. يرجى المحاولة مرة أخرى لاحقًا.",
         icon: "error",
@@ -66,7 +66,12 @@ export default function CategoryList() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          await axios.delete(`${baseURL}/${CATEGORIES}/${id}`);
+          const token = localStorage.getItem('token');
+          await axios.delete(`${baseURL}/${CATEGORIES}/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
           fetchCategories();
           setLoading(false);
           Swal.fire({

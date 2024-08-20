@@ -4,6 +4,9 @@ export const baseURL = "https://org-bay.runasp.net/api";
 // for image 
 export const IMG_URL = "https://org-bay.runasp.net/";
 
+// for login 
+export const LOGIN = "auth/login";
+
 // SALES_CENTERS 
 export const SALES_CENTERS = "sales-centers";
 export const SALES_CENTERS_CREATE = "sales-centers/create";

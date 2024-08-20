@@ -95,17 +95,21 @@ export default function AddTourGuides() {
 
       if (location.state && location.state.id) {
         // Edit tour guide
+        const token = localStorage.getItem('token');
         await axios.put(`${baseURL}/tour-guides/${location.state.id}`, payload, {
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
           }
         });
         localStorage.setItem("alertMessage", "تم تعديل المرشد بنجاح");
       } else {
         // add tour guide
+        const token = localStorage.getItem('token');
         const response = await axios.post(`${baseURL}/tour-guides/create`, payload, {
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
           }
         });
         if (response.data) {

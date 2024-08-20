@@ -127,17 +127,20 @@ export default function AddProducts() {
       let response;
       if (location.state && location.state.id) {
         // edit product 
+        const token = localStorage.getItem('token');
         response = await axios.put(
           `${baseURL}/${PRODUCTS}/${location.state.id}`,
           formDataToSend,
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              'Authorization': `Bearer ${token}`,
             },
           }
         );
         localStorage.setItem("alertMessage", "تم تعديل المنتج بنجاح");
       } else {
+        const token = localStorage.getItem('token');
         response = await axios.post(
           // add product 
           `${baseURL}/${PRODUCTS_CREATE}`,
@@ -145,6 +148,7 @@ export default function AddProducts() {
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              'Authorization': `Bearer ${token}`,
             },
           }
         );
@@ -165,12 +169,12 @@ export default function AddProducts() {
       {loading && <Loading />}
       <Drawer />
       <Box className='box-container'>
-      <div className="table-head">
-      <h2>اضافة منتج</h2>
-        <Link to="/AllProducts">
-          <button className="btn btn-primary add-button">رجوع</button>
-        </Link>
-      </div>
+        <div className="table-head">
+          <h2>اضافة منتج</h2>
+          <Link to="/AllProducts">
+            <button className="btn btn-primary add-button">رجوع</button>
+          </Link>
+        </div>
         <div className="card table-style" style={{ direction: "rtl" }}>
           <div className="card-header d-flex table-head-style">
             اضف البيانات

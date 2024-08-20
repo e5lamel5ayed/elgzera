@@ -17,7 +17,12 @@ const TotalDailyReport = () => {
     const fetchTotalDailyReports = async (date) => {
         setLoading(true);
         try {
-            const response = await axios.get(`${baseURL}/reports/total-daily-report?date=${date}`);
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${baseURL}/reports/total-daily-report?date=${date}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
             const data = response.data;
             setTotalDailyReports(data);
         } catch (error) {

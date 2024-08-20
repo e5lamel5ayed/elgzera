@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { baseURL, LOGIN } from '../Components/Api';
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [linkEnabled, setLinkEnabled] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleUsernameChange = (e) => {
@@ -27,18 +31,40 @@ export default function Login() {
         }
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         if (linkEnabled) {
-            // Determine the role based on the username
-            const role = username === 'admin' ? 'admin' : 'user';
-            localStorage.setItem('role', role);
+            setIsLoading(true);
+            setError('');
+            try {
+                const response = await axios.post(`${baseURL}/${LOGIN}`, {
+                    userName: username,
+                    password: password
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-            // Redirect based on the role
-            if (role === 'user') {
-                navigate('/PayingOff');
-            } else {
-                navigate('/Home');
+                const token = response.data.accessToken;
+                localStorage.setItem('token', token);
+                const role = response.data.role;
+                localStorage.setItem('role', role);
+
+                if (role === 'user') {
+                    navigate('/PayingOff');
+                } else {
+                    navigate('/Home');
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    setError('اسم المستخدم أو كلمة المرور غير صحيحة');
+                } else {
+                    setError('اسم المستخدم أو كلمة المرور غير صحيحة');
+                }
+                console.error('Login failed:', error);
+            } finally {
+                setIsLoading(false);
             }
         }
     };
@@ -62,8 +88,11 @@ export default function Login() {
                                     <label className='d-flex' style={{ justifyContent: "end" }} htmlFor="password">كلمة المرور</label>
                                     <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} />
                                 </div>
+                                {error && <div className="alert alert-danger">{error}</div>}
                                 <div>
-                                    <button type="submit" className="btn btn-primary btn-block text-center mb-2" disabled={!linkEnabled}>دخول</button>
+                                    <button type="submit" className="btn btn-primary btn-block text-center mb-2" disabled={!linkEnabled || isLoading}>
+                                        {isLoading ? 'جارٍ تسجيل الدخول...' : 'دخول'}
+                                    </button>
                                 </div>
                             </form>
                         </div>

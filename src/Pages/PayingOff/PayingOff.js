@@ -148,12 +148,21 @@ function PayingOff() {
             tourGuideId: selectedGuideId,
             orderItems: orderItems
         };
-
-        axios.post(`${baseURL}/${ORDER_CREATE}`, orderData)
+        const token = localStorage.getItem('token');
+        axios.post(`${baseURL}/${ORDER_CREATE}`, orderData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
             .then(response => {
                 const id = response.data.match(/\d+/)[0];
                 console.log(`Order created with ID: ${id}`);
-                return axios.get(`${baseURL}/${ORDER_CREATE}/${id}`);
+                const token = localStorage.getItem('token');
+                return axios.get(`${baseURL}/${ORDER_CREATE}/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
             })
             .then(response => {
                 const qrData = response.data;
@@ -256,13 +265,14 @@ function PayingOff() {
                 name: formData.name,
                 status: formData.status === "Active" ? 1 : 2,
             };
-
+            const token = localStorage.getItem('token');
             const response = await axios.post(
                 `${baseURL}/${CRUISES_CREATE}`,
                 payload,
                 {
                     headers: {
                         "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`,
                     },
                 }
             );
@@ -337,10 +347,11 @@ function PayingOff() {
                 profitRate: formDataguide.profitRate,
                 status: formDataguide.status === "Active" ? 1 : 2,
             };
-
+            const token = localStorage.getItem('token');
             await axios.post(`${baseURL}/${TOURGUIDE_CREATE}`, payload, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`,
                 }
             });
             fetchGuides();

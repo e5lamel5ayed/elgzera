@@ -58,18 +58,33 @@ export default function AddCategory() {
 
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
+
       if (location.state && location.state.id) {
         // Edit Category
         const response = await axios.put(
           `${baseURL}/${CATEGORIES}/${location.state.id}`,
-          { title: categoryName }
+          { title: categoryName },
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
         );
-        localStorage.setItem("alertMessage", "تم تعديل الفئه بنجاح");
+        localStorage.setItem("alertMessage", "تم تعديل الفئة بنجاح");
       } else {
-        // add category 
-        const response = await axios.post(`${baseURL}/${CATEGORIES_CREATE}`, {
-          title: categoryName,
-        });
+        // Add Category
+        const response = await axios.post(
+          `${baseURL}/${CATEGORIES_CREATE}`,
+          { title: categoryName },
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة فئة التذكرة بنجاح");
         }
@@ -78,9 +93,10 @@ export default function AddCategory() {
       navigate("/AllCategories");
     } catch (error) {
       setLoading(false);
-      console.error("There was an error adding the category!", error);
+      console.error("There was an error handling the category!", error);
     }
   };
+
 
   return (
     <div>

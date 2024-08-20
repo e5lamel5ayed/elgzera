@@ -41,7 +41,12 @@ const EditTicket = () => {
   // for update 
   const fetchTicketDetails = async (id) => {
     try {
-      const response = await axios.get(`${baseURL}/${TICKETS}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${TICKETS}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+        },
+      }); 
       const ticket = response.data.find((ticket) => ticket.id === id);
       if (ticket) {
         const { name, price, tax, categoryName, currency, days } = ticket;
@@ -58,7 +63,7 @@ const EditTicket = () => {
       console.log("Error fetching data of ticket:", error);
     }
   };
-
+  
   // fetch categories 
   const fetchCategories = async () => {
     try {
@@ -97,15 +102,16 @@ const EditTicket = () => {
     e.preventDefault();
     const newErrors = {};
     if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
-
+  
+    // Uncomment and validate price and tax if needed
     // const price = parseFloat(formData.price);
     // if (isNaN(price)) {
     //   newErrors.price = "من فضلك ادخل السعر";
     // }
     // if (price <= 0) {
-    //   newErrors.price = "يحب ان يكون السعر رقما اكبر من صفر";
+    //   newErrors.price = "يجب أن يكون السعر رقمًا أكبر من صفر";
     // }
-
+  
     // const tax = parseFloat(formData.tax);
     // if (isNaN(tax)) {
     //   newErrors.tax = "من فضلك ادخل الضرائب";
@@ -113,18 +119,20 @@ const EditTicket = () => {
     // if (tax <= 0) {
     //   newErrors.tax = "يجب أن تكون رقمًا أكبر من صفر";
     // }
-
+  
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
     // if (!formData.currency && !location.state)
     //   newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
-
+  
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-
+  
     try {
+      const token = localStorage.getItem('token'); 
+  
       const payload = {
         ...formData,
         price: parseFloat(formData.price),
@@ -134,24 +142,28 @@ const EditTicket = () => {
           : undefined,
         days: formData.days.map((day) => parseInt(day, 10)),
       };
+  
       const response = await axios.put(
         `${baseURL}/${TICKETS}/${location.state.id}`,
         payload,
         {
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, 
           },
         }
       );
+  
       if (response.data) {
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
       }
-
+  
       navigate("/AllTickets");
     } catch (error) {
       console.error("There was an error submitting the ticket!", error);
     }
   };
+  
 
   const currencyNames = {
     0: "دولار أمريكي",

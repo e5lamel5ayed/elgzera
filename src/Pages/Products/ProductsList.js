@@ -62,7 +62,12 @@ export default function ProductList() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          await axios.delete(`${baseURL}/${PRODUCTS}/${id}`);
+          const token = localStorage.getItem('token');
+          await axios.delete(`${baseURL}/${PRODUCTS}/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
           fetchData();
           setLoading(false);
           Swal.fire({

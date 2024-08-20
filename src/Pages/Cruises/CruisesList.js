@@ -66,7 +66,12 @@ export default function CruisesList() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          await axios.delete(`${baseURL}/${CRUISES}/${id}`);
+          const token = localStorage.getItem('token');
+          await axios.delete(`${baseURL}/${CRUISES}/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
           fetchData();
           setLoading(false);
           Swal.fire({

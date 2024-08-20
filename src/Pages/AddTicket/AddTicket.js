@@ -51,7 +51,12 @@ export default function AddTicket() {
   // for update 
   const fetchTicketDetails = async (id) => {
     try {
-      const response = await axios.get(`${baseURL}/${TICKETS}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${TICKETS}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       const ticket = response.data.find((ticket) => ticket.id === id);
       if (ticket) {
         const { name, price, tax, categoryName, currency, days } = ticket;
@@ -72,7 +77,12 @@ export default function AddTicket() {
   // fetch categories 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
+      const token = localStorage.getItem('token'); // الحصول على التوكن من التخزين المحلي
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // إضافة التوكن إلى رؤوس الطلبات
+        },
+      });
       setCategories(response.data);
       setLoading(false);
     } catch {
@@ -80,6 +90,7 @@ export default function AddTicket() {
       setLoading(false);
     }
   };
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -157,14 +168,17 @@ export default function AddTicket() {
           }
         );
         localStorage.setItem("alertMessage", "تم تعديل التذكرة بنجاح");
-      } else {
+      }
+      else {
         // add ticket 
+        const token = localStorage.getItem('token');
         const response = await axios.post(
           `${baseURL}/${TICKETS_CREATE}`,
           payload,
           {
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
             },
           }
         );
@@ -172,6 +186,7 @@ export default function AddTicket() {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
         }
       }
+
 
       setLoading(false);
       navigate("/AllTickets");

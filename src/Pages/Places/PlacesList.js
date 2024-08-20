@@ -63,7 +63,12 @@ export default function PlacesList() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          await axios.delete(`${baseURL}/${SALES_CENTERS}/${id}`);
+          const token = localStorage.getItem('token');
+          await axios.delete(`${baseURL}/${SALES_CENTERS}/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
           fetchData();
           setLoading(false);
           Swal.fire({

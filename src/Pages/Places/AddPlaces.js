@@ -90,24 +90,28 @@ export default function AddPlaces() {
 
       if (location.state && location.state.id) {
         // edit SALES_CENTERS 
+        const token = localStorage.getItem('token');
         const response = await axios.put(
           `${baseURL}/${SALES_CENTERS}/${location.state.id}`,
           formDataToSend,
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              'Authorization': `Bearer ${token}`,
             },
           }
         );
         localStorage.setItem("alertMessage", "تم تعديل مركز البيع بنجاح");
       } else {
         // add SALES_CENTERS 
+        const token = localStorage.getItem('token');
         const response = await axios.post(
           `${baseURL}/${SALES_CENTERS_CREATE}`,
           formDataToSend,
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              'Authorization': `Bearer ${token}`,
             },
           }
         );

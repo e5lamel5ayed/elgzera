@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import AllTickets from "./Pages/AddTicket/AllTickets";
 import AddTicket from "./Pages/AddTicket/AddTicket";
@@ -19,34 +19,39 @@ import Login from "./Pages/Login";
 import EditTicket from "./Pages/AddTicket/EditTicket";
 import DailyReport from "./Pages/Reports/DailyReport";
 import TotalDailyReport from "./Pages/Reports/TotalDailyReport";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
-export default function App() {
+function App() {
+  const isAuthenticated = !!localStorage.getItem('token');
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route>
-          <Route path="/" exact element={<Login />}></Route>
-          <Route path="/Home" exact element={<Home />}></Route>
-          <Route path="/AllTickets" exact element={<AllTickets />}></Route>
-          <Route path="/AddTicket" exact element={<AddTicket />}></Route>
-          <Route path="/EditTicket" exact element={<EditTicket />}></Route>
-          <Route path="/AddCategory" exact element={<AddCategory />}></Route>
-          <Route path="/AllCategories" exact element={<AllCategories />}></Route>
-          <Route path="/AddTourGuides" exact element={<AddTourGuides />} ></Route>
-          <Route path="/AllTourGuides" exact element={<AllTourGuides />} ></Route>
-          <Route path="/AllCruises" exact element={<AllCruises />}></Route>
-          <Route path="/AddCruises" exact element={<AddCruises />}></Route>
-          <Route path="/AddPlaces" exact element={<AddPlaces />}></Route>
-          <Route path="/AllPlaces" exact element={<AllPlaces />}></Route>
-          <Route path="/AllProducts" exact element={<AllProducts />}></Route>
-          <Route path="/AddProducts" exact element={<AddProducts />}></Route>
-          <Route path="/AddProducts" exact element={<AddProducts />}></Route>
-          <Route path="/AllReservation" exact element={<AllReservation />} ></Route>
-          <Route path="/PayingOff" exact element={<PayingOff />}></Route>
-          <Route path="/daily-report" exact element={<DailyReport />}></Route>
-          <Route path="/total-daily-report" exact element={<TotalDailyReport />}></Route>
-        </Route>
+        <Route
+          path="/"
+          element={isAuthenticated ? <Navigate to="/Home" replace /> : <Login />}
+        />
+        <Route path="/Home" element={<ProtectedRoute element={<Home />} />} />
+        <Route path="/AllTickets" element={<ProtectedRoute element={<AllTickets />} />} />
+        <Route path="/AddTicket" element={<ProtectedRoute element={<AddTicket />} />} />
+        <Route path="/EditTicket" element={<ProtectedRoute element={<EditTicket />} />} />
+        <Route path="/AddCategory" element={<ProtectedRoute element={<AddCategory />} />} />
+        <Route path="/AllCategories" element={<ProtectedRoute element={<AllCategories />} />} />
+        <Route path="/AddTourGuides" element={<ProtectedRoute element={<AddTourGuides />} />} />
+        <Route path="/AllTourGuides" element={<ProtectedRoute element={<AllTourGuides />} />} />
+        <Route path="/AllCruises" element={<ProtectedRoute element={<AllCruises />} />} />
+        <Route path="/AddCruises" element={<ProtectedRoute element={<AddCruises />} />} />
+        <Route path="/AddPlaces" element={<ProtectedRoute element={<AddPlaces />} />} />
+        <Route path="/AllPlaces" element={<ProtectedRoute element={<AllPlaces />} />} />
+        <Route path="/AllProducts" element={<ProtectedRoute element={<AllProducts />} />} />
+        <Route path="/AddProducts" element={<ProtectedRoute element={<AddProducts />} />} />
+        <Route path="/AllReservation" element={<ProtectedRoute element={<AllReservation />} />} />
+        <Route path="/PayingOff" element={<ProtectedRoute element={<PayingOff />} />} />
+        <Route path="/daily-report" element={<ProtectedRoute element={<DailyReport />} />} />
+        <Route path="/total-daily-report" element={<ProtectedRoute element={<TotalDailyReport />} />} />
       </Routes>
     </BrowserRouter>
   );
 }
+
+export default App;

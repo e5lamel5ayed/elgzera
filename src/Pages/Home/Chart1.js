@@ -9,8 +9,15 @@ export default function BasicPie() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem('token');
+
         const response = await axios.get(
-          `${baseURL}/${TOTAL_DAILY_REPORTS}`
+          `${baseURL}/${TOTAL_DAILY_REPORTS}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         );
         const data = response.data;
 

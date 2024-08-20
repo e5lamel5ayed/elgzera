@@ -31,7 +31,13 @@ export default function AddCruises() {
   const fetchCruiseDetails = async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/cruises`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/cruises`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
+      );
       const cruise = response.data.find((cruise) => cruise.id === id);
       if (cruise) {
         const { name, status } = cruise;
@@ -69,24 +75,29 @@ export default function AddCruises() {
 
       if (location.state && location.state.id) {
         // Edit Cruise
+        const token = localStorage.getItem('token');
         await axios.put(
           `${baseURL}/${CRUISES}/${location.state.id}`,
           payload,
           {
             headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`,
             },
           }
         );
         localStorage.setItem("alertMessage", "تم تعديل المركب بنجاح");
       } else {
         // add Cruise
+        const token = localStorage.getItem('token');
         await axios.post(
           `${baseURL}/${CRUISES_CREATE}`,
           payload,
           {
             headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`,
+
             },
           }
         );
@@ -105,8 +116,8 @@ export default function AddCruises() {
       {loading && <Loading />}
       <Drawer />
       <Box className='box-container'>
-      <div className="table-head">
-      <h2>المراكب</h2>
+        <div className="table-head">
+          <h2>المراكب</h2>
           <Link to="/AllCruises">
             <button className="btn btn-primary add-button">رجوع</button>
           </Link>
