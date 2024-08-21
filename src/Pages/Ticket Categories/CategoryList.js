@@ -21,7 +21,12 @@ export default function CategoryList() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       let newData = response.data.filter((res) => res.name !== "");
       setCategories(newData);
       setLoading(false);

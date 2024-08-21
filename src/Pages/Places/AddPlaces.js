@@ -51,7 +51,13 @@ export default function AddPlaces() {
   const fetchPlace = async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      }
+      );
       const center = response.data.find((center) => center.id === id);
       const completeImageUrl = `${IMG_URL}${center.imgUrl}`;
       setFormData({

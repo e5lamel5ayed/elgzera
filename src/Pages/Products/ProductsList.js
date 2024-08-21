@@ -19,7 +19,12 @@ export default function ProductList() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/${PRODUCTS}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${PRODUCTS}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
       setProducts(response.data);
     } catch (error) {
       Swal.fire({

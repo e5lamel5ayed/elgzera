@@ -34,7 +34,13 @@ export default function AddTourGuides() {
   const fetchTourGuideDetails = async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${TOURGUIDE}/${id}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${TOURGUIDE}/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      }
+      );
       setFormData(response.data);
       setLoading(false);
     } catch (error) {

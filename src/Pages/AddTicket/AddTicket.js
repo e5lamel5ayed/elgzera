@@ -27,6 +27,7 @@ export default function AddTicket() {
 
   const [formData, setFormData] = useState({
     title: "",
+    status: "",
     price: "",
     tax: "",
     categoryId: "",
@@ -77,10 +78,10 @@ export default function AddTicket() {
   // fetch categories 
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem('token'); // الحصول على التوكن من التخزين المحلي
+      const token = localStorage.getItem('token'); 
       const response = await axios.get(`${baseURL}/${CATEGORIES}`, {
         headers: {
-          'Authorization': `Bearer ${token}`, // إضافة التوكن إلى رؤوس الطلبات
+          'Authorization': `Bearer ${token}`,
         },
       });
       setCategories(response.data);
@@ -119,7 +120,7 @@ export default function AddTicket() {
     const newErrors = {};
 
     if (!formData.title) newErrors.title = "من فضلك ادخل الاسم";
-    // if (!formData.status) newErrors.status = "من فضلك اختر الحالة";
+    if (!formData.status) newErrors.status = "من فضلك اختر الحالة";
 
     const price = parseFloat(formData.price);
     if (isNaN(price)) {
@@ -138,7 +139,6 @@ export default function AddTicket() {
     }
 
     if (!formData.categoryId) newErrors.categoryId = "من فضلك اختر نوع التذكرة";
-    // if (!formData.currency && !location.state) newErrors.currency = "من فضلك اختر العملة";
     if (formData.days.length === 0) newErrors.days = "من فضلك اختر اليوم";
 
     if (Object.keys(newErrors).length > 0) {
@@ -152,18 +152,22 @@ export default function AddTicket() {
       const payload = {
         ...formData,
         // price: parseFloat(formData.price),
+        name: formData.name,
+        status: formData.status === "1" ? 1 : 2, 
         tax: parseFloat(formData.tax),
         currency: formData.currency ? parseInt(formData.currency, 10) : undefined,
         days: formData.days.map((day) => parseInt(day, 10)),
       };
       // update ticket
       if (location.state && location.state.id) {
+        const token = localStorage.getItem('token');
         const response = await axios.put(
           `${baseURL}/${TICKETS}/${location.state.id}`,
           payload,
           {
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
             },
           }
         );
@@ -180,13 +184,13 @@ export default function AddTicket() {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${token}`,
             },
+            
           }
         );
         if (response.data) {
           localStorage.setItem("alertMessage", "تم إضافة التذكرة بنجاح");
         }
       }
-
 
       setLoading(false);
       navigate("/AllTickets");
@@ -301,7 +305,7 @@ export default function AddTicket() {
                     {errors.tax && <h6 className="error-log">{errors.tax}</h6>}
                   </div>
 
-                  {/* <div className="col-md-6">
+                  <div className="col-md-6">
                     <label htmlFor="status" className="d-flex">
                       الحالة
                     </label>
@@ -318,13 +322,13 @@ export default function AddTicket() {
                       }}
                     >
                       <option value="">اختر الحالة</option>
-                      <option value="Active">نشط</option>
-                      <option value="InActive">غير نشط</option>
+                      <option value="1">نشط</option>
+                      <option value="2">غير نشط</option>
                     </TextField>
                     {errors.status && (
                       <h6 className="error-log">{errors.status}</h6>
                     )}
-                  </div> */}
+                  </div>
 
                   {/* <div className="col-md-3">
                     <label htmlFor="currency" className="d-flex">

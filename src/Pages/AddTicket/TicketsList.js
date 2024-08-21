@@ -23,12 +23,15 @@ export default function BasicTable() {
   async function fetchData() {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
       const response = await axios.get(`${baseURL}/${TICKETS}`, {
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
+
       setData(response.data);
     } catch (error) {
       Swal.fire({
@@ -71,11 +74,11 @@ export default function BasicTable() {
       if (result.isConfirmed) {
         try {
           setLoading(true);
-          const token = localStorage.getItem('token'); 
+          const token = localStorage.getItem('token');
 
           await axios.delete(`${baseURL}/${TICKETS}/${id} `, {
             headers: {
-              'Authorization': `Bearer ${token}`, 
+              'Authorization': `Bearer ${token}`,
             },
           });
           fetchData();
@@ -119,9 +122,10 @@ export default function BasicTable() {
 
   // change status from English to arabic 
   const status = {
-    "Active": "نشط",
-    "InActive": "غير نشط",
-  }
+    1: "نشط",
+    2: "غير نشط",
+  };
+  
   return (
     <div>
       {loading && <Loading />}
@@ -168,14 +172,14 @@ export default function BasicTable() {
               >
                 الضرائب
               </TableCell>
-              {/* 
+
               <TableCell className="text-center"
                 style={{ color: "#fff" }}
                 sx={{ fontSize: "18px" }}
                 align="right"
               >
                 الحالة
-              </TableCell> */}
+              </TableCell>
 
               <TableCell className="text-center"
                 style={{ color: "#fff" }}
@@ -220,9 +224,9 @@ export default function BasicTable() {
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.tax} $
                   </TableCell>
-                  {/* <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
+                  <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {status[ticket.status]}
-                  </TableCell> */}
+                  </TableCell>
 
                   <TableCell className="text-center" sx={{ fontSize: "18px" }} align="right">
                     {ticket.days.map((day) => dayNames[day.name]).join(", ")}

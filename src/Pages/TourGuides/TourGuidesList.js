@@ -21,7 +21,12 @@ export default function TourGuidesList() {
   const fetchGuides = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${TOURGUIDE}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${TOURGUIDE}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       setGuides(response.data);
       setLoading(false);
     } catch (error) {

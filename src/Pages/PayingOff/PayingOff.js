@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputAdornment, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
-import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, ORDER_CREATE, TICKETS, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
+import { baseURL, CRUISE_ACTIVE, CRUISES, CRUISES_CREATE, NATIONALITY, ORDER_CREATE, TICKETS, TICKETS_ACTIVE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
 import Swal from 'sweetalert2';
 import utf8 from 'utf8';
 import { format } from 'date-fns';
@@ -36,9 +36,28 @@ function PayingOff() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`${baseURL}/${NATIONALITY}`).then(response => setNationalities(response.data));
-        axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`).then(response => setGuides(response.data));
-        axios.get(`${baseURL}/${CRUISES}`).then(response => setBoats(response.data));
+        const token = localStorage.getItem('token');
+        //NATIONALITY
+        axios.get(`${baseURL}/${NATIONALITY}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(response => setNationalities(response.data));
+
+        //TOURGUIDE_ACTIVE
+        axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(response => setGuides(response.data));
+
+        //CRUISES
+        axios.get(`${baseURL}/${CRUISES}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(response => setBoats(response.data));
+
         fetchGuides();
         fetchBoats();
     }, []);
@@ -51,7 +70,7 @@ function PayingOff() {
         setTickets([...tickets, {
             ticketId: ticket.id,
             ticketType: ticket.name,
-            ticketcurrency: ticket.currency,
+            // ticketcurrency: ticket.currency,
             ticketCount: 1,
             ticketPrice: ticket.price,
             nationality: selectedNationality,
@@ -210,9 +229,9 @@ function PayingOff() {
     // print function 
     const handlePrint = async () => {
         window.print();
+        setTickets([]);
+        setSelectedTicketCategories({});
         setTimeout(() => {
-            setTickets([]);
-            setSelectedTicketCategories({});
             handleCloseDialog();
         }, 7000);
     };
@@ -220,7 +239,13 @@ function PayingOff() {
     // fetch active tour guide 
     const fetchGuides = async () => {
         try {
-            const response = await axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`);
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            }
+            );
             setGuides(response.data);
         } catch (error) {
             console.error("There was an error fetching the guides!", error);
@@ -230,9 +255,13 @@ function PayingOff() {
     // fecth boats 
     const fetchBoats = async () => {
         try {
-            const response = await axios.get(`${baseURL}/${CRUISES}`);
-            const activeBoats = response.data.filter(boat => boat.status === "Active");
-            setBoats(activeBoats);
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${baseURL}/${CRUISE_ACTIVE}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            setBoats(response.data);
         } catch (error) {
             console.error("There was an error fetching the boats!", error);
         }
@@ -399,7 +428,13 @@ function PayingOff() {
         const fetchTickets = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${baseURL}/${TICKETS}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${baseURL}/${TICKETS_ACTIVE}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }
+                );
                 setTicketCategories(response.data);
             } catch (error) {
                 Swal.fire({
@@ -696,6 +731,7 @@ function PayingOff() {
                 </DialogActions>
             </Dialog >
 
+            {/* Qr Code dialog  */}
             <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
                 <DialogContent>
                     {qrCodeData && qrCodeData.map((ticket, index) => (
@@ -733,11 +769,12 @@ Created At : ${serialInfo.createdAt}
                     ))}
                 </DialogContent>
 
-                <DialogActions>
+                <DialogActions className='hide-on-print'>
                     <Button onClick={handlePrint}>طباعة</Button>
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
             </Dialog>
+
         </div >
     );
 }

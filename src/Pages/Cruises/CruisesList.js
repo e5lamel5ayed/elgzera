@@ -22,7 +22,13 @@ export default function CruisesList() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${CRUISES}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${CRUISES}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    }
+  );
       setCruises(response.data);
       setLoading(false);
     } catch (error) {

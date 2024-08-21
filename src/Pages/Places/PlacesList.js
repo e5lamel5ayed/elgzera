@@ -19,7 +19,12 @@ export default function PlacesList() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${SALES_CENTERS}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
       setSalesCenters(response.data);
       setLoading(false);
     } catch (error) {

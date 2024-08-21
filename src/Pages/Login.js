@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import { baseURL, LOGIN } from '../Components/Api';
 
 export default function Login() {
@@ -48,13 +49,18 @@ export default function Login() {
 
                 const token = response.data.accessToken;
                 localStorage.setItem('token', token);
-                const role = response.data.role;
-                localStorage.setItem('role', role);
 
-                if (role === 'user') {
+                // فك تشفير التوكن
+                const decodedToken = jwtDecode(token);
+                const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+                // Check the role to determine navigation
+                if (role === 'Admin') {
+                    navigate('/Home');
+                } else if (role === 'Employee') {
                     navigate('/PayingOff');
                 } else {
-                    navigate('/Home');
+                    setError('Invalid role');
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -82,11 +88,11 @@ export default function Login() {
                             <form onSubmit={handleLogin}>
                                 <div className="form-group">
                                     <label className='d-flex' style={{ justifyContent: "end" }} htmlFor="username">اسم المستخدم</label>
-                                    <input type="text" className="form-control " id="username" value={username} onChange={handleUsernameChange} />
+                                    <input type="text" className="form-control " id="username" value={username} onChange={handleUsernameChange} autoComplete='username' />
                                 </div>
                                 <div className="form-group">
                                     <label className='d-flex' style={{ justifyContent: "end" }} htmlFor="password">كلمة المرور</label>
-                                    <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} />
+                                    <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} autoComplete='password' />
                                 </div>
                                 {error && <div className="alert alert-danger">{error}</div>}
                                 <div>

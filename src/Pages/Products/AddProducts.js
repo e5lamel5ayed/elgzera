@@ -41,7 +41,12 @@ export default function AddProducts() {
     const fetchSalesCenters = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${baseURL}/${SALES_CENTERS}`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${baseURL}/${SALES_CENTERS}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
         setSalesCenters(response.data);
         setLoading(false);
       } catch (error) {
@@ -57,7 +62,13 @@ export default function AddProducts() {
   const fetchProduct = async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${PRODUCTS}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${PRODUCTS}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      }
+      );
       const product = response.data.find((product) => product.id === id);
       const completeImageUrl = `${IMG_URL}${product.imgUrl}`;
       setFormData({

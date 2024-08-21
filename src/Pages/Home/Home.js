@@ -38,15 +38,15 @@ const Home = () => {
   const getCategoryIcon = (index) => {
     switch (index % 4) {
       case 0:
-        return <FamilyRestroomIcon />;
+        return <FamilyRestroomIcon className="text-info " sx={{ fontSize: '30px' }} />;
       case 1:
-        return <PeopleIcon />;
+        return <PeopleIcon className="text-info" sx={{ fontSize: '30px' }} />;
       case 2:
-        return <ConfirmationNumberIcon />;
+        return <ConfirmationNumberIcon className="text-info" sx={{ fontSize: '30px' }} />;
       case 3:
-        return <AccessibilityIcon />;
+        return <AccessibilityIcon className="text-info" sx={{ fontSize: '30px' }} />;
       default:
-        return <PeopleIcon />;
+        return <PeopleIcon className="text-info" sx={{ fontSize: '30px' }} />;
     }
   };
 
@@ -155,10 +155,6 @@ const Home = () => {
                   width: isMobileOrMedium ? "100%" : "20%",
                   marginBottom: isMobileOrMedium ? "10px" : "0",
                   transition: "background-color 0.3s ease",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-around",
                   margin: '5px'
                 }}
                 elevation={2}
@@ -173,8 +169,8 @@ const Home = () => {
                 {/* show icon with category*/}
                 {getCategoryIcon(index)}
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  <h3>{item.category}</h3>
-                  <h5>{item.quantity}</h5>
+                  <h5>{item.category}</h5>
+                  <h6>{item.quantity}</h6>
                 </div>
               </Paper>
             ))}

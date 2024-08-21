@@ -28,7 +28,13 @@ export default function AddCategory() {
   const fetchCategoryDetails = async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/${CATEGORIES}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/${CATEGORIES}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    }
+  );
       const category = response.data.find((cat) => cat.id === id);
       setCategoryName(category.title);
       setLoading(false);

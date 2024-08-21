@@ -260,13 +260,12 @@ body {
 
 /* print  */
 @media print {
-
   .MuiDialogActions-root {
     display: none;
   }
 
-  .MuiDialogContent-root {
-    display: block;
+  .hide-on-print {
+    display: none !important;
   }
 
   .qr-box {
@@ -276,18 +275,18 @@ body {
     padding: 0;
     border: none;
     box-sizing: border-box;
-    page-break-after: always;
+    page-break-after: always; 
   }
 
   @page {
     margin: 0;
-    width: 87mm;
-    height: 54mm;
+    size: auto; 
   }
 
+  .qr-size {
+    width: 75%;
+    margin: auto;
+  }
 }
 
-.qr-size {
-  width: 50%;
-  margin: auto !important;
-}
+

@@ -37,7 +37,7 @@ export default function BasicPie() {
   }, []);
 
   return (
-    <PieChart
+    <PieChart className=""
       colors={["#FFD1DC", "#FFDEAD", "#E0BBE4", "#C6E2FF", "#FFC0CB", "#DDA0DD"]}
       series={[
         {
