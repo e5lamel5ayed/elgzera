@@ -1,24 +1,18 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputAdornment, MenuItem, OutlinedInput, Paper, Select, Snackbar, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PaymentIcon from '@mui/icons-material/Payment';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputAdornment, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
-import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, ORDER_CREATE, TICKETS, TOURGUIDE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
+import { baseURL, CRUISES, CRUISES_CREATE, NATIONALITY, ORDER_CREATE, TICKETS, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
 import Swal from 'sweetalert2';
 import utf8 from 'utf8';
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { format } from 'date-fns';
-import { Loading } from '../../Components/Loading';
-import GuideSelect from './GuideSelect';
 import BoatSelect from './BoatSelect';
 import NationalitySelect from './NationalitySelect ';
 import TicketTable from './TicketTable';
 import TicketList from './TicketList';
+import GuideSelect from './GuideSelect';
 
 function PayingOff() {
     const [nationalities, setNationalities] = useState([]);
@@ -702,7 +696,6 @@ function PayingOff() {
                 </DialogActions>
             </Dialog >
 
-            {/* QRCode dialog  */}
             <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
                 <DialogContent>
                     {qrCodeData && qrCodeData.map((ticket, index) => (
@@ -720,12 +713,10 @@ Created At : ${serialInfo.createdAt}
                                 const encodedQRValue = utf8.encode(qrValue);
 
                                 return (
-                                    <div key={i} className='qr-box ' style={{ marginBottom: '20px', border: '1px solid black', padding: '20px' }}>
-
+                                    <div key={i} className='qr-box' style={{ marginBottom: '20px', border: '1px solid black', padding: '20px' }}>
                                         <div>
                                             <QRCode value={encodedQRValue} className='qr-size' />
                                         </div>
-
                                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
                                             <Typography variant="subtitle1">Serial Number : {serialInfo.serialNumber}</Typography>
                                             <Typography variant="subtitle1">Ticket Title : {serialInfo.ticketTitle}</Typography>
@@ -735,7 +726,6 @@ Created At : ${serialInfo.createdAt}
                                             <Typography variant="subtitle1">Price : {serialInfo.price} $</Typography>
                                             <Typography variant="subtitle1">Created At : {serialInfo.createdAt}</Typography>
                                         </div>
-
                                     </div>
                                 );
                             })}
@@ -748,33 +738,6 @@ Created At : ${serialInfo.createdAt}
                     <Button onClick={handleCloseDialog}>إغلاق</Button>
                 </DialogActions>
             </Dialog>
-
-            <style>
-                {`
-                    @media print {
-                    .MuiDialogActions-root {
-                        display: none;
-                    }
-
-                    .MuiDialogContent-root {
-                        display: block;
-                    }
-                    .qr-box {
-                        width: 100%;
-                        height: auto;
-                        margin: 0;
-                        padding: 0;
-                        border: none;
-                        box-sizing: border-box;
-                    }
-
-                    @page {
-                        margin: 0;
-                    }  
-            
-                `}
-            </style>
-
         </div >
     );
 }

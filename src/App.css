@@ -211,11 +211,6 @@ body {
   background-color: #F8BBD0;
 }
 
-.qr-size {
-  width: 90%;
-  margin: auto !important;
-}
-
 .ticket-disabled {
   opacity: 0.7;
   pointer-events: none;
@@ -261,4 +256,38 @@ body {
   .qr-box {
     flex-direction: column !important;
   }
+}
+
+/* print  */
+@media print {
+
+  .MuiDialogActions-root {
+    display: none;
+  }
+
+  .MuiDialogContent-root {
+    display: block;
+  }
+
+  .qr-box {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+    page-break-after: always;
+  }
+
+  @page {
+    margin: 0;
+    width: 87mm;
+    height: 54mm;
+  }
+
+}
+
+.qr-size {
+  width: 50%;
+  margin: auto !important;
 }
