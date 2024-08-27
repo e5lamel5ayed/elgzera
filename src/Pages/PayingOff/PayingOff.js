@@ -240,10 +240,8 @@ function PayingOff() {
                         setPrintReady(true);
                     }, 1000);
 
-                    setTimeout(() => {
-                        setShowQRCodes(false);
-                        setPrintReady(false);
-                    }, 5000);
+                    setShowQRCodes(false);
+                    setPrintReady(false);
 
                     // Reset selected values
                     setTickets([]);
