@@ -50,11 +50,9 @@ export default function Login() {
                 const token = response.data.accessToken;
                 localStorage.setItem('token', token);
 
-                // فك تشفير التوكن
                 const decodedToken = jwtDecode(token);
                 const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-                // Check the role to determine navigation
                 if (role === 'Admin') {
                     navigate('/Home');
                 } else if (role === 'Employee') {

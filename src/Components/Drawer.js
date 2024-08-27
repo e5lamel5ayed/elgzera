@@ -95,7 +95,6 @@ export default function PersistentDrawerRight() {
             role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
         } catch (error) {
             console.error('Error decoding token:', error);
-            // يمكنك التعامل مع الخطأ هنا إذا لزم الأمر
         }
     }
     React.useEffect(() => {
