@@ -1,7 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputAdornment, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import QRCode from 'react-qr-code';
 import Drawer from '../../Components/Drawer';
 import { baseURL, CRUISE_ACTIVE, CRUISES, CRUISES_CREATE, NATIONALITY, ORDER_CREATE, TICKETS, TICKETS_ACTIVE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
@@ -34,6 +46,7 @@ function PayingOff() {
     const [selectedBoatId, setSelectedBoatId] = useState(null);
     const [selectedGuideId, setSelectedGuideId] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [printReady, setPrintReady] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -221,20 +234,37 @@ function PayingOff() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     handlePayment();
+                    setShowQRCodes(true);
+
+                    setTimeout(() => {
+                        setPrintReady(true);
+                    }, 1000);
+
+                    setTimeout(() => {
+                        setShowQRCodes(false);
+                        setPrintReady(false);
+                    }, 5000);
+
+                    // Reset selected values
+                    setTickets([]);
+                    setSelectedTicketCategories({});
+                    setSelectedNationalityId("");
+                    setSelectedGuideId("");
+                    setSelectedBoatId("");
+                    setSelectedNationality("");
+                    setSelectedGuideName("");
+                    setSelectedBoatName("");
                 }
             });
         }
     };
 
-    // print function 
-    const handlePrint = async () => {
-        window.print();
-        setTickets([]);
-        setSelectedTicketCategories({});
-        setTimeout(() => {
-            handleCloseDialog();
-        }, 7000);
-    };
+    useEffect(() => {
+        if (printReady) {
+            window.print();
+        }
+    }, [printReady]);
+
 
     // fetch active tour guide 
     const fetchGuides = async () => {
@@ -732,7 +762,7 @@ function PayingOff() {
             </Dialog >
 
             {/* Qr Code dialog  */}
-            <Dialog open={showQRCodes} onClose={handleCloseDialog} fullWidth style={{ direction: "rtl" }}>
+            <Dialog open={showQRCodes} onClose={() => setShowQRCodes(false)} fullWidth style={{ direction: "rtl" }}>
                 <DialogContent>
                     {qrCodeData && qrCodeData.map((ticket, index) => (
                         <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
@@ -770,8 +800,7 @@ Created At : ${serialInfo.createdAt}
                 </DialogContent>
 
                 <DialogActions className='hide-on-print'>
-                    <Button onClick={handlePrint}>طباعة</Button>
-                    <Button onClick={handleCloseDialog}>إغلاق</Button>
+                    <Button onClick={() => setShowQRCodes(false)}>إغلاق</Button>
                 </DialogActions>
             </Dialog>
 

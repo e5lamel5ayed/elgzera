@@ -20,6 +20,9 @@ import EditTicket from "./Pages/AddTicket/EditTicket";
 import DailyReport from "./Pages/Reports/DailyReport";
 import TotalDailyReport from "./Pages/Reports/TotalDailyReport";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import AddUser from "./Pages/Register/AddUser";
+import UserList from "./Pages/Register/UserList";
+import AllUsers from "./Pages/Register/AllUsers";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -49,6 +52,9 @@ function App() {
         <Route path="/PayingOff" element={<ProtectedRoute element={<PayingOff />} />} />
         <Route path="/daily-report" element={<ProtectedRoute element={<DailyReport />} />} />
         <Route path="/total-daily-report" element={<ProtectedRoute element={<TotalDailyReport />} />} />
+        <Route path="/add-user" element={<ProtectedRoute element={<AddUser />} />} />
+        <Route path="/user-list" element={<ProtectedRoute element={<UserList />} />} />
+        <Route path="/all-users" element={<ProtectedRoute element={<AllUsers />} />} />
       </Routes>
     </BrowserRouter>
   );

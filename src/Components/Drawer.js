@@ -30,6 +30,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { jwtDecode } from 'jwt-decode';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 const drawerWidth = 240;
 
@@ -192,6 +193,16 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>الرئيسية</span>
                                 </ListItemButton>
                             </ListItem>
+
+                            <ListItem disablePadding onClick={() => navigate("/all-users")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
+                                    <ListItemIcon>
+                                        <PersonAddAltIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>اضافة مستخدم</span>
+                                </ListItemButton>
+                            </ListItem>
+
                             <ListItem disablePadding onClick={() => navigate("/AllTickets")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -200,6 +211,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>اضافة تذكرة</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={() => navigate("/AllCategories")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -208,6 +220,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>فئات التذاكر</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={() => navigate("/AllTourGuides")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -216,6 +229,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>المرشدين</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={() => navigate("/AllCruises")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -224,6 +238,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>المراكب</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={() => navigate("/AllPlaces")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -232,6 +247,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>مراكز البيع</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={() => navigate("/AllProducts")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -240,6 +256,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>المنتجات</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={handleReportsClick}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -249,6 +266,7 @@ export default function PersistentDrawerRight() {
                                     <ExpandMoreIcon />
                                 </ListItemButton>
                             </ListItem>
+
                             <Collapse in={openReports} sx={customStyles.collapse}>
                                 <List component="div" disablePadding>
                                     <ListItem button sx={customStyles.listItem} onClick={() => handleReportClick("/daily-report")}>
@@ -263,6 +281,7 @@ export default function PersistentDrawerRight() {
                                     </ListItem>
                                 </List>
                             </Collapse>
+
                             <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -271,6 +290,7 @@ export default function PersistentDrawerRight() {
                                     <span className='span-edit'>حجز تذكرة</span>
                                 </ListItemButton>
                             </ListItem>
+
                             <ListItem disablePadding onClick={handleLogout}>
                                 <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
                                     <ListItemIcon>
@@ -283,24 +303,24 @@ export default function PersistentDrawerRight() {
                     ) : (
                         <div>
 
-                        <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
-                            <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
-                                <ListItemIcon>
-                                    <PaymentIcon className='icon-edit' />
-                                </ListItemIcon>
-                                <span className='span-edit'>حجز تذكرة</span>
-                            </ListItemButton>
-                        </ListItem>
+                            <ListItem disablePadding onClick={() => navigate("/PayingOff")}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
+                                    <ListItemIcon>
+                                        <PaymentIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>حجز تذكرة</span>
+                                </ListItemButton>
+                            </ListItem>
 
-                         <ListItem disablePadding onClick={handleLogout}>
-                         <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
-                             <ListItemIcon>
-                                 <LogoutIcon className='icon-edit' />
-                             </ListItemIcon>
-                             <span className='span-edit'>تسجيل الخروج</span>
-                         </ListItemButton>
-                     </ListItem>
-                     </div>
+                            <ListItem disablePadding onClick={handleLogout}>
+                                <ListItemButton sx={{ flexDirection: 'row-reverse', display: 'flex', alignItems: 'center' }}>
+                                    <ListItemIcon>
+                                        <LogoutIcon className='icon-edit' />
+                                    </ListItemIcon>
+                                    <span className='span-edit'>تسجيل الخروج</span>
+                                </ListItemButton>
+                            </ListItem>
+                        </div>
 
                     )}
                 </List>
