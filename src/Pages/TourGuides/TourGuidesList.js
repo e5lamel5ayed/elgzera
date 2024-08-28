@@ -105,6 +105,43 @@ export default function TourGuidesList() {
                     </button>
                   </TableCell>
                 </TableRow>
+           
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell
+                    sx={{ fontSize: "18px" }}
+                    align="right"
+                    component="th"
+                    scope="row"
+                  >
+                    اسلام
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                   نشط
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    islam@yahoo.com
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    0123456789
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="right">
+                    %50
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                    <button
+                      className="btn btn-primary ml-2"
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                    >
+                      حذف
+                    </button>
+                  </TableCell>
+                </TableRow>
               
           </TableBody>
         </Table>
