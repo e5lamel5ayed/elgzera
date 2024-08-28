@@ -1,809 +1,411 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import Drawer from '../../Components/Drawer';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
-import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import TableContainer from '@mui/material/TableContainer';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import TableFooter from '@mui/material/TableFooter';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import QRCode from 'react-qr-code';
-import Drawer from '../../Components/Drawer';
-import { baseURL, CRUISE_ACTIVE, CRUISES, CRUISES_CREATE, NATIONALITY, ORDER_CREATE, TICKETS, TICKETS_ACTIVE, TOURGUIDE_ACTIVE, TOURGUIDE_CREATE } from "../../Components/Api";
-import Swal from 'sweetalert2';
-import utf8 from 'utf8';
-import { format } from 'date-fns';
-import BoatSelect from './BoatSelect';
-import NationalitySelect from './NationalitySelect ';
-import TicketTable from './TicketTable';
-import TicketList from './TicketList';
-import GuideSelect from './GuideSelect';
+import PersonIcon from '@mui/icons-material/Person';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PaymentIcon from '@mui/icons-material/Payment';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import InputAdornment from '@mui/material/InputAdornment';
 
-function PayingOff() {
-    const [nationalities, setNationalities] = useState([]);
-    const [guides, setGuides] = useState([]);
-    const [boats, setBoats] = useState([]);
-    const [ticketCategories, setTicketCategories] = useState([]);
-    const [selectedNationality, setSelectedNationality] = useState('');
-    const [selectedGuideName, setSelectedGuideName] = useState('');
-    const [selectedBoatName, setSelectedBoatName] = useState('');
+const ticketCategories = {
+    'مصري': [
+        { name: 'تذاكر اطفال', price: 50 },
+        { name: 'تذاكر كبار', price: 100 },
+        { name: 'تذاكر عائلية', price: 200 }
+    ],
+    'سعودي': [
+        { name: 'تذاكر اطفال', price: 20 },
+        { name: 'تذاكر كبار', price: 50 },
+        { name: 'تذاكر عائلية', price: 150 }
+    ],
+    'انجليزي': [
+        { name: 'تذاكر اطفال', price: 5 },
+        { name: 'تذاكر كبار', price: 10 },
+        { name: 'تذاكر عائلية', price: 25 }
+    ],
+    'امريكي': [
+        { name: 'تذاكر اطفال', price: 10 },
+        { name: 'تذاكر كبار', price: 20 },
+        { name: 'تذاكر عائلية', price: 50 }
+    ]
+};
+
+const testGuideOptions = ['Guide 1', 'Guide 2', 'Guide 3'];
+const testBoatOptions = ['Boat 1', 'Boat 2', 'Boat 3'];
+
+export default function PayingOff() {
+    const [selectedNationality, setSelectedNationality] = useState("مصري");
+    const [selectedGuideName, setSelectedGuideName] = useState("");
+    const [selectedBoatName, setSelectedBoatName] = useState("");
     const [selectedTicketCategories, setSelectedTicketCategories] = useState({});
     const [tickets, setTickets] = useState([]);
-    const [total, setTotal] = useState(0);
     const [showQRCodes, setShowQRCodes] = useState(false);
-    const [qrCodeData, setQrCodeData] = useState([]);
-    const [currentTime, setCurrentTime] = useState(new Date());
-    const [currentDay, setCurrentDay] = useState('');
-    const [showError, setShowError] = useState(false);
-    const [selectedNationalityId, setSelectedNationalityId] = useState(null);
-    const [selectedBoatId, setSelectedBoatId] = useState(null);
-    const [selectedGuideId, setSelectedGuideId] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [printReady, setPrintReady] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [addGuideDialog, setAddGuideDialog] = useState(false);
+    const [addBoatDialog, setAddBoatDialog] = useState(false);
+    const [guideData, setGuideData] = useState({
+        name: '',
+        email: '',
+        status: '',
+        phoneNumber: '',
+        profitPercentage: ''
+    });
+    const [boatData, setBoatData] = useState({
+        name: '',
+        status: ''
+    });
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        //NATIONALITY
-        axios.get(`${baseURL}/${NATIONALITY}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-        }).then(response => setNationalities(response.data));
-
-        //TOURGUIDE_ACTIVE
-        axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-        }).then(response => setGuides(response.data));
-
-        //CRUISES
-        axios.get(`${baseURL}/${CRUISES}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-        }).then(response => setBoats(response.data));
-
-        fetchGuides();
-        fetchBoats();
-    }, []);
-
-    const handleAddTicket = (ticket) => {
-        if (selectedTicketCategories[ticket.name]) {
-            return;
-        }
-
-        setTickets([...tickets, {
-            ticketId: ticket.id,
-            ticketType: ticket.name,
-            // ticketcurrency: ticket.currency,
-            ticketCount: 1,
-            ticketPrice: ticket.price,
+    const handleAddTicket = (category) => {
+        const newTicket = {
             nationality: selectedNationality,
             guideName: selectedGuideName,
+            ticketType: category.name,
+            ticketPrice: category.price,
             boatName: selectedBoatName,
-        }]);
+            ticketCount: 1
+        };
 
-        setSelectedTicketCategories({ ...selectedTicketCategories, [ticket.name]: true });
-    };
-
-    const handleIncreaseTicketCount = (index) => {
-        const newTickets = [...tickets];
-        newTickets[index].ticketCount += 1;
-
-        // Update the ticket in the state
-        setTickets(newTickets);
-
-        // Update the total ticket count
-        setTotal(total + newTickets[index].ticketPrice);
-    }
-
-    const handleDecreaseTicketCount = (index) => {
-        const newTickets = [...tickets];
-        if (newTickets[index].ticketCount > 1) {
-            newTickets[index].ticketCount -= 1;
-            setTickets(newTickets);
-        }
+        setSelectedTicketCategories({ ...selectedTicketCategories, [category.name]: true });
+        setTickets([...tickets, newTicket]);
     };
 
     const handleDeleteTicket = (index, ticketType) => {
-        const newTickets = tickets.filter((_, i) => i !== index);
-        setTickets(newTickets);
-        const newSelectedTicketCategories = { ...selectedTicketCategories };
-        delete newSelectedTicketCategories[ticketType];
-        setSelectedTicketCategories(newSelectedTicketCategories);
+        const updatedTickets = tickets.filter((ticket, i) => i !== index);
+        setSelectedTicketCategories({ ...selectedTicketCategories, [ticketType]: false });
+        setTickets(updatedTickets);
     };
 
-    useEffect(() => {
-        const totalAmount = tickets.reduce((acc, ticket) => acc + (ticket.ticketPrice * ticket.ticketCount), 0);
-        setTotal(totalAmount);
-    }, [tickets]);
+    const handleIncreaseTicketCount = (index) => {
+        const updatedTickets = [...tickets];
+        updatedTickets[index].ticketCount++;
+        setTickets(updatedTickets);
+    };
+
+    const handleDecreaseTicketCount = (index) => {
+        const updatedTickets = [...tickets];
+        if (updatedTickets[index].ticketCount > 1) {
+            updatedTickets[index].ticketCount--;
+            setTickets(updatedTickets);
+        }
+    };
+
+    const handlePayment = () => {
+        setShowQRCodes(true);
+    };
 
     const handleCloseDialog = () => {
         setShowQRCodes(false);
+        setTickets([]);
+        setSelectedNationality("مصري");
+        setSelectedGuideName("");
+        setSelectedBoatName("");
+        setSelectedTicketCategories({});
     };
 
-    const handleCloseError = () => {
-        setShowError(false);
+    const handlePrint = () => {
+        window.print();
     };
 
-    const validateForm = () => {
-        let valid = true;
-        const newErrors = { nationality: '', guide: '', boat: '', tickets: '' };
-
-        if (!selectedNationality) {
-            newErrors.nationality = 'يجب اختيار الجنسية';
-            valid = false;
-        }
-        if (!selectedGuideName) {
-            newErrors.guide = 'يجب اختيار المرشد';
-            valid = false;
-        }
-        if (!selectedBoatName) {
-            newErrors.boat = 'يجب اختيار المركب';
-            valid = false;
-        }
-        if (tickets.length === 0) {
-            newErrors.tickets = 'يجب إضافة تذكرة';
-            valid = false;
-        }
-
-        setErrors(newErrors);
-        return valid;
-    };
-
-    // payment function
-    const handlePayment = () => {
-        const orderItems = [];
-
-        tickets.forEach(ticket => {
-            for (let i = 0; i < ticket.ticketCount; i++) {
-                orderItems.push({
-                    price: ticket.ticketPrice,
-                    ticketId: ticket.ticketId,
-                    quantity: 1,
-                });
-            }
-        });
-
-        const orderData = {
-            nationalityId: selectedNationalityId,
-            cruiseId: selectedBoatId,
-            tourGuideId: selectedGuideId,
-            orderItems: orderItems
-        };
-        const token = localStorage.getItem('token');
-        axios.post(`${baseURL}/${ORDER_CREATE}`, orderData, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-            .then(response => {
-                const id = response.data.match(/\d+/)[0];
-                console.log(`Order created with ID: ${id}`);
-                const token = localStorage.getItem('token');
-                return axios.get(`${baseURL}/${ORDER_CREATE}/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-            })
-            .then(response => {
-                const qrData = response.data;
-                qrData.forEach(ticket => {
-                    ticket.serialNumbers.forEach(serialInfo => {
-                        if (serialInfo.createdAt) {
-                            const dateObject = new Date(serialInfo.createdAt);
-                            if (!isNaN(dateObject)) {
-                                serialInfo.createdAt = format(dateObject, 'dd/MM/yyyy HH:mm:ss');
-                            } else {
-                                console.error('Invalid date:', serialInfo.createdAt);
-                            }
-                        }
-                    });
-                });
-                setQrCodeData(qrData);
-
-                setShowQRCodes(true);
-            })
-            .catch(error => {
-                console.error("Error during payment:", error.response ? error.response.data : error.message);
-            });
-    };
-
-    // Payment Confirmation funcion
-    const handlePaymentConfirmation = () => {
-        if (validateForm()) {
-            Swal.fire({
-                title: "هل انت متاكد من الدفع؟",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                cancelButtonText: "إلغاء",
-                confirmButtonText: "نعم متاكد",
-                customClass: {
-                    popup: 'small-swal'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    handlePayment();
-                    setShowQRCodes(true);
-
-                    setTimeout(() => {
-                        setPrintReady(true);
-                    }, 1000);
-
-                    setShowQRCodes(false);
-                    setPrintReady(false);
-
-                    // Reset selected values
-                    setTickets([]);
-                    setSelectedTicketCategories({});
-                    setSelectedNationalityId("");
-                    setSelectedGuideId("");
-                    setSelectedBoatId("");
-                    setSelectedNationality("");
-                    setSelectedGuideName("");
-                    setSelectedBoatName("");
-                }
-            });
-        }
-    };
-
-    useEffect(() => {
-        if (printReady) {
-            window.print();
-        }
-    }, [printReady]);
-
-
-    // fetch active tour guide 
-    const fetchGuides = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${baseURL}/${TOURGUIDE_ACTIVE}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            }
-            );
-            setGuides(response.data);
-        } catch (error) {
-            console.error("There was an error fetching the guides!", error);
-        }
-    };
-
-    // fecth boats 
-    const fetchBoats = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${baseURL}/${CRUISE_ACTIVE}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-            setBoats(response.data);
-        } catch (error) {
-            console.error("There was an error fetching the boats!", error);
-        }
-    };
-
-    // add cruises 
-    const [addBoat, setAddBoat] = useState(false);
-    const [errors, setErrors] = useState({});
-    const [formData, setFormData] = useState({
-        name: "",
-        status: "",
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmitBoat = async (e) => {
-        e.preventDefault();
-        const newErrors = {};
-        if (!formData.name) newErrors.name = "من فضلك ادخل الاسم";
-        if (!formData.status) newErrors.status = " من فضلك اختر الحالة";
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
-        try {
-            const payload = {
-                name: formData.name,
-                status: formData.status === "Active" ? 1 : 2,
-            };
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                `${baseURL}/${CRUISES_CREATE}`,
-                payload,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        'Authorization': `Bearer ${token}`,
-                    },
-                }
-            );
-
-            fetchBoats();
-            setAddBoat(false);
-            Swal.fire("تم إضافة المركب بنجاح");
-        } catch (error) {
-            console.log("Error adding cruise:", error, error.message);
-        }
-    };
-
-    // add guide 
-    const [addGuide, setAddGuide] = useState(false);
-    const [formDataguide, setFormDataguide] = useState({
-        name: "",
-        email: "",
-        phoneNumber: "",
-        profitRate: "",
-        status: ''
-    });
-    const [guideErrors, setGuideErrors] = useState({});
-
-    const handleChangeGuide = (e) => {
-        const { name, value } = e.target;
-        setFormDataguide({ ...formDataguide, [name]: value });
-    };
-
-    const handleSubmitguide = async (e) => {
-        e.preventDefault();
-        const newErrors = {};
-        const phoneNumberPattern = /^(012|010|011|015)\d{8}$/;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!formDataguide.name) newErrors.name = "من فضلك ادخل الاسم";
-
-        if (!formDataguide.email) {
-            newErrors.email = "من فضلك ادخل البريد الإلكتروني";
-        } else if (!emailRegex.test(formDataguide.email)) {
-            newErrors.email = "من فضلك ادخل بريد إلكتروني صحيح";
-
-        } if (!formDataguide.status) newErrors.status = "من فضلك اختر الحالة ";
-        if (!formDataguide.phoneNumber) {
-            newErrors.phoneNumber = "من فضلك ادخل رقم الهاتف";
-        } else if (!phoneNumberPattern.test(formDataguide.phoneNumber)) {
-            newErrors.phoneNumber = "رقم الهاتف يجب أن يبدأ بـ 012 أو 010 أو 011 أو 015 ويكون 11 رقم";
-        }
-        const profitRate = parseFloat(formDataguide.profitRate);
-        if (!formDataguide.profitRate) {
-            newErrors.profitRate = "من فضلك ادخل نسبة الربح";
-        }
-        if (profitRate > 100) {
-            newErrors.profitRate = "يجب أن تكون رقمًا أقل من أو تساوي 100";
-        }
-        if (profitRate <= 0) {
-            newErrors.profitRate = "يجب أن تكون رقمًا أكبر من صفر";
-        }
-        if (isNaN(profitRate)) {
-            newErrors.profitRate = "يجب أن تكون رقمًا";
-        }
-
-        if (Object.keys(newErrors).length > 0) {
-            setGuideErrors(newErrors);
-            return;
-        }
-
-        try {
-            const payload = {
-                name: formDataguide.name,
-                email: formDataguide.email,
-                phoneNumber: formDataguide.phoneNumber,
-                profitRate: formDataguide.profitRate,
-                status: formDataguide.status === "Active" ? 1 : 2,
-            };
-            const token = localStorage.getItem('token');
-            await axios.post(`${baseURL}/${TOURGUIDE_CREATE}`, payload, {
-                headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-            fetchGuides();
-            setAddGuide(false);
-            Swal.fire("تم إضافة المرشد بنجاح");
-        }
-        catch (error) {
-            console.error("There was an error adding the tour guide!", error);
-        }
-    };
-
-    // change nationality from english to arabic 
-    // const nationalityTranslations = {
-    //     "Egyptian": "مصري",
-    //     "Saudi": "سعودي",
-    //     "Kuwaiti": "كويتي",
-    //     "Emirati": "إماراتي",
-    //     "Qatari": "قطري",
-    //     "Bahraini": "بحريني",
-    //     "Omani": "عماني",
-    //     "Jordanian": "أردني",
-    //     "Lebanese": "لبناني",
-    //     "Syrian": "سوري",
-    //     "British": "بريطاني",
-    //     "American": "أمريكي",
-    //     "Canadian": "كندي",
-    //     "Australian": "أسترالي"
-    // };
-
-    // change currency from english to arabic 
-    const currencyNames = {
-        0: "دولار أمريكي",
-        1: "يورو",
-        2: "جنيه مصري",
-        3: "جنيه إسترليني",
-        4: "ريال سعودي",
-        5: "درهم إماراتي",
-        6: "دينار كويتي"
-    };
-
-    // filter tickets to the day tickets
-    useEffect(() => {
-        const fetchTickets = async () => {
-            setLoading(true);
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${baseURL}/${TICKETS_ACTIVE}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                }
-                );
-                setTicketCategories(response.data);
-            } catch (error) {
-                Swal.fire({
-                    text: "حدث خطأ أثناء جلب التذاكر. يرجى المحاولة مرة أخرى لاحقًا.",
-                    icon: "error",
-                    confirmButtonText: "حسنًا",
-                    customClass: {
-                        popup: 'small-swal',
-                        confirmButton: 'custom-confirm-button'
-                    }
-                });
-                console.error("Error fetching daily reports:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTickets();
-    }, []);
-
-    // get day function 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            const now = new Date();
-            setCurrentTime(now);
-            setCurrentDay(now.toLocaleDateString('en-US', { weekday: 'long' }));
-        }, 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const formatDate = (date) => {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('ar-EG', options);
-    };
-
-    const filteredTickets = ticketCategories.filter(ticket =>
-        ticket.days.some(day => day.name === currentDay)
-    );
-
-    // get day to qr code 
-    const currentDate = new Date();
-    const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
-    const formattedDate = currentDate.toLocaleDateString('ar-EG', options);
+    const total = tickets.reduce((acc, curr) => acc + curr.ticketPrice * curr.ticketCount, 0);
 
     return (
         <div>
             <Drawer />
-            <Box className='box-container'>
+            <Box height={0} sx={{ direction: "rtl" }} />
+            <Box sx={{ width: "80%", marginTop: "-30px" }}>
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-md-6'></div>
+                        <div className='col-md-6'></div>
+                    </div>
+                </div>
                 <div className='card table-style ' style={{ direction: "rtl" }}>
+                    <div className="card-header table-head-style d-flex">
+                        <h3>حجز تذكرة</h3>
+                    </div>
                     <div className="card-body">
                         <div className="container">
-                            <div className='row'>
-                                <div className="col-md-4 px-0 pt-3 mb-2 pay-container">
-                                    <div className='col-12 text-right d-flex'>
-                                        <p className='m-0'>اليوم : </p>
-                                        <p className='text-info mr-1 m-0' style={{ fontSize: "20px" }}>{formatDate(currentTime)}</p>
-                                    </div>
-
-                                    {/* fetch nationality */}
-                                    <NationalitySelect
-                                        nationalities={nationalities}
-                                        selectedNationalityId={selectedNationalityId}
-                                        setSelectedNationalityId={setSelectedNationalityId}
-                                        setSelectedNationality={setSelectedNationality}
-                                        errors={errors}
-                                    />
-
-                                    <div className="d-flex align-items-center select-box px-3 ">
-                                        {/* fetch tour guide  */}
-                                        <GuideSelect
-                                            guides={guides}
-                                            selectedGuideId={selectedGuideId}
-                                            setSelectedGuideId={setSelectedGuideId}
-                                            setSelectedGuideName={setSelectedGuideName}
-                                            setAddGuide={setAddGuide}
-                                            errors={errors}
-                                        />
-
-                                        {/* fetch boats */}
-                                        <BoatSelect
-                                            boats={boats}
-                                            selectedBoatId={selectedBoatId}
-                                            setSelectedBoatId={setSelectedBoatId}
-                                            setSelectedBoatName={setSelectedBoatName}
-                                            setAddBoat={setAddBoat}
-                                            errors={errors}
-                                        />
-                                    </div>
+                            <div className="row">
+                                <div className='col-md-4 mt-1'>
+                                    <label htmlFor="nationality" className="d-flex">الجنسية</label>
+                                    <Select id="nationality" value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} className="form-control">
+                                        {Object.keys(ticketCategories).map((nationality, index) => (
+                                            <MenuItem key={index} value={nationality}>{nationality}</MenuItem>
+                                        ))}
+                                    </Select>
                                 </div>
-
-                                {/* fetch tickets  */}
-                                <TicketList
-                                    filteredTickets={filteredTickets}
-                                    loading={loading}
-                                    handleAddTicket={handleAddTicket}
-                                    selectedTicketCategories={selectedTicketCategories}
-                                    errors={errors}
-                                />
-
-                                {/* TicketTable  */}
-                                <TicketTable
-                                    tickets={tickets}
-                                    handleIncreaseTicketCount={handleIncreaseTicketCount}
-                                    handleDecreaseTicketCount={handleDecreaseTicketCount}
-                                    handleDeleteTicket={handleDeleteTicket}
-                                    total={total}
-                                    handlePaymentConfirmation={handlePaymentConfirmation}
-                                    showError={showError}
-                                    handleCloseError={handleCloseError}
-                                />
-
+                                <div className='col-md-4 '>
+                                    <label htmlFor="guideName" className="d-flex">
+                                        اسم المرشد
+                                        <IconButton onClick={() => setAddGuideDialog(true)}>
+                                            <AddIcon className='addIcon' />
+                                        </IconButton>
+                                    </label>
+                                    <Select id="guideName" value={selectedGuideName} onChange={(e) => setSelectedGuideName(e.target.value)} className="form-control">
+                                        {testGuideOptions.map((option, index) => (
+                                            <MenuItem key={index} value={option}>{option}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                                <div className='col-md-4 mt-1'>
+                                    <label htmlFor="boatName" className="d-flex">
+                                        اسم المركب
+                                        <IconButton onClick={() => setAddBoatDialog(true)}>
+                                            <AddIcon className='addIcon' />
+                                        </IconButton>
+                                    </label>
+                                    <Select id="boatName" value={selectedBoatName} onChange={(e) => setSelectedBoatName(e.target.value)} className="form-control">
+                                        {testBoatOptions.map((option, index) => (
+                                            <MenuItem key={index} value={option}>{option}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                            </div>
+                            <div className="row" style={{ display: "flex", justifyContent: "center" }}>
+                                {ticketCategories[selectedNationality].map((category, index) => (
+                                    <div key={index} className='col-md-3 mt-4'>
+                                        <div className="d-flex flex-column align-items-center ticket">
+                                            <IconButton disabled={selectedTicketCategories[category.name]} onClick={() => handleAddTicket(category)}>
+                                                <PersonIcon sx={{ color: "#000", fontSize: "55px" }} />
+                                            </IconButton>
+                                            <span>{category.name}</span>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </div>
-            </Box >
-
-            {/* add boats dialog  */}
-            <Dialog open={addBoat} onClose={() => setAddBoat(false)} fullWidth style={{ direction: "rtl" }}>
-                <DialogTitle>
-                    <Typography style={{ display: "flex", justifyContent: "start", fontSize: "20px" }}>
-                        إضافة مركب جديد
-                    </Typography>
-                </DialogTitle>
-                <DialogContent>
-                    <div className='container'>
-                        <div className='row'>
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="name" className="d-flex">
-                                        الاسم
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        aria-describedby="nameHelp"
-                                    />
-                                    {errors.name && (
-                                        <h6 className="error-log">{errors.name}</h6>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <label htmlFor="status" className="d-flex">
-                                    الحالة
-                                </label>
-                                <TextField
-                                    id="status"
-                                    name="status"
-                                    select
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                    size="small"
-                                    fullWidth
-                                    SelectProps={{
-                                        native: true,
+                <div className="mt-3">
+                    <TableContainer className='table-style table table-hover' sx={{ direction: "rtl" }} component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead className='table-head-style'>
+                                <TableRow>
+                                    <TableCell style={{ color: "#fff" }} align="right">الجنسية</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">اسم المرشد</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">اسم المركب</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">نوع التذكرة</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">عدد التذاكر</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">السعر</TableCell>
+                                    <TableCell style={{ color: "#fff" }} align="right">حذف</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {tickets.map((ticket, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell align="right">{ticket.nationality}</TableCell>
+                                        <TableCell align="right">{ticket.guideName}</TableCell>
+                                        <TableCell align="right">{ticket.boatName}</TableCell>
+                                        <TableCell align="right">{ticket.ticketType}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => handleDecreaseTicketCount(index)}>
+                                                <RemoveIcon sx={{ backgroundColor: "#c72c2c", borderRadius: "3px", padding: " 0px", marginLeft: "5px", color: "#fff" }} />
+                                            </IconButton>
+                                            {ticket.ticketCount}
+                                            <IconButton onClick={() => handleIncreaseTicketCount(index)}>
+                                                <AddIcon sx={{ backgroundColor: "#199119", borderRadius: "3px", padding: " 0px", marginRight: "5px", color: "#fff" }} />
+                                            </IconButton>
+                                        </TableCell>
+                                        <TableCell align="right">{ticket.ticketPrice * ticket.ticketCount}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => handleDeleteTicket(index, ticket.ticketType)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TableCell sx={{ fontSize: "20px" }} align="right" colSpan={5}>المجموع الكلي</TableCell>
+                                    <TableCell sx={{ fontSize: "20px" }} align="right">{total}</TableCell>
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </div>
+                <div className='container' style={{ width: "87%" }}>
+                    <div className="mt-4 mb-5">
+                        <Button variant="contained" style={{ backgroundColor: "#000" }} onClick={handlePayment}><PaymentIcon sx={{ marginRight: "4px", fontSize: "19px" }} /> دفع</Button>
+                    </div>
+                </div>
+                <Dialog maxWidth open={showQRCodes} onClose={handleCloseDialog}>
+                    <DialogTitle>رموز الاستجابة السريعة</DialogTitle>
+                    <DialogContent>
+                        <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
+                            {tickets.map((ticket, index) => (
+                                <div
+                                    style={{
+                                        border: "1px #000 solid",
+                                        padding: "17px"
                                     }}
-                                >
-                                    <option value="">اختر الحالة</option>
-                                    <option value="Active">نشط</option>
-                                    <option value="InActive">غير نشط</option>
-                                </TextField>
-                                {errors.status && (
-                                    <h6 className="error-log">{errors.status}</h6>
-                                )}
-                            </div>
+                                    key={index} className="mt-4 ml-2 text-center">
+                                    <Typography variant="h6" gutterBottom>رمز الاستجابة السريعة QR للتذكرة {index + 1}</Typography>
+                                    <QRCode value={`تذكرة ${index + 1}`} />
+                                </div>
+                            ))}
                         </div>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setAddBoat(false)}>إلغاء</Button>
-                    <Button onClick={handleSubmitBoat} variant="contained" disableElevation>
-                        إضافة
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handlePrint}>طباعة</Button>
+                        <Button onClick={handleCloseDialog}>إلغاء</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog minWidth open={addGuideDialog} onClose={() => setAddGuideDialog(false)}>
+                    <DialogTitle>
+                        <h3 style={{ display: "flex", justifyContent: "end" }}>
 
-            {/* add guides dialog  */}
-            < Dialog open={addGuide} onClose={() => setAddGuide(false)} fullWidth style={{ direction: "rtl" }}>
-                <DialogTitle>
-                    <Typography style={{ display: "flex", justifyContent: "start", fontSize: "20px" }}>
-                        إضافة مرشد جديد
-                    </Typography>
-                </DialogTitle>
-                <DialogContent>
-                    <div className='container'>
-                        <div className='row'>
+                            إضافة مرشد جديد
+                        </h3>
 
-                            <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.name}>
-                                    <OutlinedInput
-                                        size='small'
-                                        autoFocus
-                                        margin="dense"
-                                        id="guideNameInput"
-                                        name="name"
-                                        placeholder="اسم المرشد"
-                                        value={formDataguide.name}
-                                        onChange={handleChangeGuide}
-                                    />
-                                    <div className='error-log'>{guideErrors.name}</div>
-                                </FormControl>
-                            </div>
-
-                            <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.status}>
-                                    <Select
-                                        size='small'
-                                        labelId="guideStatusLabel"
-                                        id="guideStatusSelect"
-                                        name="status"
-                                        value={formDataguide.status}
-                                        onChange={handleChangeGuide}
-                                        displayEmpty
-                                        fullWidth
-                                    >
-                                        <MenuItem value="">
-                                            اختر حالة المرشد
-                                        </MenuItem>
-                                        <MenuItem value="Active">نشط</MenuItem>
-                                        <MenuItem value="InActive">غير نشط</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                <div className='error-log'>
-                                    {guideErrors.status}
+                    </DialogTitle>
+                    <DialogContent>
+                        <form>
+                            <div className='container'>
+                                <div className='row ' style={{ direction: "rtl" }}>
+                                    <div className='col-md-6 mt-3'>
+                                        <FormControl fullWidth>
+                                            <OutlinedInput
+                                                size='small'
+                                                placeholder="الاسم"
+                                                value={guideData.name}
+                                                onChange={(e) => setGuideData({ ...guideData, name: e.target.value })}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                    <div className='col-md-6  mt-3'>
+                                        <FormControl fullWidth>
+                                            <OutlinedInput
+                                                size='small'
+                                                placeholder="الايميل"
+                                                value={guideData.email}
+                                                onChange={(e) => setGuideData({ ...guideData, email: e.target.value })}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                    <div className='col-md-6  mt-3'>
+                                        <FormControl fullWidth>
+                                            <Select
+                                                size='small'
+                                                value={guideData.status}
+                                                onChange={(e) => setGuideData({ ...guideData, status: e.target.value })}
+                                                displayEmpty
+                                            >
+                                                <MenuItem value="" disabled>
+                                                    حالة المرشد
+                                                </MenuItem>
+                                                <MenuItem value="active">نشط</MenuItem>
+                                                <MenuItem value="inactive">غير نشط</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div className='col-md-6  mt-3'>
+                                        <FormControl fullWidth>
+                                            <OutlinedInput
+                                                size='small'
+                                                placeholder="رقم الهاتف"
+                                                value={guideData.phoneNumber}
+                                                onChange={(e) => setGuideData({ ...guideData, phoneNumber: e.target.value })}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                    <div className='col-md-6  mt-3'>
+                                        <FormControl fullWidth>
+                                            <OutlinedInput
+                                                size='small'
+                                                placeholder="نسبة الربح"
+                                                value={guideData.profitPercentage}
+                                                onChange={(e) => setGuideData({ ...guideData, profitPercentage: e.target.value })}
+                                                endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                                            />
+                                        </FormControl>
+                                    </div>
                                 </div>
                             </div>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setAddGuideDialog(false)}>إلغاء</Button>
+                        <Button onClick={() => setAddGuideDialog(false)} autoFocus>حفظ</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog maxWidth open={addBoatDialog} onClose={() => setAddBoatDialog(false)}>
+                    <DialogTitle>
+                        <h3 style={{ display: "flex", justifyContent: "end" }}>
+                            إضافة مركب جديد
+                        </h3>
+                    </DialogTitle>
+                    <DialogContent>
+                        <form>
+                            <div className='container'>
+                                <div className='row'>
 
-                            <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.profitRate}>
-                                    <OutlinedInput
-                                        size='small'
-                                        margin="dense"
-                                        id="guideProfitRateInput"
-                                        name="profitRate"
-                                        placeholder="نسبة الربح"
-                                        value={formDataguide.profitRate}
-                                        onChange={handleChangeGuide}
-                                        endAdornment={
-                                            <InputAdornment position="end">%</InputAdornment>
-                                        }
-                                    />
-                                    <div className='error-log'>
-                                        {guideErrors.profitRate}
+                                    <div className='col-md-6'>
+                                        <FormControl fullWidth>
+                                            <Select
+                                                value={boatData.status}
+                                                onChange={(e) => setBoatData({ ...boatData, status: e.target.value })}
+                                                displayEmpty
+                                                size='small'
+                                            >
+                                                <MenuItem value="" disabled>
+                                                    حالة المركب
+                                                </MenuItem>
+                                                <MenuItem value="active">نشط</MenuItem>
+                                                <MenuItem value="inactive">غير نشط</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </div>
-                                </FormControl>
+
+
+                                    <div className='col-md-6'>
+                                        <FormControl fullWidth>
+                                            <OutlinedInput
+                                                size='small'
+                                                placeholder="الاسم"
+                                                value={boatData.name}
+                                                onChange={(e) => setBoatData({ ...boatData, name: e.target.value })}
+                                            />
+                                        </FormControl>
+                                    </div>
+
+                                </div>
                             </div>
-
-                            <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.email}>
-                                    <OutlinedInput
-                                        size='small'
-                                        margin="dense"
-                                        id="guideEmailInput"
-                                        name="email"
-                                        placeholder="البريد الالكتروني"
-                                        value={formDataguide.email}
-                                        onChange={handleChangeGuide}
-                                    />
-                                    <div className='error-log'>
-                                        {guideErrors.email}
-                                    </div>
-                                </FormControl>
-                            </div>
-
-                            <div className='col-md-6 mt-2'>
-                                <FormControl fullWidth error={!!guideErrors.phoneNumber}>
-                                    <OutlinedInput
-                                        size='small'
-                                        margin="dense"
-                                        id="guidePhoneNumberInput"
-                                        name="phoneNumber"
-                                        placeholder="الهاتف"
-                                        value={formDataguide.phoneNumber}
-                                        onChange={handleChangeGuide}
-                                    />
-                                    <div className='error-log'>
-                                        {guideErrors.phoneNumber}
-                                    </div>
-                                </FormControl>
-                            </div>
-                        </div>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setAddGuide(false)}>إلغاء</Button>
-                    <Button onClick={handleSubmitguide} variant="contained" disableElevation>
-                        إضافة
-                    </Button>
-                </DialogActions>
-            </Dialog >
-
-            {/* Qr Code dialog  */}
-            <Dialog open={showQRCodes} onClose={() => setShowQRCodes(false)} fullWidth style={{ direction: "rtl" }}>
-                <DialogContent>
-                    {qrCodeData && qrCodeData.map((ticket, index) => (
-                        <div key={index} style={{ textAlign: "center", margin: "10px 0" }}>
-                            {ticket.serialNumbers.map((serialInfo, i) => {
-                                const qrValue = `
-Serial Number : ${serialInfo.serialNumber}
-Ticket Title : ${serialInfo.ticketTitle}
-Boat Name : ${selectedBoatName} 
-TourGuide Name : ${serialInfo.tourGuide}
-Nationality : ${serialInfo.nationality}
-Price : ${serialInfo.price} $
-Created At : ${serialInfo.createdAt}
-`;
-                                const encodedQRValue = utf8.encode(qrValue);
-
-                                return (
-                                    <div key={i} className='qr-box' style={{ marginBottom: '20px', border: '1px solid black', padding: '20px' }}>
-                                        <div>
-                                            <QRCode value={encodedQRValue} className='qr-size' />
-                                        </div>
-                                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
-                                            <Typography variant="subtitle1">Serial Number : {serialInfo.serialNumber}</Typography>
-                                            <Typography variant="subtitle1">Ticket Title : {serialInfo.ticketTitle}</Typography>
-                                            <Typography variant="subtitle1">Boat Name : {selectedBoatName}</Typography>
-                                            <Typography variant="subtitle1">Tourguide Name : {serialInfo.tourGuide}</Typography>
-                                            <Typography variant="subtitle1">Nationality : {serialInfo.nationality}</Typography>
-                                            <Typography variant="subtitle1">Price : {serialInfo.price} $</Typography>
-                                            <Typography variant="subtitle1">Created At : {serialInfo.createdAt}</Typography>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ))}
-                </DialogContent>
-
-                <DialogActions className='hide-on-print'>
-                    <Button onClick={() => setShowQRCodes(false)}>إغلاق</Button>
-                </DialogActions>
-            </Dialog>
-
-        </div >
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setAddBoatDialog(false)}>إلغاء</Button>
+                        <Button onClick={() => setAddBoatDialog(false)} autoFocus>حفظ</Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+        </div>
     );
 }
 
-export default PayingOff;
+
+
+
+
+

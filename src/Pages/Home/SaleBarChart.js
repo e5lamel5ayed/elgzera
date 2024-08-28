@@ -1,5 +1,5 @@
 // SalesBarChart.js
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -29,7 +29,7 @@ const SalesBarChart = ({ data }) => {
       },
       title: {
         display: true,
-        text: "المبيعات",
+        text: "Sales States",
       },
     },
   };
@@ -38,7 +38,6 @@ const SalesBarChart = ({ data }) => {
     <div
       style={{
         width: "100%",
-        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyItems: "center",

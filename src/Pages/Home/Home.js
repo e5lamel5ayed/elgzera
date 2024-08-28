@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SalesBarChart from "./SaleBarChart";
 import Drawer from "../../Components/Drawer";
 import Paper from "@mui/material/Paper";
@@ -9,108 +9,47 @@ import PeopleIcon from "@mui/icons-material/People";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import BasicPie from "./Chart1";
-import axios from "axios";
-import { baseURL, TOTAL_DAILY_REPORTS } from "../../Components/Api";
-
 const Home = () => {
-  const parseDate = (formattedDate) => {
-    const [year, month, day] = formattedDate.split("-");
-    return `${day}-${month}-${year}`;
-  };
-
-  // Helper function to format date
-  const formatDate = (date) => {
-    const [year, month, day] = date.split("-");
-    return `${year}-${month}-${day}`;
-  };
-
-  const defaultStartDate = formatDate("2024-08-13");
-  const defaultEndDate = formatDate(new Date().toISOString().split('T')[0]);
-
-  const [startDate, setStartDate] = useState(defaultStartDate);
-  const [endDate, setEndDate] = useState(defaultEndDate);
-  const [categories, setCategories] = useState([]);
-  const [all, setAll] = useState([]);
+  const [startDate, setStartDate] = useState("2023-05-01");
+  const [endDate, setEndDate] = useState("2024-07-21");
 
   const theme = useTheme();
   const isMobileOrMedium = useMediaQuery(theme.breakpoints.down("md"));
 
-  const getCategoryIcon = (index) => {
-    switch (index % 4) {
-      case 0:
-        return <FamilyRestroomIcon className="text-info " sx={{ fontSize: '30px' }} />;
-      case 1:
-        return <PeopleIcon className="text-info" sx={{ fontSize: '30px' }} />;
-      case 2:
-        return <ConfirmationNumberIcon className="text-info" sx={{ fontSize: '30px' }} />;
-      case 3:
-        return <AccessibilityIcon className="text-info" sx={{ fontSize: '30px' }} />;
-      default:
-        return <PeopleIcon className="text-info" sx={{ fontSize: '30px' }} />;
-    }
-  };
-
-  // Fetch data for today
-  useEffect(() => {
-    const fetchDataAll = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(
-          `${baseURL}/${TOTAL_DAILY_REPORTS}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        setAll(response.data);
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchDataAll();
-  }, []);
-
-  // Fetch data by date from: and to:
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(
-          `${baseURL}/reports/duration-total-report?from=${formatDate(startDate)}&to=${formatDate(endDate)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        setCategories(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    if (startDate && endDate) {
-      fetchData();
-    }
-  }, [startDate, endDate]);
-
-  const handleStartDateChange = (e) => setStartDate(formatDate(e.target.value));
-  const handleEndDateChange = (e) => setEndDate(formatDate(e.target.value));
-
-  const pastelColors = ["#FFD1DC", "#FFDEAD", "#E0BBE4", "#C6E2FF"];
-
-  // Create the data object for the SalesBarChart
-  const chartData = {
-    labels: categories.map((category) =>
-      parseDate(category.orderDate.split("T")[0])
-    ),
+  const data = {
+    labels: [
+      "01-05-2023",
+      "02-05-2023",
+      "03-05-2023",
+      "04-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "01-05-2023",
+      "02-05-2023",
+      "03-05-2023",
+      "04-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      "05-05-2023",
+      // Add more dates as needed
+    ],
     datasets: [
       {
-        label: "التذاكر المباعة",
-        data: categories.map((category) => category.ticketCount),
+        label: "Tickets Sold",
+        data: [
+          20, 40, 30, 50, 60, 70, 80, 90, 100, 20, 40, 30, 50, 60, 70, 80, 90,
+          100, 20, 40, 30, 50, 60, 70, 80, 90, 100,
+        ], // Add more ticket data as needed
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
@@ -118,8 +57,19 @@ const Home = () => {
     ],
   };
 
+  const handleStartDateChange = (e) => setStartDate(e.target.value);
+  const handleEndDateChange = (e) => setEndDate(e.target.value);
+
+  const pastelColors = ["#FFD1DC", "#FFDEAD", "#E0BBE4", "#C6E2FF"];
+  const paperData = [
+    { label: "عائليه", count: 26, icon: <FamilyRestroomIcon /> },
+    { label: "ضيافه", count: 49, icon: <PeopleIcon /> },
+    { label: "تذكره الجمعه", count: 49, icon: <ConfirmationNumberIcon /> },
+    { label: "كبير", count: 41, icon: <AccessibilityIcon /> },
+  ];
+
   return (
-    <div className="mb-5">
+    <>
       <Drawer />
       <div
         style={{
@@ -132,51 +82,49 @@ const Home = () => {
           position: "relative",
         }}
       >
-        <div>
-          <div className="card-header d-flex table-head-style justify-content-end">
-            <h3>مبيعات اليوم</h3>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: isMobileOrMedium ? "center" : "space-between",
-              flexDirection: isMobileOrMedium ? "column" : "row",
-              marginTop: "10px",
-            }}
-          >
-            {all.map((item, index) => (
-              <Paper
-                key={index}
-                style={{
-                  textAlign: "center",
-                  backgroundColor: pastelColors[index % pastelColors.length],
-                  padding: "10px",
-                  borderRadius: "15px",
-                  width: isMobileOrMedium ? "100%" : "20%",
-                  marginBottom: isMobileOrMedium ? "10px" : "0",
-                  transition: "background-color 0.3s ease",
-                  margin: '5px'
-                }}
-                elevation={2}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#FFE4E1")
-                }
-                onMouseLeave={(e) =>
+        <h3>Today's Sales</h3>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: isMobileOrMedium ? "center" : "space-between",
+            flexDirection: isMobileOrMedium ? "column" : "row",
+            marginTop: "10px",
+          }}
+        >
+          {paperData.map((item, index) => (
+            <Paper
+              key={index}
+              style={{
+                textAlign: "center",
+                backgroundColor: pastelColors[index % pastelColors.length],
+                padding: "10px",
+                borderRadius: "15px",
+                width: isMobileOrMedium ? "100%" : "20%",
+                marginBottom: isMobileOrMedium ? "10px" : "0",
+                transition: "background-color 0.3s ease",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-around",
+              }}
+              elevation={2}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#FFE4E1")
+              }
+              onMouseLeave={(e) =>
                 (e.currentTarget.style.backgroundColor =
                   pastelColors[index % pastelColors.length])
-                }
-              >
-                {/* show icon with category*/}
-                {getCategoryIcon(index)}
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <h5>{item.category}</h5>
-                  <h6>{item.quantity}</h6>
-                </div>
-              </Paper>
-            ))}
-          </div>
+              }
+            >
+              <>{item.icon}</>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <h2>{item.label}</h2>
+                <p>{item.count}</p>
+              </div>
+            </Paper>
+          ))}
         </div>
-
         <div
           style={{
             display: "flex",
@@ -184,29 +132,8 @@ const Home = () => {
             flexDirection: isMobileOrMedium ? "column" : "row",
           }}
         >
-          <label
-            style={{
-              width: isMobileOrMedium ? "100%" : "50%",
-              marginRight: isMobileOrMedium ? "0" : "10px",
-            }}
-          >
-            <label className="d-flex justify-content-end" htmlFor=""> : الي </label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              style={{
-                width: "100%",
-                height: "40px",
-                borderRadius: "15px",
-                border: "1px solid grey",
-                padding: "20px",
-              }}
-            />
-          </label>
-
           <label style={{ width: isMobileOrMedium ? "100%" : "50%" }}>
-            <label className="d-flex justify-content-end" htmlFor=""> : من </label>
+            From:
             <input
               type="date"
               value={startDate}
@@ -221,9 +148,27 @@ const Home = () => {
               }}
             />
           </label>
-
+          <label
+            style={{
+              width: isMobileOrMedium ? "100%" : "50%",
+              marginLeft: isMobileOrMedium ? "0" : "10px",
+            }}
+          >
+            To:
+            <input
+              type="date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              style={{
+                width: "100%",
+                height: "40px",
+                borderRadius: "15px",
+                border: "1px solid grey",
+                padding: "20px",
+              }}
+            />
+          </label>
         </div>
-
         <div
           style={{
             marginTop: "20px",
@@ -231,15 +176,14 @@ const Home = () => {
             width: "100%",
             alignItems: "center",
             flexDirection: isMobileOrMedium ? "column" : "row",
-            height: "100%",
+            heigh: "100%",
           }}
         >
-
-          <SalesBarChart data={chartData} />
-          <BasicPie startDate={startDate} endDate={endDate} />
+          <SalesBarChart data={data} />
+          <BasicPie />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
